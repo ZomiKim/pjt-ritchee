@@ -7,6 +7,8 @@ import DentList from "./assets/page/dentistlist/DentList";
 import Medicalreservation from "./assets/page/medicalreservation/Medicalreservation";
 import Mypage from "./assets/page/mypage/Mypage";
 import Event from "./assets/page/event/Event";
+import Map from "./assets/page/shared/Map";
+import Member from "./assets/member/Member";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
             <Route path="/reservation/*" element={<Medicalreservation />} />
             <Route path="/mypage/*" element={<Mypage />} />
             <Route path="/events/*" element={<Event />} />
+            <Route path="/map/*" element={<Map />} />
+            <Route path="/member/*" element={<Member />} />
           </Routes>
         </div>
       </div>

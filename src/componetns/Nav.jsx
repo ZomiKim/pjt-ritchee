@@ -46,7 +46,7 @@ function Nav() {
     <nav className="bg-main-02 text-white fixed w-full top-0 left-0 z-50 shadow-lg">
       <div className="w-full md:w-[90%] mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* 모바일 햄버거 버튼 - 왼쪽 */}
+          {/* ham menu */}
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
@@ -71,7 +71,7 @@ function Nav() {
             </button>
           </div>
 
-          {/* 로고 */}
+          {/* logo */}
           <div className="shrink-0">
             <Link
               to="/"
@@ -81,7 +81,7 @@ function Nav() {
             </Link>
           </div>
 
-          {/* 데스크탑 메뉴 */}
+          {/* pc mene*/}
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">
               {navLinks.map((link) => (
@@ -97,7 +97,7 @@ function Nav() {
             </div>
           </div>
 
-          {/* 모바일 오른쪽 아이콘 */}
+          {/* mb right menu*/}
           <div className="flex items-center gap-2 md:hidden">
             <Link
               to="/map"
@@ -115,7 +115,7 @@ function Nav() {
         </div>
       </div>
 
-      {/* 딤 배경 */}
+      {/* deem */}
       {isOpen && (
         <div
           className="md:hidden fixed inset-0 top-16 bg-black/50 z-40 transition-opacity duration-300"
@@ -123,14 +123,14 @@ function Nav() {
         ></div>
       )}
 
-      {/* 모바일 메뉴 */}
+      {/* mb menu*/}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out relative z-50 ${
           isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="bg-light-01">
-          {/* 0번, 1번 메뉴 가로 정렬 */}
+          {/* mb menu big */}
           <div className="bg-main-01 p-[2%]">
             <div className="flex justify-evenly">
               <Link
@@ -161,7 +161,7 @@ function Nav() {
               </Link>
             </div>
           </div>
-          {/* 나머지 메뉴 (2번부터) */}
+          {/* mb menu another  */}
           {navLinks.slice(2).map((link) => (
             <Link
               key={link.name}

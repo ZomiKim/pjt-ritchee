@@ -22,7 +22,7 @@ function App() {
             <Route path="/clinics/*" element={<DentList />} />
             <Route path="/reservation/*" element={<Medicalreservation />} />
             <Route path="/mypage/*" element={<Mypage />} />
-            <Route path="/events/*" element={<Event />} />
+            <Route path="/event/*" element={<Event />} />
             <Route path="/map/*" element={<Map />} />
             <Route path="/member/*" element={<Member />} />
           </Routes>

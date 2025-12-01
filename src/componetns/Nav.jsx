@@ -39,7 +39,7 @@ function Nav() {
     { name: "진료 예약", to: "/reservation" },
     { name: "릿치 소개", to: "/about" },
     { name: "치과 리스트", to: "/clinics" },
-    { name: "이벤트", to: "/events" },
+    { name: "이벤트", to: "/event" },
   ];
 
   return (

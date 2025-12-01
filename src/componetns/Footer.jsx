@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 function Footer() {
   return (
     <footer className="bg-deep text-white py-8 md:py-12">
-      <div className="w-full mx-auto px-4">
-        <div className="flex flex-col   md:justify-between gap-4">
+      <div className="container">
+        <div className="flex flex-col md:justify-between gap-4">
           {/* 로고 */}
           <Link
             to="/"
@@ -15,7 +15,7 @@ function Footer() {
 
           {/* 설명 */}
           <p className="text-white text-xs" style={{ fontWeight: 100 }}>
-            COPYRIGHTⓒ 2025.jumeogdajim. fist fight. INC. ALL RIGHTS RESERVED.
+            COPYRIGHTⓒ 2025.jumeogdajim. fist fight. INC. ALL RIGHTS RESERVED.
           </p>
         </div>
       </div>

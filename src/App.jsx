@@ -1,8 +1,10 @@
 import Button from "./componetns/Button";
+import Nav from "./componetns/Nav";
 
 function App() {
   return (
     <>
+      <Nav></Nav>
       <div className="bg-main-01"></div>
       <div className="bg-main-02">컬러</div>
       <div className="bg-light-01">컬러</div>

@@ -170,3 +170,11 @@ a {
     width: 90%;
   }
 }
+
+/* title settings */
+.tit {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-deep);
+}

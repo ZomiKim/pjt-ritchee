@@ -20,6 +20,11 @@ function App() {
           <div className="bg-gray-mid text-white">컬러</div>
           <div className="bg-gray-light text-black">컬러</div>
 
+          <h4 className="tit">
+            <span className="material-icons">star</span>
+            타이틀 테스트
+          </h4>
+
           <h1>계절이 지나가는 하늘에는</h1>
           <h2>계절이 지나가는 하늘에는</h2>
           <h3>계절이 지나가는 하늘에는</h3>

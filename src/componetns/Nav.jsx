@@ -88,10 +88,10 @@ function Nav() {
                 <Link
                   key={link.name}
                   to={link.to}
-                  className="relative text-white hover:text-main-01 transition-colors duration-300 py-2 group"
+                  className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group"
                 >
                   {link.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-point group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
                 </Link>
               ))}
             </div>

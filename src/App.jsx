@@ -1,4 +1,5 @@
 import Button from "./componetns/Button";
+import Footer from "./componetns/footer";
 import Nav from "./componetns/Nav";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           short
         </Button>
       </div>
+      <Footer />
     </>
   );
 }

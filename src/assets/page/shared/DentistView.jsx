@@ -4,6 +4,7 @@ function DentistView() {
   return (
     <>
       <div>DentistView</div>
+
       {/*Please refer to
       // 그냥 Map으로 이동
       <Link to="/map">지도 보기</Link>

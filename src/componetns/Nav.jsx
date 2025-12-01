@@ -36,7 +36,7 @@ function Nav() {
 
   const navLinks = [
     { name: "마이페이지", to: "/mypage" },
-    { name: "진료 예약", to: "/reservation" },
+    { name: "진료 예약", to: "/dentistList" },
     { name: "릿치 소개", to: "/about" },
     { name: "치과 리스트", to: "/dentistList" },
     { name: "이벤트", to: "/event" },

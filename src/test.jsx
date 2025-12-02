@@ -21,10 +21,10 @@ function App() {
           <div className="bg-gray-light text-black">컬러</div>
 
           <h4 className="tit">
-            <span className="material-icons">star</span>
+            <span className="material-icons">star_outline</span>
             타이틀 테스트
           </h4>
-
+          <i className="fa-solid fa-tooth"></i>
           <h1>계절이 지나가는 하늘에는</h1>
           <h2>계절이 지나가는 하늘에는</h2>
           <h3>계절이 지나가는 하늘에는</h3>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import EditInfo from './EditInfo';
 import MedicalList from './MedicalList';
 import ReviewHistory from './ReviewHistory';

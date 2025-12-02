@@ -7,9 +7,11 @@ import ReservationList from './ReservationList';
 import ReviewForm from './ReviewForm';
 import DentistReview from '../shared/DentistReview';
 import { Link } from 'react-router-dom';
-import Footer from '../../../componetns/footer';
+import { useNavigate } from 'react-router-dom';
 
 function Mypage() {
+  const navigate = useNavigate();
+
   return (
     <>
       <div
@@ -28,27 +30,34 @@ function Mypage() {
         <div className="container ">
           <div className="flex justify-center  gap-3 py-3">
             <Link
-              to="/mypage/editInformation"
-              className="nav-link px-13 py-2 bg-main-02 text-white rounded-md hover:bg-main-02 "
+              to="../mypage/editInformation"
+              className="nav-link px-13 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/mypage/editInformation');
+              }}
             >
               회원 정보 수정
             </Link>
+
             <Link
-              to="/mypage/reservationList"
+              to="../mypage/reservationList"
               className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
               예약 현황
             </Link>
           </div>
+
           <div className="flex justify-center gap-3 mb-[100px]">
             <Link
-              to="/mypage/medicalList"
+              to="../mypage/medicalList"
               className="nav-link  px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
               진료 기록
             </Link>
+
             <Link
-              to="/mypage/reviewHistory"
+              to="../mypage/reviewHistory"
               className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
               후기 기록
@@ -67,7 +76,6 @@ function Mypage() {
           element={<DentistReview />}
         />
         <Route path="reservationList" element={<ReservationList />} />
-        <Route path="/mypage/*" element={<Mypage />} />
       </Routes>
     </>
   );

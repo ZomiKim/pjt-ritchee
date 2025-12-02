@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 function EditInfo() {
   return (
     <>
-      <div>EditInfo</div>
+      <div>EditInfoasdfasdf</div>
     </>
   );
 }

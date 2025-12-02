@@ -104,6 +104,11 @@
 
 /* common settings */
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-sans) !important;
 }
@@ -175,6 +180,7 @@ a {
 
   .myBg {
     width: 100%;
+    overflow: visible !important;
   }
 }
 
@@ -188,6 +194,6 @@ a {
 
 /* bg-img setting */
 .myBg {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+  width: calc(100% + ((100vw - 100%) / 2) * 2);
+  margin-left: calc((100% - 100vw) / 2);
 }

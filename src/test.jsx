@@ -1,6 +1,7 @@
 import Button from "./componetns/Button";
 import Footer from "./componetns/footer";
 import Nav from "./componetns/Nav";
+import PageNatation from "./componetns/PageNatation";
 
 function App() {
   return (
@@ -33,6 +34,10 @@ function App() {
           <p>계절이 지나가는 하늘에는</p>
           <a>계절이 지나가는 하늘에는</a>
           <span className="dummy block">계절이 지나가는 하늘에는</span>
+
+          <div className="w-full">
+            <PageNatation></PageNatation>
+          </div>
 
           <div className="w-[50%] flex flex-col flex-wrap">
             <Button size="long" variant="primary">

@@ -1,13 +1,13 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import EditInfo from "./EditInfo";
-import MedicalList from "./MedicalList";
-import ReviewHistory from "./ReviewHistory";
-import ReservationList from "./ReservationList";
-import ReviewForm from "./ReviewForm";
-import DentistReview from "../shared/DentistReview";
-import { Link } from "react-router-dom";
-import Footer from "../../../componetns/footer";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import EditInfo from './EditInfo';
+import MedicalList from './MedicalList';
+import ReviewHistory from './ReviewHistory';
+import ReservationList from './ReservationList';
+import ReviewForm from './ReviewForm';
+import DentistReview from '../shared/DentistReview';
+import { Link } from 'react-router-dom';
+import Footer from '../../../componetns/footer';
 
 function Mypage() {
   return (
@@ -17,8 +17,8 @@ function Mypage() {
         style={{
           backgroundImage:
             'url("https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/MyPageIMG.png")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
         <span>김훈규님의 건강을 위한 공간입니다</span>
@@ -51,7 +51,7 @@ function Mypage() {
               to="./mypage/EditInfo"
               className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
-              후기 기록
+              후기 기록2
             </Link>
           </div>
         </div>

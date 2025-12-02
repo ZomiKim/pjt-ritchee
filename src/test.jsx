@@ -1,6 +1,6 @@
-import Button from "./componetns/Button";
-import Footer from "./componetns/footer";
-import Nav from "./componetns/Nav";
+import Button from './componetns/Button';
+import Footer from './componetns/footer';
+import Nav from './componetns/Nav';
 
 function App() {
   return (

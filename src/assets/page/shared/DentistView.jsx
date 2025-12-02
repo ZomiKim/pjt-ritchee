@@ -14,11 +14,6 @@ function DentistView() {
       </div>
 
       <div className="wrap" style={{ margin: 0, padding: 0 }}>
-        {/* <img
-          src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
-          alt=""
-          className="mb-[50px] "
-        /> */}
         <div className="py-5 pl-[3px] mb-7.5">
           <div className="hospitalTitle flex mb-5 justify-between">
             <h4 className="tit">
@@ -26,7 +21,10 @@ function DentistView() {
               병원명
             </h4>
             <div className="bg-point rounded-md w-6 h-6 flex justify-center items-center mt-[3px] p-3">
-              <span className="material-icons text-white" style={{ fontSize: '20px' }}>
+              <span
+                className="material-icons text-white"
+                style={{ fontSize: '20px' }}
+              >
                 location_on
               </span>
             </div>
@@ -35,37 +33,56 @@ function DentistView() {
             <div className="detail h-[100px] mb-5">
               <div className="addr flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                  <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+                  <span
+                    className="material-icons text-white"
+                    style={{ fontSize: '14px' }}
+                  >
                     location_on
                   </span>
                 </div>
                 <div className="dummy text-gray-deep">
-                  주소 : 서울시 구로구 구로동 구로디지털로32-58 가길 25 티엠타운빌딩 1층 505호
+                  주소 : 서울시 구로구 구로동 구로디지털로32-58 가길 25
+                  티엠타운빌딩 1층 505호
                 </div>
               </div>
               <div className="tel flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                  <div className="material-icons text-white" style={{ fontSize: '14px' }}>
+                  <div
+                    className="material-icons text-white"
+                    style={{ fontSize: '14px' }}
+                  >
                     access_time_filled
                   </div>
                 </div>
-                <span className="dummy text-gray-deep">진료 시간 : 09 : 00 ~ 18 : 00</span>
+                <span className="dummy text-gray-deep">
+                  진료 시간 : 09 : 00 ~ 18 : 00
+                </span>
               </div>
               <div className="review flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                  <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+                  <span
+                    className="material-icons text-white"
+                    style={{ fontSize: '14px' }}
+                  >
                     restaurant
                   </span>
                 </div>
-                <div className="dummy text-gray-deep">점심 시간 : 09 : 00 ~ 18 : 00</div>
+                <div className="dummy text-gray-deep">
+                  점심 시간 : 09 : 00 ~ 18 : 00
+                </div>
               </div>
               <div className="etc flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                  <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+                  <span
+                    className="material-icons text-white"
+                    style={{ fontSize: '14px' }}
+                  >
                     local_parking
                   </span>
                 </div>
-                <div className="dummy text-gray-deep">주차 : 건물 지하 2층 차단기 통과 후 이용 가능</div>
+                <div className="dummy text-gray-deep">
+                  주차 : 건물 지하 2층 차단기 통과 후 이용 가능
+                </div>
               </div>
             </div>
             <div className="flex justify-between">

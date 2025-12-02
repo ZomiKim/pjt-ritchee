@@ -8,7 +8,7 @@ import Mypage from './assets/page/mypage/Mypage';
 import Event from './assets/page/event/Event';
 import Map from './assets/page/shared/Map';
 import Member from './assets/member/Member';
-import DentistView from './assets/page/shared/DentistView';
+import ReservationForm from './assets/page/shared/ReservationForm';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about/*" element={<About />} />
             <Route path="/dentistList/*" element={<DentList />} />
-            <Route path="/test/*" element={<DentistView />} />
+            <Route path="/test/*" element={<ReservationForm />} />
             <Route path="/mypage/*" element={<Mypage />} />
             <Route path="/event/*" element={<Event />} />
             <Route path="/map/*" element={<Map />} />

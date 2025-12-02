@@ -7,7 +7,6 @@ import ReservationList from "./ReservationList";
 import ReviewForm from "./ReviewForm";
 import DentistReview from "../shared/DentistReview";
 import { Link } from "react-router-dom";
-import Footer from "../../../componetns/footer";
 
 // 마이페이지 메인 화면 컴포넌트
 function MypageMain() {

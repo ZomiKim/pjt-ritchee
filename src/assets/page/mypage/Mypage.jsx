@@ -7,7 +7,8 @@ import ReservationList from './ReservationList';
 import ReviewForm from './ReviewForm';
 import DentistReview from '../shared/DentistReview';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+
+import Footer from '../../../componetns/footer';
 
 function Mypage() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ function Mypage() {
               to="../mypage/reviewHistory"
               className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
-              후기 기록
+              후기 기록2
             </Link>
           </div>
         </div>

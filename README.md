@@ -3,7 +3,7 @@ but it is not perfect
 
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules. jisung
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules. hanel
 
 Currently, two official plugins are available:
 

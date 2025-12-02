@@ -75,9 +75,13 @@ function Nav() {
           <div className="shrink-0">
             <Link
               to="/"
-              className="text-2xl font-bold text-main-01 hover:text-main-02 transition-colors duration-300"
+              className="block hover:opacity-80 transition-opacity duration-300"
             >
-              LOGO
+              <img
+                src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/logo_wh.png"
+                alt="logo"
+                className="h-10 w-auto"
+              />
             </Link>
           </div>
 

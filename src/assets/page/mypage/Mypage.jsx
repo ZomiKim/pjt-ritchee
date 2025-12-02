@@ -1,18 +1,16 @@
-import React from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
-import EditInfo from './EditInfo';
-import MedicalList from './MedicalList';
-import ReviewHistory from './ReviewHistory';
-import ReservationList from './ReservationList';
-import ReviewForm from './ReviewForm';
-import DentistReview from '../shared/DentistReview';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import EditInfo from "./EditInfo";
+import MedicalList from "./MedicalList";
+import ReviewHistory from "./ReviewHistory";
+import ReservationList from "./ReservationList";
+import ReviewForm from "./ReviewForm";
+import DentistReview from "../shared/DentistReview";
+import { Link } from "react-router-dom";
+import Footer from "../../../componetns/footer";
 
-import Footer from '../../../componetns/footer';
-
-function Mypage() {
-  const navigate = useNavigate();
-
+// 마이페이지 메인 화면 컴포넌트
+function MypageMain() {
   return (
     <>
       <div
@@ -20,65 +18,63 @@ function Mypage() {
         style={{
           backgroundImage:
             'url("https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/MyPageIMG.png")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <span>김훈규님의 건강을 위한 공간입니다</span>
       </div>
 
       <div className="wrap">
-        <div className="container ">
-          <div className="flex justify-center  gap-3 py-3">
+        <div className="container">
+          <div className="flex justify-center gap-3 py-3">
             <Link
-              to="../mypage/editInformation"
+              to="/mypage/editInformation"
               className="nav-link px-13 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
-              onClick={(e) => {
-                e.preventDefault();
-                navigate('/mypage/editInformation');
-              }}
             >
               회원 정보 수정
             </Link>
-
             <Link
-              to="../mypage/reservationList"
+              to="/mypage/reservationList"
               className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
-              예약 현황
+              예약 현황 23
             </Link>
           </div>
-
           <div className="flex justify-center gap-3 mb-[100px]">
             <Link
-              to="../mypage/medicalList"
-              className="nav-link  px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
+              to="/mypage/medicalList"
+              className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
               진료 기록
             </Link>
-
             <Link
-              to="../mypage/reviewHistory"
+              to="/mypage/reviewHistory"
               className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
-              후기 기록2
+              후기 기록
             </Link>
           </div>
         </div>
       </div>
-
-      <Routes>
-        <Route path="editInformation" element={<EditInfo />} />
-        <Route path="medicalList" element={<MedicalList />} />
-        <Route path="medicalList/reviewForm/:id" element={<ReviewForm />} />
-        <Route path="reviewHistory" element={<ReviewHistory />} />
-        <Route
-          path="reviewHistory/dentistReview/:id"
-          element={<DentistReview />}
-        />
-        <Route path="reservationList" element={<ReservationList />} />
-      </Routes>
     </>
+  );
+}
+
+function Mypage() {
+  return (
+    <Routes>
+      <Route path="/" element={<MypageMain />} />
+      <Route path="editInformation" element={<EditInfo />} />
+      <Route path="medicalList" element={<MedicalList />} />
+      <Route path="medicalList/reviewForm/:id" element={<ReviewForm />} />
+      <Route path="reviewHistory" element={<ReviewHistory />} />
+      <Route
+        path="reviewHistory/dentistReview/:id"
+        element={<DentistReview />}
+      />
+      <Route path="reservationList" element={<ReservationList />} />
+    </Routes>
   );
 }
 

@@ -138,6 +138,7 @@ a {
   display: flex;
   flex-direction: column;
   background: var(--color-white);
+  overflow: hidden;
 }
 
 .container {

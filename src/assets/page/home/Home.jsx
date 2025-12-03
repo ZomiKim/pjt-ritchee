@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import supabase from "../../utils/supabase";
+import Button from "../../../componetns/Button";
 
 function Home() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [hospitals, setHospitals] = useState([]);
 
@@ -126,7 +129,7 @@ function Home() {
         </div>
       </div>
 
-      <section className="sect2 mt-3 mb-7 myBg w-[96vw] lg:w-[100vw] bg-light-02">
+      <section className="sect2 mt-3  myBg w-[96vw] lg:w-[100vw] bg-light-02">
         {/* 탭 버튼 */}
         <div className="flex">
           <button
@@ -269,6 +272,12 @@ function Home() {
             )}
           </div>
         </div>
+
+          <div className="w-[90%] flex justify-center mx-auto pb-6 mb-[50px]">
+            <Button size="long" variant="primary" onClick={() => navigate("/dentistList")}>
+              더보기
+            </Button>
+          </div>
       </section>
     </>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import SignIn from "./SignIn";
-import SingUp from "./SingUP";
+import SignUp from "./SignUp";
 
 function Member() {
   return (
@@ -11,7 +11,7 @@ function Member() {
       <Routes>
         <Route index element={<SignIn />} />
         <Route path="signin" element={<SignIn />} />
-        <Route path="signup" element={<SingUp />} />
+        <Route path="signup" element={<SignUp />} />
       </Routes>
     </>
   );

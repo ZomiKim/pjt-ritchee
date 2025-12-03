@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function Home() {
+  const [activeTab, setActiveTab] = useState(0);
+
   useEffect(() => {
     const swiper = new window.Swiper(".home-swiper", {
       slidesPerView: 1,
@@ -61,11 +63,11 @@ function Home() {
       <div className="wrap">
         <div className="container">
           <h4 className="tit">
-            <span className="material-icons">star_outline</span>
-            타이틀 테스트
+            <i className="fa-solid fa-crown"></i>
+            릿치 랭킹 인기 병원
           </h4>
 
-          <section className="sect1 w-full mt-3">
+          <section className="sect1 w-full mt-3 mb-7">
             <div className="flex flex-row justify-between w-full gap-4">
               <div className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden">
                 <div className="w-full h-[150px] md:h-[300px] overflow-hidden rounded-[10px]">
@@ -103,6 +105,61 @@ function Home() {
           </section>
         </div>
       </div>
+
+      <section className="sect2 mt-3 mb-7 myBg w-[96vw] lg:w-[100vw]">
+        {/* 탭 버튼 */}
+        <div className="flex">
+          <button
+            onClick={() => setActiveTab(0)}
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+              activeTab === 0
+                ? "bg-main-02 text-white"
+                : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"
+            }`}
+          >
+            별점 높은 순
+          </button>
+          <button
+            onClick={() => setActiveTab(1)}
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+              activeTab === 1
+                ? "bg-main-02 text-white"
+                : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"
+            }`}
+          >
+            리뷰 많은 순
+          </button>
+          <button
+            onClick={() => setActiveTab(2)}
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+              activeTab === 2
+                ? "bg-main-02 text-white"
+                : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"
+            }`}
+          >
+            댓글 많은 순
+          </button>
+        </div>
+
+        {/* 탭 콘텐츠 */}
+        <div className="py-6">
+          {activeTab === 0 && (
+            <div className="text-center text-deep p-6 bg-light-01 rounded-[10px]">
+              탭 1 콘텐츠
+            </div>
+          )}
+          {activeTab === 1 && (
+            <div className="text-center text-deep p-6 bg-main-01 rounded-[10px]">
+              탭 2 콘텐츠
+            </div>
+          )}
+          {activeTab === 2 && (
+            <div className="text-center text-white p-6 bg-main-02 rounded-[10px]">
+              탭 3 콘텐츠
+            </div>
+          )}
+        </div>
+      </section>
     </>
   );
 }

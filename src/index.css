@@ -109,6 +109,16 @@ body {
   overflow-x: hidden;
 }
 
+/* 스크롤바 숨기기 */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 body {
   font-family: var(--font-sans) !important;
 }

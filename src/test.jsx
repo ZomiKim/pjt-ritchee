@@ -1,7 +1,7 @@
-import Button from "./componetns/Button";
-import Footer from "./componetns/footer";
-import Nav from "./componetns/Nav";
-import PageNatation from "./componetns/PageNatation";
+import Button from './componetns/Button';
+import Footer from './componetns/footer';
+import Nav from './componetns/Nav';
+import PageNatation from './componetns/PageNatation';
 
 function App() {
   return (

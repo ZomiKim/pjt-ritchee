@@ -30,13 +30,13 @@ function MypageMain() {
           <div className="flex justify-center gap-3 py-3">
             <Link
               to="/mypage/editInformation"
-              className="nav-link px-13 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
+              className="nav-link px-6 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
               회원 정보 수정
             </Link>
             <Link
               to="/mypage/reservationList"
-              className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
+              className="nav-link px-10 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
               예약 현황
             </Link>
@@ -44,13 +44,13 @@ function MypageMain() {
           <div className="flex justify-center gap-3 mb-[100px]">
             <Link
               to="/mypage/medicalList"
-              className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
+              className="nav-link px-10 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
               진료 기록
             </Link>
             <Link
               to="/mypage/reviewHistory"
-              className="nav-link px-17 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
+              className="nav-link px-10 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
               후기 기록
             </Link>

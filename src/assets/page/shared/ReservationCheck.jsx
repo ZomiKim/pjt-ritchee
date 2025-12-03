@@ -9,11 +9,11 @@ function ReservationCheck() {
   return (
     <>
       {/* 환자 전용 */}
-      {/* <div className="myBg bg-light-02 h-screen mb-[50px]">
+      <div className="myBg bg-light-02 h-screen mb-[50px]">
         <div className="wrap" style={{ backgroundColor: '#f4f8ff' }}>
           <div className="container">
             <h4 className="reservationTitle tit mb-5">
-              <span class="material-icons">access_alarm</span>
+              <span className="material-icons">access_alarm</span>
               김훈규 님의 예약 내역
             </h4>
             <div className="px-3.5 py-5 mb-7.5 bg-white border border-main-01 rounded-[5px]">
@@ -36,13 +36,13 @@ function ReservationCheck() {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
       {/* 의료진 전용 */}
-      <div className="myBg bg-main-01 h-screen mb-[50px]">
+      {/* <div className="myBg bg-main-01 h-screen mb-[50px]">
         <div className="wrap" style={{ backgroundColor: '#a1c5ff' }}>
           <div className="container">
             <h4 className="reservationTitle tit mb-5">
-              <span class="material-icons">health_and_safety</span>
+              <span className="material-icons">health_and_safety</span>
               소견서 작성
             </h4>
             <form>
@@ -69,7 +69,7 @@ function ReservationCheck() {
             </form>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Please refer to
     
       /map/reservationForm/reservationCheck?id=1

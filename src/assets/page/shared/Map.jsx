@@ -1,19 +1,20 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import ReservationForm from "./ReservationForm";
-import ReservationCheck from "./ReservationCheck";
+import React from 'react';
+import MapPage from './MapPage';
+import { Route, Routes } from 'react-router-dom';
+import ReservationCheck from './ReservationCheck';
+import ReservationForm from './ReservationForm';
 
-function Map() {
+const Map = () => {
   return (
     <>
-      <div>Map</div>
-
       <Routes>
-        <Route path="reservationForm" element={<ReservationForm />} />
-        <Route path="reservationForm/reservationCheck" element={<ReservationCheck />} />
+        <Route index element={<MapPage />} />
+        <Route path="/" element={<MapPage />} />
+        <Route path="/reservationForm" element={<ReservationForm />} />
+        <Route path="/reservationForm/reservationCheck" element={<ReservationCheck />} />
       </Routes>
     </>
   );
-}
+};
 
 export default Map;

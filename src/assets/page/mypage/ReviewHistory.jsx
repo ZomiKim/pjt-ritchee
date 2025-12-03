@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 function ReviewHistory() {
   return (
     <>
-      <div>ReviewHistory</div>
+      <div>ReviewHistory 후기 기록</div>
     </>
   );
 }

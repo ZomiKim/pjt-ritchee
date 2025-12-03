@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 function ReservationList() {
   return (
     <>
-      <div>ReservationList</div>
+      <div>ReservationList 예약현황</div>
     </>
   );
 }

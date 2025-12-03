@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 function ReviewForm() {
   return (
     <>
-      <div>ReviewForm</div>
+      <div>ReviewForm 후기작성하기</div>
     </>
   );
 }

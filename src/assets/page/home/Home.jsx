@@ -14,11 +14,9 @@ function Home() {
       const { data, error } = await supabase
         .from("hospital")
         .select("*")
-        .limit(5);
+        .limit(6);
 
-      if (error) {
-        console.error("Error fetching hospitals:", error);
-      } else {
+      if (!error) {
         setHospitals(data);
       }
     };
@@ -171,14 +169,16 @@ function Home() {
           </h4>
 
           {/* 탭 콘텐츠 */}
-          <div className="py-6 flex flex-col gap-4">
+          <div className="py-6 flex flex-col md:flex-row md:flex-wrap md:justify-between gap-4">
             {activeTab === 0 &&
-              hospitals.map((hospital) => (
+              hospitals.map((hospital, index) => (
                 <div
                   key={hospital.h_code}
-                  className="tab_cont text-center text-deep p-6 bg-white rounded-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)]"
+                  className={`tab_cont text-center text-deep p-6 bg-white rounded-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] w-full md:w-[48%] lg:w-[30%] ${
+                    index === hospitals.length - 1 ? "hidden md:block" : ""
+                  }`}
                 >
-                  <div className="tab_cont_tit flex flex-row items-center">
+                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
                     <h4 className="tit mr-4" id="cardId">
                       <span className="material-icons">local_hospital</span>
                       {hospital.h_name || "병원명"}

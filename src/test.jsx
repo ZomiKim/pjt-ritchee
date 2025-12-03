@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 import Button from './componetns/Button';
-import Footer from './componetns/footer';
+import Footer from './componetns/Footer';
+
 import Nav from './componetns/Nav';
-=======
-import Button from "./componetns/Button";
-import Footer from "./componetns/footer";
-import Nav from "./componetns/Nav";
-import PageNatation from "./componetns/PageNatation";
->>>>>>> 767e80fc48734c3bc0de5644d3fc00de06d47ca2
+import PageNatation from './componetns/PageNatation';
 
 function App() {
   return (

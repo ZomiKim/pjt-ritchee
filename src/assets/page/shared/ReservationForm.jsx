@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../../../componetns/Button';
 import { Link, useLocation } from 'react-router-dom';
 import CalendarComp from './CalendarComp';
 import moment from 'moment';
+import axios from 'axios';
 
 // 요일 이름
 const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -92,12 +93,25 @@ function ReservationForm() {
   // [form 관련]
   const { search } = useLocation();
   const query = new URLSearchParams(search);
-  const hName = query.get('hospitalName');
+  const h_code = query.get('id');
+  const [hospital, setHospital] = useState({});
+
+  const fetch = async () => {
+    const { data, error } = await axios.get(
+      `http://localhost:8080/api/hs_info/${h_code}`
+    );
+
+    if (error) {
+      console.error('Single Hospital Info Fetch Error', error.message);
+      return;
+    }
+
+    setHospital(data);
+  };
 
   const [isCalendar, setIsCalendar] = useState(false);
   const [privacyChecked, setPrivacyChecked] = useState(false);
   const [formData, setFormData] = useState({
-    hospitalName: hName,
     hospitalSymptom: '',
     userName: '',
     gender: 'm',
@@ -120,6 +134,11 @@ function ReservationForm() {
   const submitHandler = (e) => {
     e.preventDefault();
   };
+
+  useEffect(() => {
+    fetch();
+  }, []);
+
   return (
     <>
       <div className="myBg bg-light-02">
@@ -140,7 +159,7 @@ function ReservationForm() {
                 outline-none placeholder-gray-mid rounded-sm text-[12px] bg-white 
                 w-full py-2.5 pl-3 pr-2 mb-[5px] 
                 border border-main-01 focus:border-main-02"
-                value={hName}
+                value={hospital.h_name ?? ''}
                 disabled
               />
               <input
@@ -160,44 +179,69 @@ function ReservationForm() {
               <div className="w-[130px] flex justify-between my-2.5 cursor-pointer">
                 <div
                   className="flex items-center gap-[5px]"
-                  onClick={() => setFormData((prev) => ({ ...prev, gender: 'm' }))}
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, gender: 'm' }))
+                  }
                 >
                   <span className="material-icons text-main-02">
-                    {formData.gender === 'm' ? 'radio_button_checked' : 'radio_button_unchecked'}
+                    {formData.gender === 'm'
+                      ? 'radio_button_checked'
+                      : 'radio_button_unchecked'}
                   </span>
                   <span className="male dummy">남</span>
                 </div>
                 <div
                   className="flex items-center gap-[5px]"
-                  onClick={() => setFormData((prev) => ({ ...prev, gender: 'f' }))}
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, gender: 'f' }))
+                  }
                 >
                   <span className="material-icons text-main-02">
-                    {formData.gender === 'f' ? 'radio_button_checked' : 'radio_button_unchecked'}
+                    {formData.gender === 'f'
+                      ? 'radio_button_checked'
+                      : 'radio_button_unchecked'}
                   </span>
                   <span className="female dummy">여</span>
                 </div>
               </div>
+              {/* 달력 */}
               <div className="relative">
                 <div
-                  className={`rounded-sm text-[12px] text-${selectedDate ? 'black' : 'gray-mid'} bg-white 
+                  className={`rounded-sm text-[12px] text-${
+                    selectedDate ? 'black' : 'gray-mid'
+                  } bg-white 
                   w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 
                   flex items-center gap-2 cursor-pointer`}
                   onClick={() => setIsCalendar((prev) => !prev)}
                 >
-                  <span className="material-icons text-[15px]!">edit_calendar</span>
-                  {selectedDate ? moment(selectedDate).format('YYYY년 MM월 DD일') : '날짜 선택'}
+                  <span className="material-icons text-[15px]!">
+                    edit_calendar
+                  </span>
+                  {selectedDate
+                    ? moment(selectedDate).format('YYYY년 MM월 DD일')
+                    : '날짜 선택'}
                 </div>
-                <div className={`${isCalendar ? '' : 'hidden'} absolute w-full z-10`}>
-                  <div className="w-full max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
+                <div
+                  className={`${
+                    isCalendar ? '' : 'hidden'
+                  } absolute w-full z-10`}
+                >
+                  <div className="w-full max-w-md  p-4 bg-white rounded-lg shadow-md">
                     {/* 헤더 */}
                     <div className="flex justify-between items-center mb-4">
-                      <button onClick={prevMonth} className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">
+                      <button
+                        onClick={prevMonth}
+                        className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer"
+                      >
                         {'<'}
                       </button>
                       <div className="font-bold text-lg">
                         {year} - {month + 1}
                       </div>
-                      <button onClick={nextMonth} className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">
+                      <button
+                        onClick={nextMonth}
+                        className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer"
+                      >
                         {'>'}
                       </button>
                     </div>
@@ -227,12 +271,16 @@ function ReservationForm() {
 
                         const dayOfWeek = date.getDay(); // 0:일, 6:토
                         const dateStr = moment(date).format('YYYY-MM-DD');
-                        const isHoliday = holidays.some((h) => h.date === dateStr);
+                        const isHoliday = holidays.some(
+                          (h) => h.date === dateStr
+                        );
 
                         // 텍스트 색상 결정
                         let textColor = '';
-                        if (dayOfWeek === 6) textColor = 'text-blue-500'; // 토요일은 파랑
-                        else if (dayOfWeek === 0 || isHoliday) textColor = 'text-red-500'; // 일요일 또는 공휴일 빨강
+                        if (dayOfWeek === 6)
+                          textColor = 'text-blue-500'; // 토요일은 파랑
+                        else if (dayOfWeek === 0 || isHoliday)
+                          textColor = 'text-red-500'; // 일요일 또는 공휴일 빨강
 
                         return (
                           <div
@@ -248,7 +296,8 @@ function ReservationForm() {
                               setSelectedDate(date);
                               setFormData((prev) => ({
                                 ...prev,
-                                reservationDate: moment(date).format('YYYY년 MM월 DD일'),
+                                reservationDate:
+                                  moment(date).format('YYYY년 MM월 DD일'),
                               }));
                             }}
                           >
@@ -285,21 +334,38 @@ function ReservationForm() {
               ></textarea>
               <div className="flex gap-[7px] select-none cursor-pointer">
                 {privacyChecked ? (
-                  <span className="material-icons text-main-02" onClick={() => setPrivacyChecked((prev) => !prev)}>
+                  <span
+                    className="material-icons text-main-02"
+                    onClick={() => setPrivacyChecked((prev) => !prev)}
+                  >
                     check_box
                   </span>
                 ) : (
-                  <span className="material-icons text-main-02" onClick={() => setPrivacyChecked((prev) => !prev)}>
+                  <span
+                    className="material-icons text-main-02"
+                    onClick={() => setPrivacyChecked((prev) => !prev)}
+                  >
                     check_box_outline_blank
                   </span>
                 )}
-                <label className="dummy text-gray-deep" onClick={() => setPrivacyChecked((prev) => !prev)}>
-                  병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료 후 관련 법령에 따라 보관 후 파기합니다.
+                <label
+                  className="dummy text-gray-deep"
+                  onClick={() => setPrivacyChecked((prev) => !prev)}
+                >
+                  병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료 후
+                  관련 법령에 따라 보관 후 파기합니다.
                 </label>
               </div>
-              <Button size="long" className={`mb-[50px] ${privacyChecked ? '' : 'opacity-50 cursor-not-allowed'}`}>
+              <Button
+                size="long"
+                className={`mb-[50px] ${
+                  privacyChecked ? '' : 'opacity-50 cursor-not-allowed'
+                }`}
+              >
                 <Link
-                  className={`w-full ${privacyChecked ? '' : 'pointer-events-none'}`}
+                  className={`w-full ${
+                    privacyChecked ? '' : 'pointer-events-none'
+                  }`}
                   to={`/map/reservationForm/reservationCheck`}
                 >
                   예약하기

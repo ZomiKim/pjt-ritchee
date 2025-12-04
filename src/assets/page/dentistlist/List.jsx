@@ -1,17 +1,41 @@
-import React, { useState } from 'react';
-import { useDent } from '../../../context/DentContext';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DentCard from './DentCard';
 import PageNatation from '../../../componetns/PageNatation';
+import axios from 'axios';
 
 const List = () => {
-  const { hospital } = useDent();
   const [inputValue, setInputValue] = useState('');
+  const [hospital, setHospital] = useState([]);
+
+  const fetch = async () => {
+    const { data, error } = await axios.get(
+      `http://localhost:8080/api/hs_evalpt?page=0&size=10`
+    );
+
+    if (error) {
+      console.error(
+        'Hospital order by avgEvaluationPoint Info Fetch Error',
+        error.message
+      );
+      return;
+    }
+    console.log(data.content);
+    setHospital(data.content);
+  };
+
+  useEffect(() => {
+    fetch();
+  }, []);
+
   return (
     <>
       <div className="myBg bg-light-02">
         <div className="wrap" style={{ backgroundColor: '#f4f8ff' }}>
-          <div className="container" style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+          <div
+            className="container"
+            style={{ paddingLeft: '5px', paddingRight: '5px' }}
+          >
             테스트 : {inputValue}
             <h4 className="tit mb-5">
               <i className="fa-solid fa-tooth"></i>
@@ -28,7 +52,10 @@ const List = () => {
                     onChange={(e) => setInputValue(e.target.value)}
                   />
                   <div className="searchBtn bg-main-02 w-5 h-5 p-3 rounded-full flex justify-center items-center absolute right-3.5 xl:cursor-pointer">
-                    <span className="material-icons text-white" style={{ fontSize: '17px' }}>
+                    <span
+                      className="material-icons text-white"
+                      style={{ fontSize: '17px' }}
+                    >
                       search
                     </span>
                   </div>

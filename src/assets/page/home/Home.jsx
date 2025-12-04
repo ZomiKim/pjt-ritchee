@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../componetns/Button";
-import { getHospitalsByRating } from "../../../api/hospitalApi_home";
+import {
+  getHospitalsByRating,
+  getHospitalsByReview,
+  getHospitalsByCommentCnt,
+  getTopHospitals,
+} from "../../../api/hospitalApi_home";
 
 function Home() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [hospitals, setHospitals] = useState([]);
+  const [hospitalsReview, setHospitalsReview] = useState([]);
+  const [hospitalsComment, setHospitalsComment] = useState([]);
+  const [topHospitals, setTopHospitals] = useState([]);
 
   // 별점 렌더링 함수
   const renderStars = (rating) => {
@@ -43,7 +51,7 @@ function Home() {
     return stars;
   };
 
-  // API에서 hospital 데이터 가져오기
+  // API에서 hospital 데이터 가져오기 (별점순)
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
@@ -56,6 +64,51 @@ function Home() {
     };
 
     fetchHospitals();
+  }, []);
+
+  // API에서 hospital 데이터 가져오기 (리뷰 많은 순)
+  useEffect(() => {
+    const fetchHospitalsReview = async () => {
+      try {
+        const data = await getHospitalsByReview(0, 6);
+        console.log(data);
+        setHospitalsReview(data.content || data);
+      } catch (error) {
+        console.error("Error fetching hospitals by review:", error);
+      }
+    };
+
+    fetchHospitalsReview();
+  }, []);
+
+  // API에서 hospital 데이터 가져오기 (댓글 많은 순)
+  useEffect(() => {
+    const fetchHospitalsComment = async () => {
+      try {
+        const data = await getHospitalsByCommentCnt(0, 6);
+        console.log(data);
+        setHospitalsComment(data.content || data);
+      } catch (error) {
+        console.error("Error fetching hospitals by comment:", error);
+      }
+    };
+
+    fetchHospitalsComment();
+  }, []);
+
+  // API에서 인기 병원 TOP 목록 가져오기
+  useEffect(() => {
+    const fetchTopHospitals = async () => {
+      try {
+        const data = await getTopHospitals(0, 3);
+        console.log(data);
+        setTopHospitals(data.content || data);
+      } catch (error) {
+        console.error("Error fetching top hospitals:", error);
+      }
+    };
+
+    fetchTopHospitals();
   }, []);
 
   useEffect(() => {
@@ -132,38 +185,21 @@ function Home() {
 
           <section className="sect1 w-full mt-3 mb-7">
             <div className="flex flex-row justify-between w-full gap-4">
-              <div className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden">
-                <div className="w-full h-[150px] md:h-[300px] overflow-hidden rounded-[10px]">
-                  <img
-                    src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
-                    alt="img"
-                    className="w-full h-full object-cover"
-                  />
+              {topHospitals.map((hospital) => (
+                <div
+                  key={hospital.h_code}
+                  className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden"
+                >
+                  <div className="w-full h-[150px] md:h-[300px] overflow-hidden rounded-[10px]">
+                    <img
+                      src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
+                      alt="img"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="mt-2">{hospital.h_name || "병원명"}</span>
                 </div>
-                <span className="mt-2">이튼튼치과</span>
-              </div>
-
-              <div className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden">
-                <div className="w-full h-[150px] md:h-[300px] overflow-hidden rounded-[10px]">
-                  <img
-                    src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
-                    alt="img"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <span className="mt-2">이튼튼치과</span>
-              </div>
-
-              <div className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden">
-                <div className="w-full h-[150px] md:h-[300px] overflow-hidden rounded-[10px]">
-                  <img
-                    src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
-                    alt="img"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <span className="mt-2">이튼튼치과</span>
-              </div>
+              ))}
             </div>
           </section>
         </div>
@@ -206,12 +242,20 @@ function Home() {
 
         <div className="container">
           <h4 className="tit mt-8">
-            <span className="material-icons">star</span>
-            별점 높은 병원 순위
+            <span className="material-icons">
+              {activeTab === 0 && "star"}
+              {activeTab === 1 && "edit"}
+              {activeTab === 2 && "chat"}
+            </span>
+            {activeTab === 0 && "별점 높은 병원 순위"}
+            {activeTab === 1 && "리뷰 많은 병원 순위"}
+            {activeTab === 2 && "댓글 많은 병원 순위"}
           </h4>
 
           {/* 탭 콘텐츠 */}
           <div className="py-6 flex flex-col md:flex-row md:flex-wrap md:justify-between gap-4">
+            {/* tab1 start */}
+
             {activeTab === 0 &&
               hospitals.map((hospital, index) => (
                 <div
@@ -281,7 +325,7 @@ function Home() {
                         </span>
                       </div>
                       <span className="dummy text-gray-deep">
-                        진료 이용 후기 888건
+                        진료 이용 후기 {hospital.comment_cnt || 0}건
                       </span>
                     </li>
                     <li className="flex items-start gap-[5px]">
@@ -301,20 +345,198 @@ function Home() {
                   </ul>
                 </div>
               ))}
-            {activeTab === 1 && (
-              <div className="text-center text-deep p-6 bg-main-01 rounded-[4px]">
-                탭 2 콘텐츠
-              </div>
-            )}
-            {activeTab === 2 && (
-              <div className="text-center text-white p-6 bg-main-02 rounded-[4px]">
-                탭 3 콘텐츠
-              </div>
-            )}
+
+            {/* tab2 start */}
+
+            {activeTab === 1 &&
+              hospitalsReview.map((hospital, index) => (
+                <div
+                  key={hospital.h_code}
+                  className={`tab_cont text-center text-deep p-6 bg-white rounded-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] w-full md:w-[48%] lg:w-[30%] ${
+                    index === hospitalsReview.length - 1
+                      ? "hidden md:block"
+                      : ""
+                  }`}
+                >
+                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
+                    <h4 className="tit mr-4" id="cardId">
+                      <span className="material-icons">local_hospital</span>
+                      {hospital.h_name || "병원명"}
+                    </h4>
+
+                    <div className="stars flex flex-row text-point items-center">
+                      <span className="mr-1">
+                        {hospital.avg_eval_pt?.toFixed(1)}
+                      </span>
+                      <div className="flex flex-row text-point items-center">
+                        {renderStars(hospital.avg_eval_pt || 0)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="cardImg rounded-[10px] overflow-hidden mt-5">
+                    <img
+                      src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
+                      alt="img"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <ul className="cardList text-left mt-4" id="cardList">
+                    <li className="flex items-start gap-[5px] mb-[5px]">
+                      <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5 shrink-0 mt-[2px]">
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: "14px" }}
+                        >
+                          location_on
+                        </span>
+                      </div>
+                      <span className="dummy text-gray-deep">
+                        {hospital.h_addr || "주소 없음"}
+                      </span>
+                    </li>
+                    <li className="flex items-center gap-[5px] mb-[5px]">
+                      <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5 shrink-0">
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: "14px" }}
+                        >
+                          phone
+                        </span>
+                      </div>
+                      <span className="dummy text-gray-deep">
+                        {hospital.h_tel1 || "전화번호 없음"}
+                      </span>
+                    </li>
+                    <li className="flex items-center gap-[5px] mb-[5px]">
+                      <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5 shrink-0">
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: "14px" }}
+                        >
+                          edit_calendar
+                        </span>
+                      </div>
+                      <span className="dummy text-gray-deep">
+                        진료 이용 후기 {hospital.comment_cnt || 0}건
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-[5px]">
+                      <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5 shrink-0 mt-[2px]">
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: "14px" }}
+                        >
+                          description
+                        </span>
+                      </div>
+                      <span className="dummy text-gray-deep mt-0.5">
+                        {hospital.h_park_yn || "내용 없음"}, &nbsp;
+                        {hospital.h_bigo || "내용 없음"}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              ))}
+
+            {/* tab3 start */}
+
+            {activeTab === 2 &&
+              hospitalsComment.map((hospital, index) => (
+                <div
+                  key={hospital.h_code}
+                  className={`tab_cont text-center text-deep p-6 bg-white rounded-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] w-full md:w-[48%] lg:w-[30%] ${
+                    index === hospitalsComment.length - 1
+                      ? "hidden md:block"
+                      : ""
+                  }`}
+                >
+                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
+                    <h4 className="tit mr-4" id="cardId">
+                      <span className="material-icons">local_hospital</span>
+                      {hospital.h_name || "병원명"}
+                    </h4>
+
+                    <div className="stars flex flex-row text-point items-center">
+                      <span className="mr-1">
+                        {hospital.avg_eval_pt?.toFixed(1)}
+                      </span>
+                      <div className="flex flex-row text-point items-center">
+                        {renderStars(hospital.avg_eval_pt || 0)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="cardImg rounded-[10px] overflow-hidden mt-5">
+                    <img
+                      src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
+                      alt="img"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <ul className="cardList text-left mt-4" id="cardList">
+                    <li className="flex items-start gap-[5px] mb-[5px]">
+                      <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5 shrink-0 mt-[2px]">
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: "14px" }}
+                        >
+                          location_on
+                        </span>
+                      </div>
+                      <span className="dummy text-gray-deep">
+                        {hospital.h_addr || "주소 없음"}
+                      </span>
+                    </li>
+                    <li className="flex items-center gap-[5px] mb-[5px]">
+                      <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5 shrink-0">
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: "14px" }}
+                        >
+                          phone
+                        </span>
+                      </div>
+                      <span className="dummy text-gray-deep">
+                        {hospital.h_tel1 || "전화번호 없음"}
+                      </span>
+                    </li>
+                    <li className="flex items-center gap-[5px] mb-[5px]">
+                      <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5 shrink-0">
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: "14px" }}
+                        >
+                          edit_calendar
+                        </span>
+                      </div>
+                      <span className="dummy text-gray-deep">
+                        진료 이용 후기 {hospital.comment_cnt || 0}건
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-[5px]">
+                      <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5 shrink-0 mt-[2px]">
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: "14px" }}
+                        >
+                          description
+                        </span>
+                      </div>
+                      <span className="dummy text-gray-deep mt-0.5">
+                        {hospital.h_park_yn || "내용 없음"}, &nbsp;
+                        {hospital.h_bigo || "내용 없음"}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              ))}
           </div>
         </div>
 
-        <div className="w-[90%] flex justify-center mx-auto pb-6 mb-[50px]">
+        <div className="w-[90%] md:w-[50%] lg:w-[30%] flex justify-center mx-auto pb-6 mb-[50px]">
           <Button
             size="long"
             variant="primary"

@@ -18,6 +18,7 @@ function MypageMain() {
         style={{
           backgroundImage:
             'url("https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/MyPageIMG.png")',
+
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

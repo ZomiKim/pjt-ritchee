@@ -157,14 +157,14 @@ function EditInfo() {
                   onClick={() => setChecked(!checked)}
                   className="flex items-top gap-2 cursor-pointer select-none mb-6 "
                 >
-                  <span className="material-icons  text-main-02  mt-0.5">
+                  <span className="material-icons  text-main-02  mt-0">
                     {checked ? 'check_box' : 'check_box_outline_blank'}
                   </span>
 
                   {/* <span className="text-gray-800">
                   {checked ? '체크됨' : '체크 안됨'}
                 </span> */}
-                  <span className="text-gray-mid">
+                  <span className="text-gray-mid dummy">
                     병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료
                     후 관련 법령에 따라 보관 후 파기합니다.
                   </span>

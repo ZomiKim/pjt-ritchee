@@ -7,12 +7,13 @@ function ReservationList() {
     <>
       <div className="min-h-screen bg-light-02 myBg px-4 py-2 text-sm md:px-6 md:py-3 md:text-base lg:px-8 lg:py-4 lg:text-lg">
         <div className="container  flex flex-col items-center">
-          <div className="p-5">
+          <div className="w-full max-w-xl mx-auto p-5">
             <h4 className="tit  my-5 mt-10">
               <span className="material-icons">alarm</span>
               김훈규 님의 예약 내역
             </h4>
-            <div className="border p-4 rounded-lg mb-5 bg-white text-gray-200 shadow-lg ">
+
+            <div className="w-full max-w-xl mx-auto border p-4 rounded-lg mb-5 bg-white text-gray-200 shadow-lg ">
               <ul className="pl-1 space-y-2 text-gray-500">
                 <h4 className="tit my-3 mt-3 ">
                   <span className="material-icons ">local_hospital</span>

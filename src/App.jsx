@@ -10,6 +10,7 @@ import Event from './assets/page/event/Event';
 import Member from './assets/member/Member';
 import { DentProvider } from './context/DentContext';
 import Map from './assets/page/shared/Map';
+import CalendarComp from './assets/page/shared/CalendarComp';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
               }
             />
             <Route path="/mypage/*" element={<Mypage />} />
+            <Route path="/test/*" element={<CalendarComp />} />
             <Route path="/event/*" element={<Event />} />
             <Route
               path="/map/*"

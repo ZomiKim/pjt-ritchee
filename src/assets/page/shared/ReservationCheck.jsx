@@ -9,9 +9,9 @@ function ReservationCheck() {
   return (
     <>
       {/* 환자 전용 */}
-      <div className="myBg bg-light-02 h-screen mb-[50px]">
-        <div className="wrap" style={{ backgroundColor: '#f4f8ff' }}>
-          <div className="container">
+      <div className="myBg bg-light-02 h-screen ">
+        <div className="wrap pl-1.5" style={{ backgroundColor: '#f4f8ff' }}>
+          <div className="reservation container">
             <h4 className="reservationTitle tit mb-5">
               <span className="material-icons">access_alarm</span>
               김훈규 님의 예약 내역
@@ -74,7 +74,7 @@ function ReservationCheck() {
     
       /map/reservationForm/reservationCheck?id=1
     */}
-      <div>{id ? `${id} 님의 예약 내역 확인` : '예약 내역 확인'}</div>
+      {/* <div>{id ? `${id} 님의 예약 내역 확인` : '예약 내역 확인'}</div> */}
     </>
   );
 }

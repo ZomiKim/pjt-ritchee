@@ -21,15 +21,19 @@ function DentistView() {
   return (
     <>
       <div className="myBg">
-        <img src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png" alt="" />
+        <img
+          src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
+          alt=""
+          className="w-full"
+        />
       </div>
 
       <div className="wrap">
-        <div className="py-5 pl-[3px] mb-7.5">
-          <div className="hospitalTitle flex mb-5 justify-between">
+        <div className="pb-5 pl-[3px] mb-7.5">
+          <div className="hospitalTitle flex mb-5 justify-between xl:justify-normal xl:gap-5">
             <h4 className="tit">
               <span className="material-icons">local_hospital</span>
-              {hospital.h_name}
+              {hospital.h_name || '병원명'}
             </h4>
             <Link
               to={`/map?id=${h_code}`}
@@ -41,7 +45,7 @@ function DentistView() {
             </Link>
           </div>
           <div className="hospitalBody">
-            <div className="detail h-[100px] mb-5">
+            <div className="detail h-[100px]">
               <div className="addr flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
                   <span className="material-icons text-white" style={{ fontSize: '14px' }}>
@@ -75,14 +79,24 @@ function DentistView() {
                 <div className="dummy text-gray-deep">주차 : 건물 지하 2층 차단기 통과 후 이용 가능</div>
               </div>
             </div>
-            <div className="flex justify-between">
-              <Button size="mid">
-                <Link className="w-full" to={`../../map/reservationForm`}>
+            <div className="flex justify-between xl:justify-normal xl:gap-5">
+              {/* mb */}
+              <Button size="mid" className="xl:hidden">
+                <Link className="w-full" to={`../../map/reservationForm?hospitalName=${hospital.h_name}`}>
                   예약하기
                 </Link>
               </Button>
-              <Button size="mid">
+              <Button size="mid" className="xl:hidden">
                 <Link className="w-full">전화하기</Link>
+              </Button>
+              {/* pc */}
+              <Button size="short" className="hidden xl:block">
+                <Link className="block w-full" to={`../../map/reservationForm?hospitalName=${hospital.h_name}`}>
+                  예약하기
+                </Link>
+              </Button>
+              <Button size="short" className="hidden xl:block">
+                <Link className="block w-full">전화하기</Link>
               </Button>
             </div>
           </div>

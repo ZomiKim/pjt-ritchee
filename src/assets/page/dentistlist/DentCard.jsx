@@ -1,12 +1,12 @@
 import React from 'react';
 
-const DentCard = ({ child }) => {
+const DentCard = ({ hospital }) => {
   return (
     <div className="bg-white py-6 px-3 rounded-sm mb-5" style={{ boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px' }}>
-      <div className="hospitalTitle flex mb-5 gap-2.5">
-        <h4 className="tit">
+      <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start mb-5">
+        <h4 className="tit mr-4" id="cardId">
           <span className="material-icons">local_hospital</span>
-          {child.h_name}
+          {hospital.h_name || '병원명'}
         </h4>
         <div className="stars flex flex-row text-point items-center">
           <span className="mr-1">4.4</span>
@@ -19,7 +19,8 @@ const DentCard = ({ child }) => {
           </div>
         </div>
       </div>
-      <div className="hospitalBody mb-[25px]">
+
+      <div className="hospitalBody">
         <div className="image rounded-sm overflow-hidden">
           <img
             src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/TESTIMG.png"
@@ -34,7 +35,7 @@ const DentCard = ({ child }) => {
                 location_on
               </span>
             </div>
-            <div className="dummy text-gray-deep">{child.h_addr}</div>
+            <div className="dummy text-gray-deep">{hospital.h_addr}</div>
           </div>
           <div className="tel flex gap-[5px] mb-[5px]">
             <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center p-2.5">
@@ -43,7 +44,7 @@ const DentCard = ({ child }) => {
               </div>
             </div>
             <span className="dummy text-gray-deep">
-              {child.h_tel1} / {child.h_tel2}
+              {hospital.h_tel1} / {hospital.h_tel2}
             </span>
           </div>
           <div className="review flex gap-[5px] mb-[5px]">

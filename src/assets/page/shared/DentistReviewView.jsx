@@ -51,32 +51,38 @@ const DentistReviewView = () => {
           </div>
         </div>
       </div>
-      <div className="comments myBg bg-light-02 mb-[50px]">
-        {/* 기능 구현 시 map으로 <Comment />  예정*/}
-        <div className="comment dummy border border-y-main-01" style={{ padding: '14px 30px' }}>
-          <div className="commentContent mb-5">
-            이 후기 보고 저도 다녀왔는데 진짜 안아프게 잘 해주세요! 좋은 정보 넘넘 감사합니다~!
+      <ul className="comments">
+        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-y-main-01">
+          <div className="comment dummy px-[30px] py-3.5 ">
+            <div className="commentContent mb-5">
+              이 후기 보고 저도 다녀왔는데 진짜 안아프게 잘 해주세요! 좋은 정보 넘넘 감사합니다~!
+            </div>
+            <div className="commentEtc text-gray-deep flex justify-between">
+              <div className="commentWriter">작성자 : 김훈규</div>
+              <div className="commentCreatedAt">2025-02-11</div>
+            </div>
           </div>
-          <div className="commentEtc text-gray-deep flex justify-between">
-            <div className="commentWriter">작성자 : 김훈규</div>
-            <div className="commentCreatedAt">2025-02-11</div>
+        </li>
+
+        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-b-main-01 border-t-0">
+          <div className="comment dummy px-[30px] py-3.5 ">
+            <div className="commentContent mb-5">너무 상세히 적어준 좋은 후기 감사합니다~~~</div>
+            <div className="commentEtc text-gray-deep flex justify-between">
+              <div className="commentWriter">작성자 : 홍지승</div>
+              <div className="commentCreatedAt">2025-02-11</div>
+            </div>
           </div>
-        </div>
-        <div className="comment dummy border-b border-b-main-01" style={{ padding: '14px 30px' }}>
-          <div className="commentContent mb-5">너무 상세히 적어준 좋은 후기 감사합니다~~~</div>
-          <div className="commentEtc text-gray-deep flex justify-between">
-            <div className="commentWriter">작성자 : 홍지승</div>
-            <div className="commentCreatedAt">2025-02-11</div>
+        </li>
+        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-b-main-01 border-t-0">
+          <div className="comment dummy px-[30px] py-3.5 ">
+            <div className="commentContent mb-5">덕분에 좋은 정보 얻었습니다</div>
+            <div className="commentEtc text-gray-deep flex justify-between">
+              <div className="commentWriter">작성자 : 임윤섭</div>
+              <div className="commentCreatedAt">2025-02-11</div>
+            </div>
           </div>
-        </div>
-        <div className="comment dummy border-b border-b-main-01" style={{ padding: '14px 30px' }}>
-          <div className="commentContent mb-5">덕분에 좋은 정보 얻었습니다</div>
-          <div className="commentEtc text-gray-deep flex justify-between">
-            <div className="commentWriter">작성자 : 임윤섭</div>
-            <div className="commentCreatedAt">2025-02-11</div>
-          </div>
-        </div>
-      </div>
+        </li>
+      </ul>
     </>
   );
 };

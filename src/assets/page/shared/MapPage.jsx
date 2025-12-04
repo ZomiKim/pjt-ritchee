@@ -62,7 +62,7 @@ function MapPage() {
         center={location.center}
         isPanto={location.isPanto}
         level={0}
-        style={{ width: '100vw', height: h_code ? '50vh' : '100vh' }}
+        style={{ width: '100vw', height: h_code ? '50vh' : '93vh' }}
         className="myBg"
       >
         {hospital.map((h, i) => {

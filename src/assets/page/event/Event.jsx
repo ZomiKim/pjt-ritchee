@@ -6,6 +6,8 @@ import '../../../index.css';
 function Event() {
   const [select, setSelect] = useState(null);
 
+  const eventTexts = { fontSize: 'clamp(14px, 3vw, 32px)' };
+
   const selectClick = (id) => {
     setSelect(id);
   };
@@ -14,85 +16,132 @@ function Event() {
     return <EventView id={select} onBack={() => setSelect(null)} />;
   }
 
+  const eventData = [
+    {
+      eventId: 1,
+      imgMobile: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/event1.png',
+      imgTb: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/tevent1.jpg',
+      imgPc: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent1.jpg',
+      Info: true,
+    },
+    {
+      eventId: 2,
+      imgMobile: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/event2.png',
+      imgTb: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/tevent2.jpg',
+      imgPc: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent2.jpg',
+      // title: '사랑니 발치 이벤트',
+    },
+    {
+      eventId: 3,
+      imgMobile: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/event3.png',
+      imgTb: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/tevent3.jpg',
+      imgPc: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent3.jpg',
+      // title: '치아 교정 이벤트',
+    },
+    {
+      eventId: 4,
+      imgMobile: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/event4.png',
+      imgTb: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/tevent4.jpg',
+      imgPc: 'https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent4.jpg',
+      // title: '임플란트 이벤트',
+    },
+  ];
+
   return (
     <>
-      <div>
-        {/* 이벤트1 */}
-        <div onClick={() => selectClick(1)} >
-          <div>
-            <div className="w-full bg-amber-400 h-[30vh] myBg relative overflow-hidden">
-              <img
-                src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/mevent1.jpg"
-                alt="img"
-                className="block sm:hidden w-full h-full object-cover object-center"
-              />
+      {/* 모바일 */}
+      {eventData.map((item) => {
+        return (
+          <div key={item.eventId} onClick={() => selectClick(item.eventId)} className="myBg mb-5 md:hidden">
+            {/* 모바일 */}
+            <img src={item.imgMobile} alt="img" className="w-full h-full object-cover object-center" />
+
+            {item.Info && (
+              <div className="container block md:hidden">
+                <div className="flex items-center gap-[1.28vw] mt-[2.87vh] mb-5 md:hidden">
+                  <i className="fa-solid fa-tooth md:text-2xl lg:text-4xl xl:text-5xl text-deep"></i>
+                  <h4 className="font-Pretendard text-deep" style={{ fontSize: 'clamp(16px, 4vw, 44px)' }}>
+                    구로구 주민 이벤트
+                  </h4>
+                </div>
+
+                <p className="mb-[2.87vh] font-Pretendard" style={eventTexts}>
+                  구로구 주민 여러분을 위한 특별 치과 이벤트! 건강한 치아, 밝은 미소를 위한 무료 검진 및 스케일링 혜택을
+                  만나보세요. 예약은 선착순! 지금 바로 신청하세요.
+                </p>
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* 태블릿 */}
+      <div className="hidden md:block xl:hidden myBg">
+        <div className="overflow-hidden w-full h-[500px]">
+          <div onClick={() => selectClick(eventData[0].eventId)} className="w-full h-full cursor-pointer mb-6">
+            <img src={eventData[0].imgTb} alt="img" className="w-full h-full object-cover object-center" />
+          </div>
+        </div>
+
+        {eventData[0].Info && (
+          <div className="container">
+            <div className="flex items-center gap-4 my-5">
+              <i className="fa-solid fa-tooth text-4xl text-deep"></i>
+              <h4 className="font-Pretendard text-deep" style={{ fontSize: 'clamp(16px, 4vw, 44px)' }}>
+                구로구 주민 이벤트
+              </h4>
             </div>
+
+            <p className="font-Pretendard mb-6" style={eventTexts}>
+              구로구 주민 여러분을 위한 특별 치과 이벤트! 건강한 치아, 밝은 미소를 위한 무료 검진 및 스케일링 혜택을
+              만나보세요. 예약은 선착순! 지금 바로 신청하세요.
+            </p>
           </div>
-          <img
-            src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent1.jpg"
-            alt="img"
-            className="hidden sm:block myBg"
-          />
+        )}
+
+        <div className="grid grid-cols-2 gap-6 mb-6">
+          {eventData.slice(1).map((item) => {
+            return (
+              <div key={item.eventId} onClick={() => selectClick(item.eventId)}>
+                <img src={item.imgTb} alt="img" className="w-full object-cover object-center mb-5" />
+                {/* <h4 className="text-deep text-center mt-5">{item.title}</h4> */}
+              </div>
+            );
+          })}
         </div>
+      </div>
 
-
-        <div className="container">
-          {/* mt-[30px] -> mt-[2.87vh] */}
-          <div className="flex items-center gap-[1.28vw] mt-[2.87vh] mb-5 ">
-            <i className="fa-solid fa-tooth md:text-2xl lg:text-4xl xl:text-5xl text-deep"></i>
-            <h4 className="font-Pretendard text-deep" style={{ fontSize: 'clamp(16px, 4vw, 40px)' }}>
-              구로구 주민 이벤트
-            </h4>
+      {/* pc */}
+      <div className="hidden xl:block myBg">
+          <div onClick={() => selectClick(eventData[0].eventId)} className="w-full cursor-pointer mb-6">
+            <img src={eventData[0].imgPc} alt="img" className="w-full h-full object-cover object-center" />
           </div>
 
-          <p className="mb-[2.87vh] font-Pretendard" style={{ fontSize: 'clamp(12px, 3vw, 30px)' }}>
-            구로구 주민 여러분을 위한 특별 치과 이벤트! 건강한 치아, 밝은 미소를 위한 무료 검진 및 스케일링 혜택을
-            만나보세요. 예약은 선착순! 지금 바로 신청하세요.
-          </p>
-        </div>
+        {eventData[0].Info && (
+          <div className="container mt-6">
+            <div className="flex items-center gap-4 mt-[2.87vh] mb-4 ">
+              <i className="fa-solid fa-tooth text-4xl text-deep"></i>
+              <h4 className="font-Pretendard text-deep xl:text-7xl" style={{ fontSize: 'clamp(16px, 4vw, 44px)' }}>
+                구로구 주민 이벤트
+              </h4>
+            </div>
 
-        <div className="flex flex-col myBg">
-          <div onClick={() => selectClick(2)}>
-            <img
-              src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/event2.png"
-              alt="img"
-              className="block sm:hidden w-full h-full object-cover object-center mb-5"
-            />
-
-            <img
-              src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent2.jpg"
-              alt="img"
-              className="hidden sm:block mb-10"
-            />
+            <p className="font-Pretendard text-lg leading-relaxed mb-[2.87vh] " style={eventTexts}>
+              구로구 주민 여러분을 위한 특별 치과 이벤트! 건강한 치아, 밝은 미소를 위한 무료 검진 및 스케일링 혜택을
+              만나보세요. 예약은 선착순! 지금 바로 신청하세요.
+            </p>
           </div>
+        )}
 
-          <div onClick={() => selectClick(3)}>
-            <img
-              src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/event3.png"
-              alt="img"
-              className="block sm:hidden w-full h-full object-cover object-center mb-5"
-            />
-
-            <img
-              src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent3.jpg"
-              alt="img"
-              className="hidden sm:block mb-10"
-            />
-          </div>
-
-          <div onClick={() => selectClick(4)}>
-            <img
-              src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/event4.png"
-              alt="img"
-              className="block sm:hidden w-full h-full object-cover object-center mb-5"
-            />
-
-            <img
-              src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent4.jpg"
-              alt="img"
-              className="hidden sm:block mb-10"
-            />
-          </div>
+        <div className="hidden xl:grid xl:grid-cols-3 xl:gap-6 mb-15">
+          {eventData.slice(1).map((item) => {
+            return (
+              <div key={item.eventId} onClick={() => selectClick(item.eventId)}>
+                <img src={item.imgPc} alt="img" className="w-full object-cover object-center" />
+                {/* <h4 className="text-deep text-center mt-5">{item.title}</h4> */}
+              </div>
+            );
+          })}
         </div>
       </div>
 

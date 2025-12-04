@@ -1,23 +1,57 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import supabase from "../../utils/supabase";
 import Button from "../../../componetns/Button";
+import { getHospitalsByRating } from "../../../api/hospitalApi_home";
 
 function Home() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [hospitals, setHospitals] = useState([]);
 
-  // Supabase에서 hospital 데이터 가져오기
+  // 별점 렌더링 함수
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating); // 꽉 찬 별 개수
+    const hasHalfStar = rating % 1 >= 0.5; // 반 별 여부
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // 빈 별 개수
+
+    // 꽉 찬 별
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <span key={`full-${i}`} className="material-icons">
+          star
+        </span>
+      );
+    }
+    // 반 별
+    if (hasHalfStar) {
+      stars.push(
+        <span key="half" className="material-icons">
+          star_half
+        </span>
+      );
+    }
+    // 빈 별
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <span key={`empty-${i}`} className="material-icons">
+          star_outline
+        </span>
+      );
+    }
+
+    return stars;
+  };
+
+  // API에서 hospital 데이터 가져오기
   useEffect(() => {
     const fetchHospitals = async () => {
-      const { data, error } = await supabase
-        .from("hospital")
-        .select("*")
-        .limit(6);
-
-      if (!error) {
-        setHospitals(data);
+      try {
+        const data = await getHospitalsByRating(0, 6);
+        console.log(data);
+        setHospitals(data.content || data);
+      } catch (error) {
+        console.error("Error fetching hospitals:", error);
       }
     };
 
@@ -193,13 +227,11 @@ function Home() {
                     </h4>
 
                     <div className="stars flex flex-row text-point items-center">
-                      <span className="mr-1">4.4</span>
+                      <span className="mr-1">
+                        {hospital.avg_eval_pt?.toFixed(1)}
+                      </span>
                       <div className="flex flex-row text-point items-center">
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star_outline</span>
+                        {renderStars(hospital.avg_eval_pt || 0)}
                       </div>
                     </div>
                   </div>
@@ -261,8 +293,9 @@ function Home() {
                           description
                         </span>
                       </div>
-                      <span className="dummy text-gray-deep">
-                        {hospital.h_content || "내용 없음"}
+                      <span className="dummy text-gray-deep mt-0.5">
+                        {hospital.h_park_yn || "내용 없음"}, &nbsp;
+                        {hospital.h_bigo || "내용 없음"}
                       </span>
                     </li>
                   </ul>

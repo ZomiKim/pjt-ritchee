@@ -46,42 +46,42 @@ function Home() {
       <div className="relative w-full myBg">
         <div className="swiper home-swiper">
           <div className="swiper-wrapper">
-<div className="swiper-slide">
-               <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
-                 <img
-                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent1.jpg"
-                   alt="img"
-                   className="w-full h-full object-cover object-center lg:object-top"
-                 />
-               </div>
-             </div>
-             <div className="swiper-slide">
-               <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
-                 <img
-                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent2.jpg"
-                   alt="img"
-                   className="w-full h-full object-cover object-center lg:object-top"
-                 />
-               </div>
-             </div>
-             <div className="swiper-slide">
-               <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
-                 <img
-                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent3.jpg"
-                   alt="img"
-                   className="w-full h-full object-cover object-center lg:object-top"
-                 />
-               </div>
-             </div>
-             <div className="swiper-slide">
-               <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
-                 <img
-                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent4.jpg"
-                   alt="img"
-                   className="w-full h-full object-cover object-center lg:object-top"
-                 />
-               </div>
-             </div>
+            <div className="swiper-slide">
+              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+                <img
+                  src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent1.jpg"
+                  alt="img"
+                  className="w-full h-full object-cover object-center lg:object-top"
+                />
+              </div>
+            </div>
+            <div className="swiper-slide">
+              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+                <img
+                  src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent2.jpg"
+                  alt="img"
+                  className="w-full h-full object-cover object-center lg:object-top"
+                />
+              </div>
+            </div>
+            <div className="swiper-slide">
+              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+                <img
+                  src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent3.jpg"
+                  alt="img"
+                  className="w-full h-full object-cover object-center lg:object-top"
+                />
+              </div>
+            </div>
+            <div className="swiper-slide">
+              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+                <img
+                  src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent4.jpg"
+                  alt="img"
+                  className="w-full h-full object-cover object-center lg:object-top"
+                />
+              </div>
+            </div>
           </div>
           {/* 화살표 네비게이션 */}
           <div className="swiper-button-prev !text-white !w-12 !h-12 after:!text-2xl"></div>

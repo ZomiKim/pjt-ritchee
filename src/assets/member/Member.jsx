@@ -6,8 +6,6 @@ import SignUp from "./SignUp";
 function Member() {
   return (
     <>
-      <div>Member</div>
-
       <Routes>
         <Route index element={<SignIn />} />
         <Route path="signin" element={<SignIn />} />

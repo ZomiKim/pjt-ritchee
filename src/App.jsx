@@ -1,14 +1,14 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Nav from "./componetns/Nav";
-import Footer from "./componetns/Footer";
-import Home from "./assets/page/home/Home";
-import About from "./assets/page/about/About";
-import DentList from "./assets/page/dentistlist/DentList";
-import Mypage from "./assets/page/mypage/Mypage";
-import Event from "./assets/page/event/Event";
-import Map from "./assets/page/shared/Map";
-import Member from "./assets/member/Member";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Nav from './componetns/Nav';
+import Footer from './componetns/Footer';
+import Home from './assets/page/home/Home';
+import About from './assets/page/about/About';
+import DentList from './assets/page/dentistlist/DentList';
+import Mypage from './assets/page/mypage/Mypage';
+import Event from './assets/page/event/Event';
+import Member from './assets/member/Member';
+import Map from './assets/page/shared/Map';
 
 function App() {
   return (

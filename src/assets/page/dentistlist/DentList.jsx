@@ -1,17 +1,17 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import DentistView from "../shared/DentistView";
-import Map from "../shared/Map";
-import DentistReview from "../shared/DentistReview";
+import { Link, Route, Routes } from 'react-router-dom';
+import DentistView from '../shared/DentistView';
+import DentistReview from '../shared/DentistReview';
+import List from './List';
+import DentistReviewView from '../shared/DentistReviewView';
 
 function DentList() {
   return (
     <>
-      <div>DentList</div>
-
       <Routes>
-        <Route path="dentistView" element={<DentistView />} />
-        <Route path="dentistView/dentistReview" element={<DentistReview />} />
+        <Route index element={<List />} />
+        <Route path="/" element={<List />} />
+        <Route path="/dentistView/" element={<DentistView />} />
+        <Route path="/dentistView/dentistReview" element={<DentistReviewView />} />
       </Routes>
     </>
   );

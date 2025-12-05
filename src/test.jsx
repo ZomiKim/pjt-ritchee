@@ -1,5 +1,5 @@
 import Button from "./componetns/Button";
-import Footer from "./componetns/footer";
+import Footer from "./componetns/Footer";
 import Nav from "./componetns/Nav";
 import PageNatation from "./componetns/PageNatation";
 

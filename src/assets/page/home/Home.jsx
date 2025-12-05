@@ -236,7 +236,12 @@ function Home() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="mt-2">{hospital.h_name || "병원명"}</span>
+                  <span
+                    className="mt-2"
+                    style={{ fontSize: "clamp(12px, 1.5vw, 20px)" }}
+                  >
+                    {hospital.h_name || "병원명"}
+                  </span>
                 </div>
               ))}
             </div>

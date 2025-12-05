@@ -1,13 +1,12 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import EditInfo from "./EditInfo";
-import MedicalList from "./MedicalList";
-import ReviewHistory from "./ReviewHistory";
-import ReservationList from "./ReservationList";
-import ReviewForm from "./ReviewForm";
-import DentistReview from "../shared/DentistReview";
-import { Link } from "react-router-dom";
-import Footer from "../../../componetns/footer";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import EditInfo from './EditInfo';
+import MedicalList from './MedicalList';
+import ReviewHistory from './ReviewHistory';
+import ReservationList from './ReservationList';
+import ReviewForm from './ReviewForm';
+import DentistReview from '../shared/DentistReview';
+import { Link } from 'react-router-dom';
 
 // 마이페이지 메인 화면 컴포넌트
 function MypageMain() {
@@ -18,8 +17,8 @@ function MypageMain() {
         style={{
           backgroundImage:
             'url("https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/MyPageIMG.png")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
         <span>김훈규님의 건강을 위한 공간입니다</span>
@@ -69,10 +68,7 @@ function Mypage() {
       <Route path="medicalList" element={<MedicalList />} />
       <Route path="medicalList/reviewForm/:id" element={<ReviewForm />} />
       <Route path="reviewHistory" element={<ReviewHistory />} />
-      <Route
-        path="reviewHistory/dentistReview/:id"
-        element={<DentistReview />}
-      />
+      <Route path="reviewHistory/dentistReview/:id" element={<DentistReview />} />
       <Route path="reservationList" element={<ReservationList />} />
     </Routes>
   );

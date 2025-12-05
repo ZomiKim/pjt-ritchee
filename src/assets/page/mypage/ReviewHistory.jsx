@@ -5,7 +5,7 @@ import Footer from '../../../componetns/footer';
 function ReviewHistory() {
   return (
     <>
-      <div className="min-h-screen  mx-auto bg-light-02 myBg px-10  text-sm md:px-6 md:py-3 md:text-base lg:px-8 lg:py-4 lg:text-lg">
+      <div className="min-h-screen mx-auto  bg-light-02 myBg px-10  text-sm md:px-6 md:py-3 md:text-base lg:px-8 lg:py-4 lg:text-lg">
         {/* contianer start */}
 
         <div
@@ -15,13 +15,13 @@ function ReviewHistory() {
                 lg:max-w-3xl 
                 mx-auto"
         >
-          <h4 className="tit my-1 mt-10 mb-5">
+          <h4 className="tit md:mx-0 lg:mx-0 mx-auto my-1 mt-10 mb-5 lg:px-12 lg:py-4 lg:text-lg">
             <span className="material-icons">edit_calendar</span>
             김훈규 님의 작성 후기
           </h4>
 
-          <section className="sect_rev">
-            <div className="w-full max-w-2xl  border border-gray-200 shadow-lg p-5 md:p-5 rounded-lg mb-5 bg-white text-gray-200  ">
+          <section className="sect_rev ">
+            <div className="w-full  max-w-2xl mx-auto border border-gray-200 shadow-lg p-5 md:p-5 rounded-lg mb-5 bg-white text-gray-200  ">
               <p className="tit  mt-auto mb-3">
                 {/* <i className="fa-regular fa-solid fa-tooth  text-[12px]  p-1 rounded-full text-white bg-deep mb-0.5"></i> */}
                 의사 선생님이 친절해서 기분 좋았었네요!

@@ -14,7 +14,7 @@ function MypageMain() {
   return (
     <>
       <div
-        className="flex flex-col items-center justify-center text-white w-full h-[300px] md:h-[400px] lg:h-[500px] myBg"
+        className=" flex flex-col items-center justify-center text-white w-full h-[300px] md:h-[400px] lg:h-[500px] myBg"
         style={{
           backgroundImage:
             'url("https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/MyPageIMG.png")',

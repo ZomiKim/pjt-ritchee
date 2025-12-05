@@ -10,8 +10,8 @@ function SignUp() {
     name: "",
     birth: "",
     useremail: "",
-    userpwd: "",
-    userpwd1: "",
+    userpswd: "",
+    userpswd1: "",
     gender: "",
     phone: "",
     text: "",
@@ -38,10 +38,10 @@ function SignUp() {
   };
 
   const validation = () => {
-    if (formData.userpwd.length < 8 || formData.userpwd1.length < 8) {
+    if (formData.userpswd.length < 8 || formData.userpswd1.length < 8) {
       return "비밀번호는 8자리 이상이어야 합니다.";
     }
-    if (formData.userpwd !== formData.userpwd1) {
+    if (formData.userpswd !== formData.userpswd1) {
       return "비밀번호가 일치하지 않습니다.";
     }
     if (!/^\d{8}$/.test(formData.birth)) {
@@ -75,7 +75,7 @@ function SignUp() {
 
       const { data, error } = await signUp({
         email: formData.useremail,
-        password: formData.userpwd,
+        password: formData.userpswd,
         options: {
           data: {
             name: formData.name,
@@ -111,7 +111,10 @@ function SignUp() {
       </div>
       {/* PC 버전 */}
 
-      <form onSubmit={confirmHandler} className="flex flex-col items-center w-[90%] max-w-[480px] pb-30">
+      <form
+        onSubmit={confirmHandler}
+        className="flex flex-col items-center w-[90%] max-w-[480px] pb-30"
+      >
         <label htmlFor="name" className="sr-only">
           이름
         </label>
@@ -140,7 +143,9 @@ function SignUp() {
           onChange={eventHandler}
           required
           disabled={loading}
-          onInvalid={(e) => e.target.setCustomValidity("생년월일 8자리를 입력하세요.")}
+          onInvalid={(e) =>
+            e.target.setCustomValidity("생년월일 8자리를 입력하세요.")
+          }
           onInput={(e) => e.target.setCustomValidity("")}
           pattern="\d{8}"
           className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full max-w-[480px] py-2 px-3 mb-2 border border-main-01 focus:border-main-02"
@@ -161,35 +166,39 @@ function SignUp() {
           onInput={(e) => e.target.setCustomValidity("")}
           className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full max-w-[480px] py-2 px-3 mb-2 border border-main-01 focus:border-main-02"
         />
-        <label htmlFor="pwd" className="sr-only">
+        <label htmlFor="pswd" className="sr-only">
           비밀번호
         </label>
         <input
           type="password"
-          id="pwd"
+          id="pswd"
           placeholder="비밀번호"
-          name="userpwd"
-          value={formData.userpwd}
+          name="userpswd"
+          value={formData.userpswd}
           onChange={eventHandler}
           required
           disabled={loading}
-          onInvalid={(e) => e.target.setCustomValidity("비밀번호를 입력하세요.")}
+          onInvalid={(e) =>
+            e.target.setCustomValidity("비밀번호를 입력하세요.")
+          }
           onInput={(e) => e.target.setCustomValidity("")}
           className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full max-w-[480px] py-2 px-3 mb-2 border border-main-01 focus:border-main-02"
         />
-        <label htmlFor="pwd1" className="sr-only">
+        <label htmlFor="pswd1" className="sr-only">
           비밀번호 확인
         </label>
         <input
           type="password"
-          id="pwd1"
+          id="pswd1"
           placeholder="비밀번호 확인"
-          name="userpwd1"
+          name="userpswd1"
           value={formData.userpwd1}
           onChange={eventHandler}
           required
           disabled={loading}
-          onInvalid={(e) => e.target.setCustomValidity("비밀번호를 다시 한번 입력하세요.")}
+          onInvalid={(e) =>
+            e.target.setCustomValidity("비밀번호를 다시 한번 입력하세요.")
+          }
           onInput={(e) => e.target.setCustomValidity("")}
           className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full max-w-[480px] py-2 px-3 mb-2 border border-main-01 focus:border-main-02"
         />
@@ -199,17 +208,33 @@ function SignUp() {
 
         <div className="flex flex-row w-full my-2">
           {/* 남 */}
-          <div className="mr-5 flex items-center cursor-pointer" onClick={() => handleGenderClick("남")}>
-            <span className="material-icons mr-2" style={{ color: gender === "남" ? "white" : "white" }}>
-              {gender === "남" ? "radio_button_checked" : "radio_button_unchecked"}
+          <div
+            className="mr-5 flex items-center cursor-pointer"
+            onClick={() => handleGenderClick("남")}
+          >
+            <span
+              className="material-icons mr-2"
+              style={{ color: gender === "남" ? "white" : "white" }}
+            >
+              {gender === "남"
+                ? "radio_button_checked"
+                : "radio_button_unchecked"}
             </span>
             <label className="text-white">남</label>
           </div>
 
           {/* 여 */}
-          <div className="flex items-center cursor-pointer" onClick={() => handleGenderClick("여")}>
-            <span className="material-icons mr-2" style={{ color: gender === "여" ? "white" : "white" }}>
-              {gender === "여" ? "radio_button_checked" : "radio_button_unchecked"}
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={() => handleGenderClick("여")}
+          >
+            <span
+              className="material-icons mr-2"
+              style={{ color: gender === "여" ? "white" : "white" }}
+            >
+              {gender === "여"
+                ? "radio_button_checked"
+                : "radio_button_unchecked"}
             </span>
             <label className="text-white">여</label>
           </div>
@@ -227,7 +252,9 @@ function SignUp() {
           onChange={eventHandler}
           required
           disabled={loading}
-          onInvalid={(e) => e.target.setCustomValidity("핸드폰 번호를 입력하세요.")}
+          onInvalid={(e) =>
+            e.target.setCustomValidity("핸드폰 번호를 입력하세요.")
+          }
           onInput={(e) => e.target.setCustomValidity("")}
           pattern="\d{10,11}"
           className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full max-w-[480px] py-2 px-3 mb-2 border border-main-01 focus:border-main-02"
@@ -263,7 +290,11 @@ function SignUp() {
           className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full max-w-[480px] py-2 px-3 mb-2 border border-main-01 focus:border-main-02 h-32"
         />
         <div className="text-red-500">{errorM}</div>
-        <Button type="submit" className="py-2 text-[13px] w-full max-w-[480px]" disabled={loading}>
+        <Button
+          type="submit"
+          className="py-2 text-[13px] w-full max-w-[480px]"
+          disabled={loading}
+        >
           회원가입
         </Button>
       </form>

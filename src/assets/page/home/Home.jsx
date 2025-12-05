@@ -325,7 +325,7 @@ function Home() {
                         </span>
                       </div>
                       <span className="dummy text-gray-deep">
-                        진료 이용 후기 {hospital.comment_cnt || 0}건
+                        진료 이용 후기 {hospital.review_cnt || 0}건, 댓글 {hospital.comment_cnt || 0}건
                       </span>
                     </li>
                     <li className="flex items-start gap-[5px]">
@@ -419,7 +419,7 @@ function Home() {
                         </span>
                       </div>
                       <span className="dummy text-gray-deep">
-                        진료 이용 후기 {hospital.comment_cnt || 0}건
+                        진료 이용 후기 {hospital.review_cnt || 0}건, 댓글 {hospital.comment_cnt || 0}건
                       </span>
                     </li>
                     <li className="flex items-start gap-[5px]">
@@ -513,7 +513,7 @@ function Home() {
                         </span>
                       </div>
                       <span className="dummy text-gray-deep">
-                        진료 이용 후기 {hospital.comment_cnt || 0}건
+                        진료 이용 후기 {hospital.review_cnt || 0}건, 댓글 {hospital.comment_cnt || 0}건
                       </span>
                     </li>
                     <li className="flex items-start gap-[5px]">

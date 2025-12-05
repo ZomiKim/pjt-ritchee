@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const BASE_URL = "http://localhost:8080/api";
+import { BASE_URL } from "./config";
 
 // 병원 평점순 목록 조회
 export const getHospitalsByRating = async (page = 0, size = 6) => {

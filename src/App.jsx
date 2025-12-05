@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Nav from "./componetns/Nav";
 import Footer from "./componetns/Footer";

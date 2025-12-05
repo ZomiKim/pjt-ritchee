@@ -56,7 +56,9 @@ export const UserProvider = ({ children }) => {
     };
   }, []);
 
-  const signUp = async ({ address, birth, gender, name, phone, text, email, password }) => {
+  const signUp = async ({ email, password, options }) => {
+    const { name, birth, gender, phone, text, addr = "" } = options?.data || {};
+
     try {
       setLoading(true);
 
@@ -79,10 +81,11 @@ export const UserProvider = ({ children }) => {
             text,
             gender,
             birth,
-            address,
+            addr,
+            u_kind: 1,
           },
         ])
-        .select();
+        .select("id,name,birth,gender,phone,text,addr");
 
       if (userError) {
         console.error("DB insert 실패", userError);

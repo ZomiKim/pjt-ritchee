@@ -1,7 +1,7 @@
 import React from 'react';
 
 function About() {
-  const textStyle = { fontSize: 'clamp(14px, 4vw, 32px)' };
+  const textStyle = { fontSize: 'clamp(14px, 3vw, 20px)' };
 
   const mobileTexts = [
     '릿치는 구로구 주민들의 치아 건강 증진을 위해 구로구청의 지원으로 제작된 어플리케이션입니다.',
@@ -37,17 +37,19 @@ function About() {
             alt="img"
             className="w-full h-full object-cover object-center block md:hidden"
           />
-
-          <img
-            src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pabout.jpg"
-            alt="img"
-            className="w-full h-full object-cover object-center hidden md:block xl:hidden"
-            />
-          <div className="w-full h-[500px] hidden xl:block">
+          <div className='w-full lg:h-[50vh] hidden md:block xl:hidden'>
             <img
               src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pabout.jpg"
               alt="img"
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div className="w-full xl:h-[60vh] 2xl:h-[70vh] hidden xl:block">
+            <img
+              src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pabout.jpg"
+              alt="img"
+              className="w-full h-full object-cover"
             />
           </div>
         </div>
@@ -56,7 +58,7 @@ function About() {
         <div className="container">
           <div className="mt-[5.88vh] mb-[2.35vh] flex items-center gap-[1.28vw]">
             <i className="fa-solid fa-tooth md:text-2xl lg:text-4xl xl:text-5xl text-deep"></i>
-            <h4 className="text-deep" style={{ fontSize: 'clamp(16px, 4vw, 44px)' }}>
+            <h4 className="text-deep" style={{ fontSize: 'clamp(20px, 3vw, 28px)' }}>
               구로구 리뷰 치과 릿치!
             </h4>
           </div>

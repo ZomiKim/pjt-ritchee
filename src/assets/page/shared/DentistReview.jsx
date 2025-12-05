@@ -56,7 +56,7 @@ function DentistReview() {
               </ul> */}
               {/* 한 줄에 3개는 32% 4개는 24% */}
               {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[24%]">
+              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
                 <div
                   className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
                   style={{
@@ -87,7 +87,7 @@ function DentistReview() {
                 </div>
               </Link>
               {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[24%]">
+              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
                 <div
                   className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
                   style={{
@@ -118,7 +118,7 @@ function DentistReview() {
                 </div>
               </Link>
               {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[24%]">
+              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
                 <div
                   className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
                   style={{
@@ -149,7 +149,7 @@ function DentistReview() {
                 </div>
               </Link>
               {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[24%]">
+              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
                 <div
                   className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
                   style={{
@@ -180,7 +180,7 @@ function DentistReview() {
                 </div>
               </Link>
               {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[24%]">
+              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
                 <div
                   className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
                   style={{
@@ -211,7 +211,7 @@ function DentistReview() {
                 </div>
               </Link>
               {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[24%]">
+              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
                 <div
                   className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
                   style={{
@@ -242,7 +242,7 @@ function DentistReview() {
                 </div>
               </Link>
               {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[24%]">
+              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
                 <div
                   className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
                   style={{

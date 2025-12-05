@@ -3,20 +3,43 @@ import Button from '../../../componetns/Button';
 import DentistReview from './DentistReview';
 import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import supabase from '../../utils/supabase';
+import moment from 'moment';
+import axios from 'axios';
 
 function DentistView() {
   const { search } = useLocation();
   const query = new URLSearchParams(search);
   const h_code = query.get('id');
-  const [hospital, setHospital] = useState({ h_name: '', h_addr: '' });
+  const [hospital, setHospital] = useState({});
+  const [isOpened, setIsOpened] = useState(false);
   const fetch = async () => {
-    const { data, error } = await supabase.from('hospital').select('*').eq('h_code', h_code).single();
-    setHospital((prev) => ({ ...prev, h_name: data.h_name, h_addr: data.h_addr }));
+    const { data, error } = await axios.get('http://localhost:8080/api/hs_info/' + h_code);
+    setHospital(data);
   };
 
   useEffect(() => {
     fetch();
   }, []);
+
+  const hours = {
+    mon: [hospital.h_mon_s, hospital.h_mon_c, '월'],
+    tue: [hospital.h_tue_s, hospital.h_tue_c, '화'],
+    wed: [hospital.h_wed_s, hospital.h_wed_c, '수'],
+    thu: [hospital.h_tur_s, hospital.h_tur_c, '목'],
+    fri: [hospital.h_fri_s, hospital.h_fri_c, '금'],
+    sat: [hospital.h_sat_s, hospital.h_sat_c, '토'],
+    sun: [hospital.h_sun_s, hospital.h_sun_c, '일'],
+  };
+
+  // 요일 배열 (getDay()의 순서인 'sun' 부터 시작!)
+  const weekdayOrder = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+  const todayIndex = new Date().getDay();
+
+  // 오늘부터 순서를 정렬
+  const adjustedOrder = weekdayOrder.slice(todayIndex).concat(weekdayOrder.slice(0, todayIndex));
+
+  const sortedHours = adjustedOrder.map((day) => hours[day]);
 
   return (
     <>
@@ -52,23 +75,45 @@ function DentistView() {
                     location_on
                   </span>
                 </div>
-                <div className="dummy text-gray-deep">주소 : {hospital.h_addr}</div>
+                <div className="dummy text-gray-deep">주소 : {hospital.h_addr || '주소'}</div>
               </div>
-              <div className="tel flex gap-[5px] mb-[5px]">
+              <div className="operationHours flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
                   <div className="material-icons text-white" style={{ fontSize: '14px' }}>
                     access_time_filled
                   </div>
                 </div>
-                <span className="dummy text-gray-deep">진료 시간 : 09 : 00 ~ 18 : 00</span>
+                <span
+                  className="dummy text-gray-deep flex gap-[5px] cursor-pointer"
+                  onClick={() => setIsOpened((prev) => !prev)}
+                >
+                  <span className="dummy">진료 시간 :</span>
+                  <div className="flex items-center mr-1 text-black font-bold">
+                    {sortedHours[0][2]} {sortedHours[0][0]} ~ {sortedHours[0][1]}
+                    <span className={`material-icons ${isOpened ? 'hidden!' : ''} text-gray-deep font-normal`}>
+                      keyboard_arrow_down
+                    </span>
+                  </div>
+                </span>
               </div>
-              <div className="review flex gap-[5px] mb-[5px]">
+              <div className={`ml-[25px] ${isOpened ? '' : 'hidden'} mb-[5px]`}>
+                {sortedHours.map(([s, c, d], i) => {
+                  return (
+                    <div key={i} className={`dummy ${i == 0 ? 'font-bold text-black' : 'text-gray-deep'}`}>
+                      {d} {s} ~ {c}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="lunchTime flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
                   <span className="material-icons text-white" style={{ fontSize: '14px' }}>
                     restaurant
                   </span>
                 </div>
-                <div className="dummy text-gray-deep">점심 시간 : 13 : 00 ~ 14 : 00</div>
+                <div className="dummy text-gray-deep">
+                  점심 시간 : {`${hospital[`h_lun_s`]} ~ ${hospital[`h_lun_c`]}` || '13 : 00 ~ 14 : 00'}
+                </div>
               </div>
               <div className="etc flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
@@ -79,10 +124,10 @@ function DentistView() {
                 <div className="dummy text-gray-deep">주차 : 건물 지하 2층 차단기 통과 후 이용 가능</div>
               </div>
             </div>
-            <div className="flex justify-between xl:justify-normal xl:gap-5">
+            <div className={`flex justify-between xl:justify-normal xl:gap-5 ${isOpened ? 'mt-[150px]' : ''}`}>
               {/* mb */}
               <Button size="mid" className="xl:hidden">
-                <Link className="w-full" to={`../../map/reservationForm?hospitalName=${hospital.h_name}`}>
+                <Link className="w-full" to={`../../map/reservationForm?id=${h_code}`}>
                   예약하기
                 </Link>
               </Button>
@@ -91,7 +136,7 @@ function DentistView() {
               </Button>
               {/* pc */}
               <Button size="short" className="hidden xl:block">
-                <Link className="block w-full" to={`../../map/reservationForm?hospitalName=${hospital.h_name}`}>
+                <Link className="block w-full" to={`../../map/reservationForm?id=${h_code}`}>
                   예약하기
                 </Link>
               </Button>

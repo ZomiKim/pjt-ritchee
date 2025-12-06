@@ -2,17 +2,19 @@ import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Button from '../../../componetns/Button';
 import PageNatation from '../../../componetns/PageNatation';
+import { useUser } from '../../../context/UserContext';
 
 function MedicalList() {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
+  const { user } = useUser();
 
   return (
     <>
       <div className="min-h-screen bg-light-02 myBg px-5 py-2 text-sm md:px-6 md:py-3 md:text-base lg:px-8 lg:py-4 lg:text-base">
         <h4 className="tit  my-5 mt-10  px-5 mx-[4vw]">
           <i className="fa-solid fa-hospital text-[16px]"></i>
-          {id ? `${id}번 회원님의 진료 내역` : '김훈규 님의 진료 기록'}
+          {id ? `${id}번 회원님의 진료 내역` : `${user?.name || '회원'} 님의 진료 기록`}
         </h4>
 
         <div className="w-[90%] flex flex-row flex-wrap justify-between mx-auto ">

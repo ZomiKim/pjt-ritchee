@@ -1,15 +1,17 @@
 import React from "react";
 import PageNatation from "../../../componetns/PageNatation";
 import Footer from "../../../componetns/footer";
+import { useUser } from "../../../context/UserContext";
 
 function ReviewHistory() {
+  const { user } = useUser();
   return (
     <>
       <div className="min-h-screen mx-auto  bg-light-02 myBg px-10  text-sm md:px-6 md:py-3 md:text-base lg:px-8 lg:py-4 lg:text-lg ">
         {/* contianer start */}
         <h4 className="tit md:mx-0 lg:mx-0  my-1 mt-10 mb-5 lg:py-4 lg:text-lg ml-[1vw] ">
           <span className="material-icons">edit_calendar</span>
-          김훈규 님의 작성 후기
+          {user?.name || "회원"} 님의 작성 후기
         </h4>
 
         <div className="w-full mx-auto">

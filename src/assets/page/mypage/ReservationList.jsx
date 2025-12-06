@@ -1,8 +1,10 @@
 import React from "react";
 import PageNatation from "./../../../componetns/PageNatation";
 import Button from "../../../componetns/Button";
+import { useUser } from "../../../context/UserContext";
 
 function ReservationList() {
+  const { user } = useUser();
   // 예약 데이터 배열
   const reservations = [
     {
@@ -56,7 +58,7 @@ function ReservationList() {
         <div className="container flex flex-col">
           <h4 className="tit my-5 mt-10 mx-[1vw]">
             <span className="material-icons">alarm</span>
-            김훈규 님의 예약 내역
+            {user?.name || "회원"} 님의 예약 내역
           </h4>
 
           <div className="w-full flex flex-row flex-wrap justify-between gap-2 md:gap-3 lg:gap-4 mx-auto">

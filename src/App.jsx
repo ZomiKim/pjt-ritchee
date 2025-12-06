@@ -13,9 +13,6 @@ import Footer from "./componetns/footer";
 function App() {
   const location = useLocation();
 
-  // /member 경로에서는 Nav와 Footer 숨김
-  const hideNavFooter = location.pathname.startsWith("/member");
-
   // 첫 방문 홈 로딩 중인지 확인
   const isFirstVisitHome =
     location.pathname === "/" &&

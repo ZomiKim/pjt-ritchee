@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Nav from './componetns/Nav';
 import Footer from './componetns/Footer';
 import Home from './assets/page/home/Home';
@@ -11,11 +11,16 @@ import Member from './assets/member/Member';
 import Map from './assets/page/shared/Map';
 
 function App() {
+  const location = useLocation();
+  
+  // /member 경로에서는 Nav와 Footer 숨김
+  const hideNavFooter = location.pathname.startsWith('/member');
+
   return (
     <>
-      <Nav />
-      <div className="wrap">
-        <div className="container">
+      {!hideNavFooter && <Nav />}
+      <div className={hideNavFooter ? "" : "wrap"}>
+        <div className={hideNavFooter ? "" : "container"}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about/*" element={<About />} />
@@ -27,7 +32,7 @@ function App() {
           </Routes>
         </div>
       </div>
-      <Footer />
+      {!hideNavFooter && <Footer />}
     </>
   );
 }

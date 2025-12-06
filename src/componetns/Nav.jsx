@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 function Nav() {
+  const { user, signOut } = useUser();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -35,12 +38,22 @@ function Nav() {
   }, []);
 
   const navLinks = [
-    { name: "마이페이지", to: "/mypage" },
+    {
+      name: user?.name ? `${user.name} 님의 마이페이지` : "마이페이지",
+      to: "/mypage",
+    },
     { name: "진료 예약", to: "/dentistList" },
     { name: "릿치 소개", to: "/about" },
     { name: "치과 리스트", to: "/dentistList" },
     { name: "이벤트", to: "/event" },
   ];
+
+  // 로그아웃 핸들러
+  const handleLogout = async () => {
+    await signOut();
+    setIsOpen(false);
+    navigate("/member/signin");
+  };
 
   return (
     <nav className="bg-main-02 text-white fixed w-full top-0 left-0 z-50 shadow-lg">
@@ -87,7 +100,7 @@ function Nav() {
 
           {/* pc mene*/}
           <div className="hidden md:block">
-            <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -98,6 +111,23 @@ function Nav() {
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
                 </Link>
               ))}
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group"
+                >
+                  로그아웃
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                </button>
+              ) : (
+                <Link
+                  to="/member/signin"
+                  className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group"
+                >
+                  로그인
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                </Link>
+              )}
             </div>
           </div>
 
@@ -130,7 +160,7 @@ function Nav() {
       {/* mb menu*/}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out relative z-50 ${
-          isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="bg-light-01">
@@ -139,7 +169,7 @@ function Nav() {
             <div className="flex justify-evenly">
               <Link
                 to={navLinks[0].to}
-                className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center gap-2 rounded-[10px]"
+                className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center gap-2 rounded-[10px] text-center"
                 onClick={() => setIsOpen(false)}
               >
                 <span
@@ -148,11 +178,19 @@ function Nav() {
                 >
                   person
                 </span>
-                {navLinks[0].name}
+                {user?.name ? (
+                  <>
+                    {user.name} 님의
+                    <br />
+                    마이페이지
+                  </>
+                ) : (
+                  "마이페이지"
+                )}
               </Link>
               <Link
                 to={navLinks[1].to}
-                className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center gap-2 rounded-[10px]"
+                className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center justify-center gap-2 rounded-[10px] text-center"
                 onClick={() => setIsOpen(false)}
               >
                 <span
@@ -176,6 +214,23 @@ function Nav() {
               {link.name}
             </Link>
           ))}
+          {/* 로그인/로그아웃 버튼 */}
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="block w-full text-left py-3 px-4 text-deep hover:bg-main-02/20 hover:text-deep transition-all duration-300 border-b border-main-02"
+            >
+              로그아웃
+            </button>
+          ) : (
+            <Link
+              to="/member/signin"
+              className="block py-3 px-4 text-deep hover:bg-main-02/20 hover:text-deep transition-all duration-300 border-b border-main-02"
+              onClick={() => setIsOpen(false)}
+            >
+              로그인
+            </Link>
+          )}
         </div>
       </div>
     </nav>

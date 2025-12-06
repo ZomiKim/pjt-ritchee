@@ -308,7 +308,7 @@ function Home() {
                     index === hospitals.length - 1 ? "hidden md:block" : ""
                   }`}
                 >
-                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
+                  <div className="tab_cont_tit flex flex-col items-start">
                     <h4 className="tit mr-4" id="cardId">
                       <span className="material-icons">local_hospital</span>
                       {hospital.h_name || "병원명"}
@@ -403,7 +403,7 @@ function Home() {
                       : ""
                   }`}
                 >
-                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
+                  <div className="tab_cont_tit flex flex-col items-start">
                     <h4 className="tit mr-4" id="cardId">
                       <span className="material-icons">local_hospital</span>
                       {hospital.h_name || "병원명"}
@@ -498,7 +498,7 @@ function Home() {
                       : ""
                   }`}
                 >
-                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
+                  <div className="tab_cont_tit flex flex-col items-start">
                     <h4 className="tit mr-4" id="cardId">
                       <span className="material-icons">local_hospital</span>
                       {hospital.h_name || "병원명"}

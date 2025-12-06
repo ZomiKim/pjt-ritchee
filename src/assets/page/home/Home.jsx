@@ -181,6 +181,7 @@ function Home() {
                 />
               </div>
             </div>
+
             <div className="swiper-slide">
               <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
                 <img
@@ -190,6 +191,7 @@ function Home() {
                 />
               </div>
             </div>
+
             <div className="swiper-slide">
               <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
                 <img
@@ -199,6 +201,7 @@ function Home() {
                 />
               </div>
             </div>
+
             <div className="swiper-slide">
               <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
                 <img

@@ -39,7 +39,7 @@ function MypageMain() {
               to="/mypage/reservationList"
               className="nav-link px-10 py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
             >
-              예약 현황 예약 현황
+              예약 현황
             </Link>
           </div>
           <div className="flex justify-center gap-3 mb-[100px]">

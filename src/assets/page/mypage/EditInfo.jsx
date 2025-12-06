@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Button from '../../../componetns/Button';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 function EditInfo() {
@@ -249,7 +248,7 @@ function EditInfo() {
                     {checked ? 'check_box' : 'check_box_outline_blank'}
                   </span>
 
-                  <span className="text-gray-mid">
+                  <span className="text-gray-mid !text-xs md:!text-base">
                     병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료
                     후 관련 법령에 따라 보관 후 파기합니다.
                   </span>

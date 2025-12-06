@@ -49,10 +49,15 @@ function Nav() {
   ];
 
   // 로그아웃 핸들러
-  const handleLogout = async () => {
-    await signOut();
-    setIsOpen(false);
-    navigate("/member/signin");
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    try {
+      await signOut();
+      setIsOpen(false);
+      navigate("/member/signin");
+    } catch (error) {
+      console.error("로그아웃 에러:", error);
+    }
   };
 
   return (
@@ -113,8 +118,9 @@ function Nav() {
               ))}
               {user ? (
                 <button
+                  type="button"
                   onClick={handleLogout}
-                  className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group"
+                  className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group cursor-pointer"
                 >
                   로그아웃
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
@@ -217,8 +223,9 @@ function Nav() {
           {/* 로그인/로그아웃 버튼 */}
           {user ? (
             <button
+              type="button"
               onClick={handleLogout}
-              className="block w-full text-left py-3 px-4 text-deep hover:bg-main-02/20 hover:text-deep transition-all duration-300 border-b border-main-02"
+              className="block w-full text-left py-3 px-4 text-deep hover:bg-main-02/20 hover:text-deep transition-all duration-300 border-b border-main-02 cursor-pointer"
             >
               로그아웃
             </button>

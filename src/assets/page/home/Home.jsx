@@ -173,7 +173,10 @@ function Home() {
         <div className="swiper home-swiper">
           <div className="swiper-wrapper">
             <div className="swiper-slide">
-              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+              <div 
+                className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
+                onClick={() => navigate("/event/eventview/1")}
+              >
                 <img
                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent1.jpg"
                   alt="img"
@@ -183,7 +186,10 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+              <div 
+                className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
+                onClick={() => navigate("/event/eventview/2")}
+              >
                 <img
                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent2.jpg"
                   alt="img"
@@ -193,7 +199,10 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+              <div 
+                className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
+                onClick={() => navigate("/event/eventview/3")}
+              >
                 <img
                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent3.jpg"
                   alt="img"
@@ -203,7 +212,10 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+              <div 
+                className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
+                onClick={() => navigate("/event/eventview/4")}
+              >
                 <img
                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent4.jpg"
                   alt="img"
@@ -591,6 +603,7 @@ function Home() {
             size="long"
             variant="primary"
             onClick={() => navigate("/dentistList")}
+            className="cursor-pointer"
           >
             더보기
           </Button>

@@ -7,9 +7,11 @@ import ReservationList from "./ReservationList";
 import ReviewForm from "./ReviewForm";
 import DentistReview from "../shared/DentistReview";
 import { Link } from "react-router-dom";
+import { useUser } from "../../../context/UserContext";
 
 // 마이페이지 메인 화면 컴포넌트
 function MypageMain() {
+  const { user } = useUser();
   return (
     <>
       <div
@@ -21,7 +23,7 @@ function MypageMain() {
           backgroundPosition: "center",
         }}
       >
-        <span>김훈규님의 건강을 위한 공간입니다</span>
+        <span>{user?.name || "회원"}님의 건강을 위한 공간입니다</span>
       </div>
 
       <div className="wrap">

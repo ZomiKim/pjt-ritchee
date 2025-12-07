@@ -1,11 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Button from '../../../componetns/Button';
+import { useUser } from '../../../context/UserContext';
+import axios from 'axios';
 
 function ReservationCheck() {
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get('id');
+  const { user } = useUser();
+  const id = user?.id;
+  const [appointment, setAppointment] = useState({});
+  const userReservationFetch = async () => {
+    const { data, error } = await axios.get(
+      `http://localhost:8080/api/appmUser/47fe4cb1-67a8-4cb1-8f1a-89b45a21349f`
+    );
+    if (error) console.error('error', error.message);
+    else setAppointment(data);
+  };
 
+  function getAge(birthString) {
+    const today = new Date();
+    const birthDate = new Date(birthString);
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    // 아직 생일이 지나지 않았다면 -1
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      age--;
+    }
+
+    return age;
+  }
+
+  useEffect(() => {
+    userReservationFetch();
+  }, []);
+
+  console.log(appointment);
   return (
     <>
       {/* 환자 전용 */}
@@ -14,7 +45,7 @@ function ReservationCheck() {
           <div className="reservation container">
             <h4 className="reservationTitle tit mb-5">
               <span className="material-icons">access_alarm</span>
-              김훈규 님의 예약 내역
+              {appointment.name || '김훈규'} 님의 예약 내역
             </h4>
             <div className="px-3.5 py-5 mb-7.5 bg-white border border-main-01 rounded-[5px]">
               <div className="hospitalTitle mb-2.5">
@@ -24,14 +55,34 @@ function ReservationCheck() {
                 </h4>
               </div>
               <div className="reservationBody">
-                <div className="patient dummy text-gray-deep">· 환자명 : 김훈규</div>
-                <div className="symptom dummy text-gray-deep">· 증상 : 어금니 통증</div>
-                <div className="age dummy text-gray-deep">· 나이 : 만 35세</div>
-                <div className="gender dummy text-gray-deep">· 성별 : 남</div>
-                <div className="reservationDate dummy text-gray-deep">· 예약 일자 : 25 - 11 - 11</div>
-                <div className="reservationTime dummy text-gray-deep">· 예약 시간 : 14시 15분</div>
-                <div className="phoneNumber dummy text-gray-deep">· 연락처 : 010 - 2222 -2222</div>
-                <div className="etc dummy text-gray-deep">· 특이 사항 : 고혈압, 고지혈증 약 복용 중</div>
+                <div className="patient dummy text-gray-deep">
+                  · 환자명 : {appointment.name || '김훈규'}
+                </div>
+                <div className="symptom dummy text-gray-deep">
+                  · 증상 :{' '}
+                  {appointment?.appms?.[0]?.a_dia_name || '어금니 통증'}
+                </div>
+                <div className="age dummy text-gray-deep">
+                  · 나이 :{' '}
+                  {`${getAge(appointment?.birth?.split('-')[0])}세` ||
+                    '만 35세'}
+                </div>
+                <div className="gender dummy text-gray-deep">
+                  · 성별 : {appointment?.gender?.[0] || '남'}
+                </div>
+                <div className="reservationDate dummy text-gray-deep">
+                  · 예약 일자 : {appointment?.appms?.[0]?.a_date}
+                </div>
+                <div className="reservationTime dummy text-gray-deep">
+                  · 예약 시간 : 14시 15분
+                </div>
+                <div className="phoneNumber dummy text-gray-deep">
+                  · 연락처 : {appointment?.phone || '010-0000-0000'}
+                </div>
+                <div className="etc dummy text-gray-deep">
+                  · 특이 사항 :{' '}
+                  {appointment?.text || '고혈압, 고지혈증 약 복용 중'}
+                </div>
               </div>
             </div>
           </div>

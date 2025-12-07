@@ -20,7 +20,9 @@ function MapPage() {
 
   // h_code 달고 올 때 함수
   const fetch = async () => {
-    const { data, error } = await axios.get(`http://localhost:8080/api/hs_info/${h_code}`);
+    const { data, error } = await axios.get(
+      `http://localhost:8080/api/hs_info/${h_code}`
+    );
 
     if (error) {
       console.error('Single Hospital Info Fetch Error', error.message);
@@ -78,7 +80,9 @@ function MapPage() {
   const todayIndex = new Date().getDay();
 
   // 오늘부터 순서를 정렬
-  const adjustedOrder = weekdayOrder.slice(todayIndex).concat(weekdayOrder.slice(0, todayIndex));
+  const adjustedOrder = weekdayOrder
+    .slice(todayIndex)
+    .concat(weekdayOrder.slice(0, todayIndex));
 
   const sortedHours = adjustedOrder.map((day) => hours[day]);
 
@@ -107,7 +111,10 @@ function MapPage() {
               }}
             />
 
-            <CustomOverlayMap position={{ lat: location.center.lat, lng: location.center.lng }} yAnchor={1.9}>
+            <CustomOverlayMap
+              position={{ lat: location.center.lat, lng: location.center.lng }}
+              yAnchor={1.9}
+            >
               <div className="bg-white border-2 border-main-02 rounded-[5px] px-3 py-[5px] mt-[3px]">
                 {hospital.h_name}
                 <div className="stars flex flex-row text-point items-end">
@@ -115,12 +122,36 @@ function MapPage() {
                     {hospital.avg_eval_pt == 0 ? '(4.4)' : hospital.avg_eval_pt}
                   </span>
                   <div className="flex flex-row text-point items-center">
+                    {Array.from({ length: 5 }).map((_, i) => {
+                      if (hospital.avg_eval_pt >= i + 1)
+                        return (
+                          <span key={i} className="material-icons">
+                            star
+                          </span>
+                        );
+                      if (
+                        hospital.avg_eval_pt > i &&
+                        hospital.avg_eval_pt < i + 1
+                      )
+                        return (
+                          <span key={i} className="material-icons">
+                            star_half
+                          </span>
+                        );
+                      return (
+                        <span key={i} className="material-icons">
+                          star_outline
+                        </span>
+                      );
+                    })}
+                  </div>
+                  {/* <div className="flex flex-row text-point items-center">
                     <span className="material-icons">star</span>
                     <span className="material-icons">star</span>
                     <span className="material-icons">star</span>
                     <span className="material-icons">star</span>
                     <span className="material-icons">star_outline</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </CustomOverlayMap>
@@ -129,7 +160,10 @@ function MapPage() {
       </Map>
       {h_code ? (
         <div className="myBg bg-light-02">
-          <div className="wrap mb-[50px]" style={{ backgroundColor: '#f4f8ff' }}>
+          <div
+            className="wrap mb-[50px]"
+            style={{ backgroundColor: '#f4f8ff' }}
+          >
             <div className="container bg-white border border-main-01 rounded-[5px]">
               <div className="hospital px-3.5 py-[15px]">
                 <div className="hospitalTitle mb-2.5">
@@ -139,18 +173,26 @@ function MapPage() {
                   </h4>
                 </div>
                 <div className="hospitalBody">
-                  <div className="detail h-[100px] mb-5">
+                  <div className="detail h-[100px]">
                     <div className="addr flex gap-[5px] mb-[5px]">
                       <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                        <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: '14px' }}
+                        >
                           location_on
                         </span>
                       </div>
-                      <div className="dummy text-gray-deep mt-1">주소 : {hospital.h_addr}</div>
+                      <div className="dummy text-gray-deep mt-1">
+                        주소 : {hospital.h_addr}
+                      </div>
                     </div>
                     <div className="operationHours flex gap-[5px] mb-[5px]">
                       <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                        <div className="material-icons text-white" style={{ fontSize: '14px' }}>
+                        <div
+                          className="material-icons text-white"
+                          style={{ fontSize: '14px' }}
+                        >
                           access_time_filled
                         </div>
                       </div>
@@ -160,17 +202,31 @@ function MapPage() {
                       >
                         <span className="dummy">진료 시간 :</span>
                         <div className="flex items-center mr-1 text-black font-bold">
-                          {sortedHours[0][2]} {sortedHours[0][0]} ~ {sortedHours[0][1]}
-                          <span className={`material-icons ${isOpened ? 'hidden!' : ''} text-gray-deep font-normal`}>
+                          {sortedHours[0][2]} {sortedHours[0][0]} ~{' '}
+                          {sortedHours[0][1]}
+                          <span
+                            className={`material-icons ${
+                              isOpened ? 'hidden!' : ''
+                            } text-gray-deep font-normal`}
+                          >
                             keyboard_arrow_down
                           </span>
                         </div>
                       </span>
                     </div>
-                    <div className={`ml-[25px] ${isOpened ? '' : 'hidden'} mb-[5px]`}>
+                    <div
+                      className={`ml-[25px] ${
+                        isOpened ? '' : 'hidden'
+                      } mb-[5px]`}
+                    >
                       {sortedHours.map(([s, c, d], i) => {
                         return (
-                          <div key={i} className={`dummy ${i == 0 ? 'font-bold text-black' : 'text-gray-deep'}`}>
+                          <div
+                            key={i}
+                            className={`dummy ${
+                              i == 0 ? 'font-bold text-black' : 'text-gray-deep'
+                            }`}
+                          >
                             {d} {s} ~ {c}
                           </div>
                         );
@@ -178,24 +234,36 @@ function MapPage() {
                     </div>
                     <div className="lunchTime flex gap-[5px] mb-[5px]">
                       <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                        <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+                        <span
+                          className="material-icons text-white"
+                          style={{ fontSize: '14px' }}
+                        >
                           restaurant
                         </span>
                       </div>
                       <div className="dummy text-gray-deep mt-1">
-                        점심 시간 : {`${hospital[`h_lun_s`]} ~ ${hospital[`h_lun_c`]}` || '13 : 00 ~ 14 : 00'}
+                        점심 시간 :{' '}
+                        {`${hospital[`h_lun_s`]} ~ ${hospital[`h_lun_c`]}` ||
+                          '13 : 00 ~ 14 : 00'}
                       </div>
                     </div>
                   </div>
-                  <div className={`flex justify-between ${isOpened ? 'mt-[150px]' : ''}`}>
+                  <div
+                    className={`flex justify-between ${
+                      isOpened ? 'mt-[150px]' : ''
+                    }`}
+                  >
                     <Button size="mid" className="m-0">
-                      <Link className="w-full" to={`/map/reservationForm?id=${h_code}`}>
+                      <Link
+                        className="w-full"
+                        to={`/map/reservationForm?id=${h_code}`}
+                      >
                         예약하기
                       </Link>
                     </Button>
 
                     <Button size="mid" className="m-0">
-                      <Link className="w-full">전화하기</Link>
+                      <div className="w-full text-[16px]">전화하기</div>
                     </Button>
                   </div>
                 </div>

@@ -8,6 +8,11 @@ const List = () => {
   const [inputValue, setInputValue] = useState('');
   const [hospital, setHospital] = useState([]);
 
+  const iValue = {
+    para1: inputValue.split(' ')[0],
+    para2: inputValue.split(' ')[1] ?? '',
+  };
+
   const fetch = async () => {
     const { data, error } = await axios.get(
       `http://localhost:8080/api/hs_evalpt?page=0&size=10`
@@ -20,8 +25,32 @@ const List = () => {
       );
       return;
     }
-    console.log(data.content);
+    // console.log(data.content);
     setHospital(data.content);
+  };
+
+  const searchFetch = async () => {
+    if (inputValue.trim() === '') {
+      alert('검색어를 입력하세요.');
+      fetch();
+      // http://localhost:5173/dentistList로 이동
+    } else {
+      const { data, error } = await axios.get(
+        'http://localhost:8080/api/hs_find_para?page=0&size=10',
+        {
+          // &para1=튼튼&para2=개봉
+          params: {
+            para1: iValue.para1,
+            para2: iValue.para2,
+          },
+        }
+      );
+
+      if (error) console.error(error.message);
+      else {
+        setHospital(data.content);
+      }
+    }
   };
 
   useEffect(() => {
@@ -36,7 +65,6 @@ const List = () => {
             className="container"
             style={{ paddingLeft: '5px', paddingRight: '5px' }}
           >
-            테스트 : {inputValue}
             <h4 className="tit mb-5">
               <i className="fa-solid fa-tooth"></i>
               구로구 리뷰 치과 릿치!
@@ -51,14 +79,22 @@ const List = () => {
                     className="searchInput outline-none placeholder-gray-mid"
                     onChange={(e) => setInputValue(e.target.value)}
                   />
-                  <div className="searchBtn bg-main-02 w-5 h-5 p-3 rounded-full flex justify-center items-center absolute right-3.5 xl:cursor-pointer">
+                  <Link
+                    className="searchBtn bg-main-02 w-5 h-5 p-3 rounded-full flex justify-center items-center absolute right-3.5 xl:cursor-pointer"
+                    onClick={searchFetch}
+                    to={
+                      inputValue.trim() == ''
+                        ? '/dentistList'
+                        : `/dentistList?para1=${iValue.para1}&para2=${iValue.para2}`
+                    }
+                  >
                     <span
                       className="material-icons text-white"
                       style={{ fontSize: '17px' }}
                     >
                       search
                     </span>
-                  </div>
+                  </Link>
                 </div>
                 <ul className="flex flex-col md:flex-row md:flex-wrap md:gap-4">
                   {hospital.map((h, i) => {

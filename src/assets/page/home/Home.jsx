@@ -173,7 +173,10 @@ function Home() {
         <div className="swiper home-swiper">
           <div className="swiper-wrapper">
             <div className="swiper-slide">
-              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+              <div 
+                className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
+                onClick={() => navigate("/event/eventview/1")}
+              >
                 <img
                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent1.jpg"
                   alt="img"
@@ -181,8 +184,12 @@ function Home() {
                 />
               </div>
             </div>
+
             <div className="swiper-slide">
-              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+              <div 
+                className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
+                onClick={() => navigate("/event/eventview/2")}
+              >
                 <img
                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent2.jpg"
                   alt="img"
@@ -190,8 +197,12 @@ function Home() {
                 />
               </div>
             </div>
+
             <div className="swiper-slide">
-              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+              <div 
+                className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
+                onClick={() => navigate("/event/eventview/3")}
+              >
                 <img
                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent3.jpg"
                   alt="img"
@@ -199,8 +210,12 @@ function Home() {
                 />
               </div>
             </div>
+
             <div className="swiper-slide">
-              <div className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden">
+              <div 
+                className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
+                onClick={() => navigate("/event/eventview/4")}
+              >
                 <img
                   src="https://uosmaiisnppqgxbcbawc.supabase.co/storage/v1/object/public/images/pevent4.jpg"
                   alt="img"
@@ -236,7 +251,12 @@ function Home() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="mt-2">{hospital.h_name || "병원명"}</span>
+                  <span
+                    className="mt-2"
+                    style={{ fontSize: "clamp(12px, 1.5vw, 20px)" }}
+                  >
+                    {hospital.h_name || "병원명"}
+                  </span>
                 </div>
               ))}
             </div>
@@ -303,7 +323,7 @@ function Home() {
                     index === hospitals.length - 1 ? "hidden md:block" : ""
                   }`}
                 >
-                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
+                  <div className="tab_cont_tit flex flex-col items-start">
                     <h4 className="tit mr-4" id="cardId">
                       <span className="material-icons">local_hospital</span>
                       {hospital.h_name || "병원명"}
@@ -398,7 +418,7 @@ function Home() {
                       : ""
                   }`}
                 >
-                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
+                  <div className="tab_cont_tit flex flex-col items-start">
                     <h4 className="tit mr-4" id="cardId">
                       <span className="material-icons">local_hospital</span>
                       {hospital.h_name || "병원명"}
@@ -493,7 +513,7 @@ function Home() {
                       : ""
                   }`}
                 >
-                  <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start">
+                  <div className="tab_cont_tit flex flex-col items-start">
                     <h4 className="tit mr-4" id="cardId">
                       <span className="material-icons">local_hospital</span>
                       {hospital.h_name || "병원명"}
@@ -583,6 +603,7 @@ function Home() {
             size="long"
             variant="primary"
             onClick={() => navigate("/dentistList")}
+            className="cursor-pointer"
           >
             더보기
           </Button>

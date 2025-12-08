@@ -28,7 +28,8 @@ export const UserProvider = ({ children }) => {
       return;
     }
     const extra = await fetchUserInfo(sessionUser.id);
-    setUser({ ...sessionUser, ...extra });
+    // email은 sessionUser에서 가져오므로 명시적으로 보존
+    setUser({ ...sessionUser, ...extra, email: sessionUser.email });
   };
 
   useEffect(() => {
@@ -93,7 +94,8 @@ export const UserProvider = ({ children }) => {
       }
 
       const extra = await fetchUserInfo(data.user.id);
-      setUser({ ...data.user, ...extra });
+      // email은 data.user에서 가져오므로 명시적으로 보존
+      setUser({ ...data.user, ...extra, email: data.user.email });
 
       return { error: null };
     } catch (err) {
@@ -111,7 +113,8 @@ export const UserProvider = ({ children }) => {
     });
     if (!error && data?.user) {
       const extra = await fetchUserInfo(data.user.id);
-      setUser({ ...data.user, ...extra });
+      // email은 data.user에서 가져오므로 명시적으로 보존
+      setUser({ ...data.user, ...extra, email: data.user.email });
       return { error: null };
     } else {
       return { error: error || new Error("데이터 반환X") };

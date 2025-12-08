@@ -1,7 +1,6 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Nav from "./componetns/Nav";
-import Footer from "./componetns/Footer";
 import Home from "./assets/page/home/Home";
 import About from "./assets/page/about/About";
 import DentList from "./assets/page/dentistlist/DentList";
@@ -9,13 +8,22 @@ import Mypage from "./assets/page/mypage/Mypage";
 import Event from "./assets/page/event/Event";
 import Member from "./assets/member/Member";
 import Map from "./assets/page/shared/Map";
+import Footer from "./componetns/footer";
 
 function App() {
+  const location = useLocation();
+
+  // 첫 방문 홈 로딩 중인지 확인
+  const isFirstVisitHome = location.pathname === "/" && sessionStorage.getItem("homeVisited") !== "true";
+
+  // /member 경로 또는 첫 방문 홈 로딩 중에는 Nav와 Footer 숨김
+  const hideNavFooter = location.pathname.startsWith("/member") || isFirstVisitHome;
+
   return (
     <>
-      <Nav />
-      <div className="wrap">
-        <div className="container">
+      {!hideNavFooter && <Nav />}
+      <div className={hideNavFooter ? "" : "wrap"}>
+        <div className={hideNavFooter ? "" : "container"}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about/*" element={<About />} />
@@ -27,7 +35,7 @@ function App() {
           </Routes>
         </div>
       </div>
-      <Footer />
+      {!hideNavFooter && <Footer />}
     </>
   );
 }

@@ -101,7 +101,7 @@ function SignUp() {
   };
 
   return (
-    <div className="bg-main-01 myBg flex flex-col items-center justify-center h-screen">
+    <div className="bg-main-01 myBg flex flex-col items-center justify-center min-h-screen py-10">
       <div>
         <img
           src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/logo_wh.png"
@@ -113,7 +113,7 @@ function SignUp() {
 
       <form
         onSubmit={confirmHandler}
-        className="flex flex-col items-center w-[90%] max-w-[480px] pb-30"
+        className="flex flex-col items-center w-[90%] max-w-[480px] py-10"
       >
         <label htmlFor="name" className="sr-only">
           이름

@@ -64,7 +64,10 @@ function SignIn() {
       </div>
       {/* PC 버전 */}
 
-      <form onSubmit={confirmHandler} className="flex flex-col items-center w-[90%] max-w-[480px] pb-30">
+      <form
+        onSubmit={confirmHandler}
+        className="flex flex-col items-center w-[90%] max-w-[480px] my-10"
+      >
         <label htmlFor="email" className="sr-only">
           이메일
         </label>
@@ -77,7 +80,9 @@ function SignIn() {
           onChange={eventHandler}
           required
           disabled={loading}
-          onInvalid={(e) => e.target.setCustomValidity("이메일을 입력해주세요.")}
+          onInvalid={(e) =>
+            e.target.setCustomValidity("이메일을 입력해주세요.")
+          }
           className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full max-w-[480px] py-2 px-3 mb-2 border border-main-01 focus:border-main-02"
         />
 
@@ -93,12 +98,24 @@ function SignIn() {
           onChange={eventHandler}
           required
           disabled={loading}
-          onInvalid={(e) => e.target.setCustomValidity("비밀번호를 입력해주세요.")}
+          onInvalid={(e) =>
+            e.target.setCustomValidity("비밀번호를 입력해주세요.")
+          }
           className="outline-none placeholder-gray-mid rounded text-[13px]  bg-white w-full max-w-[480px] py-2 px-3 mb-2 border border-main-01 focus:border-main-02"
         />
-        {errorM && <div style={{ color: "red", marginBottom: "6px", textAlign: "center" }}>{errorM}</div>}
+        {errorM && (
+          <div
+            style={{ color: "red", marginBottom: "6px", textAlign: "center" }}
+          >
+            {errorM}
+          </div>
+        )}
 
-        <Button type="submit" disabled={loading} className="w-full max-w-[480px] mt-2 mb-3 py-2 text-[13px]">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full max-w-[480px] mt-2 mb-3 py-2 text-[13px]"
+        >
           {loading ? "로그인 중..." : " 로그인"}
         </Button>
 

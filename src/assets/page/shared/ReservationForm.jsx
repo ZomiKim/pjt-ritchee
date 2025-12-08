@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../componetns/Button';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import axios from 'axios';
 import { useUser } from '../../../context/UserContext';
@@ -95,6 +95,11 @@ function ReservationForm() {
   const query = new URLSearchParams(search);
   const h_code = query.get('id');
   const [hospital, setHospital] = useState({});
+  const { user } = useUser();
+  console.log(user?.id);
+  const nav = useNavigate();
+
+  console.log(user);
 
   const fetch = async () => {
     const { data, error } = await axios.get(`http://localhost:8080/api/hs_info/${h_code}`);
@@ -106,18 +111,34 @@ function ReservationForm() {
 
     setHospital(data);
   };
-
+  // 정보 자동 기입 해야함
   const [isCalendar, setIsCalendar] = useState(false);
   const [privacyChecked, setPrivacyChecked] = useState(false);
   const [formData, setFormData] = useState({
     hospitalSymptom: '',
     userName: '',
-    gender: 'm',
+    gender: 'M',
     reservationDate: '',
     reservationTime: '',
     userPhoneNumber: '',
     etc: '',
   });
+
+  const postAppm = async () => {
+    const { error } = await axios.post('http://localhost:8080/api/appm', {
+      h_code: h_code,
+      a_date: formData.reservationDate,
+      a_content: formData.hospitalSymptom,
+      a_user_id: user.id,
+      a_del_yn: 'N',
+    });
+    if (error) {
+      console.error('error!', error.message);
+    } else {
+      alert('예약이 완료되었습니다.');
+      nav('/map/reservationForm/reservationCheck');
+    }
+  };
 
   const eventHandler = (e) => {
     const { name, value } = e.target;
@@ -131,14 +152,17 @@ function ReservationForm() {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    if (formData.hospitalSymptom.trim() == '') alert('증상을 입력하세요.');
+    else if (formData.userName.trim() == '') alert('이름을 입력하세요.');
+    else if (formData.reservationDate.trim() == '') alert('날짜를 선택하세요.');
+    else if (formData.reservationTime.trim() == '') alert('시간을 입력하세요.');
+    else if (formData.userPhoneNumber.trim() == '') alert('핸드폰 번호를 입력하세요.');
+    else postAppm();
   };
 
   useEffect(() => {
     fetch();
   }, []);
-
-  const { user } = useUser();
-  console.log(user?.id);
 
   return (
     <>
@@ -148,9 +172,9 @@ function ReservationForm() {
             테스트용 {JSON.stringify(formData)}
             <h4 className="tit mb-5">
               <i className="fa-solid fa-tooth"></i>
-              진료 예약 하기
+              진료 예약하기
             </h4>
-            <form onClick={submitHandler}>
+            <form onSubmit={submitHandler}>
               <input
                 type="text"
                 name="hospitalName"
@@ -174,25 +198,26 @@ function ReservationForm() {
                 type="text"
                 name="userName"
                 placeholder="이름"
+                value={formData?.userName}
                 className="outline-none placeholder-gray-mid rounded-sm text-[12px] bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 onChange={eventHandler}
               />
               <div className="w-[130px] flex justify-between my-2.5 cursor-pointer">
                 <div
                   className="flex items-center gap-[5px]"
-                  onClick={() => setFormData((prev) => ({ ...prev, gender: 'm' }))}
+                  onClick={() => setFormData((prev) => ({ ...prev, gender: 'F' }))}
                 >
                   <span className="material-icons text-main-02">
-                    {formData.gender === 'm' ? 'radio_button_checked' : 'radio_button_unchecked'}
+                    {formData.gender === 'M' ? 'radio_button_checked' : 'radio_button_unchecked'}
                   </span>
                   <span className="male dummy">남</span>
                 </div>
                 <div
                   className="flex items-center gap-[5px]"
-                  onClick={() => setFormData((prev) => ({ ...prev, gender: 'f' }))}
+                  onClick={() => setFormData((prev) => ({ ...prev, gender: 'F' }))}
                 >
                   <span className="material-icons text-main-02">
-                    {formData.gender === 'f' ? 'radio_button_checked' : 'radio_button_unchecked'}
+                    {formData.gender === 'F' ? 'radio_button_checked' : 'radio_button_unchecked'}
                   </span>
                   <span className="female dummy">여</span>
                 </div>
@@ -206,7 +231,7 @@ function ReservationForm() {
                   onClick={() => setIsCalendar((prev) => !prev)}
                 >
                   <span className="material-icons text-[15px]!">edit_calendar</span>
-                  {selectedDate ? moment(selectedDate).format('YYYY년 MM월 DD일') : '날짜 선택'}
+                  {selectedDate ? moment(selectedDate).format('YYYY-MM-DD') : '날짜 선택'}
                 </div>
                 <div className={`${isCalendar ? '' : 'hidden'} absolute w-full z-10`}>
                   <div className="w-full max-w-md  p-4 bg-white rounded-lg shadow-md">
@@ -269,7 +294,7 @@ function ReservationForm() {
                               setSelectedDate(date);
                               setFormData((prev) => ({
                                 ...prev,
-                                reservationDate: moment(date).format('YYYY년 MM월 DD일'),
+                                reservationDate: moment(date).format('YYYY-MM-DD'),
                               }));
                             }}
                           >
@@ -302,6 +327,7 @@ function ReservationForm() {
                 name="etc"
                 rows="4"
                 placeholder="특이 사항"
+                value={user?.text}
                 className="outline-none placeholder-gray-mid rounded-sm text-[12px] bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 onChange={eventHandler}
               ></textarea>
@@ -319,13 +345,11 @@ function ReservationForm() {
                   병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료 후 관련 법령에 따라 보관 후 파기합니다.
                 </label>
               </div>
-              <Button size="long" className={`mb-[50px] ${privacyChecked ? '' : 'opacity-50 cursor-not-allowed'}`}>
-                <Link
-                  className={`w-full ${privacyChecked ? '' : 'pointer-events-none'}`}
-                  to={`/map/reservationForm/reservationCheck`}
-                >
-                  예약하기
-                </Link>
+              <Button
+                size="long"
+                className={`mb-[50px] ${privacyChecked ? '' : 'opacity-50 cursor-not-allowed'} cursor-pointer`}
+              >
+                <div className={`w-full ${privacyChecked ? '' : 'pointer-events-none'}`}>예약하기</div>
               </Button>
             </form>
           </div>

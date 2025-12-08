@@ -9,9 +9,7 @@ function ReservationCheck() {
   const id = user?.id;
   const [appointment, setAppointment] = useState({});
   const userReservationFetch = async () => {
-    const { data, error } = await axios.get(
-      `http://localhost:8080/api/appmUser/47fe4cb1-67a8-4cb1-8f1a-89b45a21349f`
-    );
+    const { data, error } = await axios.get(`http://localhost:8080/api/appmUser/${id}`);
     if (error) console.error('error', error.message);
     else setAppointment(data);
   };
@@ -29,7 +27,8 @@ function ReservationCheck() {
       age--;
     }
 
-    return age;
+    if (age) return age;
+    else return '35';
   }
 
   useEffect(() => {
@@ -55,33 +54,23 @@ function ReservationCheck() {
                 </h4>
               </div>
               <div className="reservationBody">
-                <div className="patient dummy text-gray-deep">
-                  · 환자명 : {appointment.name || '김훈규'}
-                </div>
+                <div className="patient dummy text-gray-deep">· 환자명 : {appointment?.name || '김훈규'}</div>
                 <div className="symptom dummy text-gray-deep">
-                  · 증상 :{' '}
-                  {appointment?.appms?.[0]?.a_dia_name || '어금니 통증'}
+                  · 증상 : {appointment?.appms?.[0]?.a_dia_name || '어금니 통증'}
                 </div>
                 <div className="age dummy text-gray-deep">
-                  · 나이 :{' '}
-                  {`${getAge(appointment?.birth?.split('-')[0])}세` ||
-                    '만 35세'}
+                  · 나이 : {`만 ${getAge(appointment?.birth?.split('-')[0])}세` || '만 35세'}
                 </div>
-                <div className="gender dummy text-gray-deep">
-                  · 성별 : {appointment?.gender?.[0] || '남'}
-                </div>
+                <div className="gender dummy text-gray-deep">· 성별 : {appointment?.gender?.[0] || '남'}</div>
                 <div className="reservationDate dummy text-gray-deep">
                   · 예약 일자 : {appointment?.appms?.[0]?.a_date}
                 </div>
-                <div className="reservationTime dummy text-gray-deep">
-                  · 예약 시간 : 14시 15분
-                </div>
+                <div className="reservationTime dummy text-gray-deep">· 예약 시간 : 14시 15분</div>
                 <div className="phoneNumber dummy text-gray-deep">
                   · 연락처 : {appointment?.phone || '010-0000-0000'}
                 </div>
                 <div className="etc dummy text-gray-deep">
-                  · 특이 사항 :{' '}
-                  {appointment?.text || '고혈압, 고지혈증 약 복용 중'}
+                  · 특이 사항 : {appointment?.text || '고혈압, 고지혈증 약 복용 중'}
                 </div>
               </div>
             </div>

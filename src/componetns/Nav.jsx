@@ -1,7 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Nav() {
+  {
+    /* 에러페이지 */
+  }
+  // const location = useLocation();
+
+  // const hidePaths = ["/test"];
+
+  // const shouldHide = hidePaths.some((path) => location.pathname.startsWith(path));
+
+  // if (shouldHide) return null;
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -59,9 +70,7 @@ function Nav() {
                 }`}
               ></span>
               <span
-                className={`block w-6 h-0.5 bg-white transition-all duration-300 ${
-                  isOpen ? "opacity-0" : ""
-                }`}
+                className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
               ></span>
               <span
                 className={`block w-6 h-0.5 bg-white transition-all duration-300 ${
@@ -73,10 +82,7 @@ function Nav() {
 
           {/* logo */}
           <div className="shrink-0">
-            <Link
-              to="/"
-              className="block hover:opacity-80 transition-opacity duration-300"
-            >
+            <Link to="/" className="block hover:opacity-80 transition-opacity duration-300">
               <img
                 src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/logo_wh.png"
                 alt="logo"
@@ -142,10 +148,7 @@ function Nav() {
                 className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center gap-2 rounded-[10px]"
                 onClick={() => setIsOpen(false)}
               >
-                <span
-                  className="material-icons text-main-02"
-                  style={{ fontSize: "48px" }}
-                >
+                <span className="material-icons text-main-02" style={{ fontSize: "48px" }}>
                   person
                 </span>
                 {navLinks[0].name}
@@ -155,10 +158,7 @@ function Nav() {
                 className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center gap-2 rounded-[10px]"
                 onClick={() => setIsOpen(false)}
               >
-                <span
-                  className="material-icons text-main-02"
-                  style={{ fontSize: "48px" }}
-                >
+                <span className="material-icons text-main-02" style={{ fontSize: "48px" }}>
                   schedule
                 </span>
                 {navLinks[1].name}

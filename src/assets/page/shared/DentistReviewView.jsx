@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Comment from './Comment';
+import Button from './../../../componetns/Button';
 
 const DentistReviewView = () => {
+  const [like, setLike] = useState(false);
   return (
     <>
+      {/* 리뷰 */}
       <div className="wrap">
-        <div className="review mb-[50px]">
+        <div className="review mb-5">
           <div className="flex items-center gap-[5px] mb-5">
             <span className="material-icons">edit_calendar</span>
             <h4>의사 선생님이 친절한 곳!!</h4> {/* r_title 들어갈 곳*/}
@@ -49,10 +52,31 @@ const DentistReviewView = () => {
             치과에 대한 두려움이 많았던 저도 만족스러운 경험이었으니 누구든 편하게 방문하셔도 될 것 같아요. 앞으로 정기
             검진도 여기서 받으려고 합니다.
           </div>
+          <div className="count flex gap-2 justify-end mt-7">
+            <div className="like flex gap-2 items-center">
+              {/* {like ? (
+                <span class="material-icons">favorite_border</span>
+              ) : (
+                <span class="material-icons">favorite_border</span>
+              )} */}
+              <span className="material-icons cursor-pointer text-point-hov" onClick={() => setLike((prev) => !prev)}>
+                {like ? 'favorite_border' : 'favorite'}
+              </span>
+              <span className="dummy">111</span>
+              {/* <span className="dummy">{like ?? '111'}</span> */}
+            </div>
+            <div className="comment flex gap-2 items-center text-gray-deep">
+              <span className="material-icons">chat_bubble_outline</span>
+              <span className="dummy">111</span>
+              {/* <span className="dummy">{comment ?? '111'}</span> */}
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* 댓글 */}
       <ul className="comments">
-        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-y-main-01">
+        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-y-main-01 border-x-0">
           <div className="comment dummy px-[30px] py-3.5 ">
             <div className="commentContent mb-5">
               이 후기 보고 저도 다녀왔는데 진짜 안아프게 잘 해주세요! 좋은 정보 넘넘 감사합니다~!
@@ -64,7 +88,7 @@ const DentistReviewView = () => {
           </div>
         </li>
 
-        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-b-main-01 border-t-0">
+        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-b-main-01 border-t-0 border-x-0">
           <div className="comment dummy px-[30px] py-3.5 ">
             <div className="commentContent mb-5">너무 상세히 적어준 좋은 후기 감사합니다~~~</div>
             <div className="commentEtc text-gray-deep flex justify-between">
@@ -73,13 +97,28 @@ const DentistReviewView = () => {
             </div>
           </div>
         </li>
-        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-b-main-01 border-t-0">
+        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-b-main-01 border-t-0 border-x-0">
           <div className="comment dummy px-[30px] py-3.5 ">
             <div className="commentContent mb-5">덕분에 좋은 정보 얻었습니다</div>
             <div className="commentEtc text-gray-deep flex justify-between">
               <div className="commentWriter">작성자 : 임윤섭</div>
               <div className="commentCreatedAt">2025-02-11</div>
             </div>
+          </div>
+        </li>
+
+        {/* 댓글 작성 */}
+        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-b-main-01 border-t-0 border-x-0">
+          <div className="comment dummy px-[30px] py-3.5 ">
+            <textarea
+              id="comment"
+              name="comment"
+              rows="4"
+              placeholder="댓글을 작성해 주세요"
+              className="outline-none placeholder-gray-mid rounded-sm text-[12px] bg-white w-full py-2.5 pl-3 pr-2 border border-main-01 focus:border-main-02"
+              style={{ resize: 'none' }}
+            ></textarea>
+            <Button className={'mt-5 mb-2.5 cursor-pointer'}>댓글 작성</Button>
           </div>
         </li>
       </ul>

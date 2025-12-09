@@ -14,15 +14,10 @@ const List = () => {
   };
 
   const fetch = async () => {
-    const { data, error } = await axios.get(
-      `http://localhost:8080/api/hs_evalpt?page=0&size=10`
-    );
+    const { data, error } = await axios.get(`http://localhost:8080/api/hs_evalpt?page=0&size=10`);
 
     if (error) {
-      console.error(
-        'Hospital order by avgEvaluationPoint Info Fetch Error',
-        error.message
-      );
+      console.error('Hospital order by avgEvaluationPoint Info Fetch Error', error.message);
       return;
     }
     // console.log(data.content);
@@ -35,16 +30,13 @@ const List = () => {
       fetch();
       // http://localhost:5173/dentistList로 이동
     } else {
-      const { data, error } = await axios.get(
-        'http://localhost:8080/api/hs_find_para?page=0&size=10',
-        {
-          // &para1=튼튼&para2=개봉
-          params: {
-            para1: iValue.para1,
-            para2: iValue.para2,
-          },
-        }
-      );
+      const { data, error } = await axios.get('http://localhost:8080/api/hs_find_para?page=0&size=10', {
+        // &para1=튼튼&para2=개봉
+        params: {
+          para1: iValue.para1,
+          para2: iValue.para2,
+        },
+      });
 
       if (error) console.error(error.message);
       else {
@@ -61,10 +53,7 @@ const List = () => {
     <>
       <div className="myBg bg-light-02">
         <div className="wrap" style={{ backgroundColor: '#f4f8ff' }}>
-          <div
-            className="container"
-            style={{ paddingLeft: '5px', paddingRight: '5px' }}
-          >
+          <div className="container" style={{ paddingLeft: '5px', paddingRight: '5px' }}>
             <h4 className="tit mb-5">
               <i className="fa-solid fa-tooth"></i>
               구로구 리뷰 치과 릿치!
@@ -88,18 +77,20 @@ const List = () => {
                         : `/dentistList?para1=${iValue.para1}&para2=${iValue.para2}`
                     }
                   >
-                    <span
-                      className="material-icons text-white"
-                      style={{ fontSize: '17px' }}
-                    >
+                    <span className="material-icons text-white" style={{ fontSize: '17px' }}>
                       search
                     </span>
                   </Link>
                 </div>
-                <ul className="flex flex-col md:flex-row md:flex-wrap md:gap-4">
+                <ul className="py-6 flex flex-col md:flex-row md:flex-wrap md:justify-between gap-4">
                   {hospital.map((h, i) => {
                     return (
-                      <li key={i} className="w-full md:w-[48%] xl:w-[32%]">
+                      <li
+                        key={i}
+                        className={`tab_cont text-center text-deep p-6 bg-white rounded-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] w-full md:w-[48%] lg:w-[30%] ${
+                          i === hospital.length - 1 ? 'hidden md:block' : ''
+                        }`}
+                      >
                         <Link to={`/dentistList/dentistView?id=${h.h_code}`}>
                           <DentCard hospital={h} />
                         </Link>

@@ -90,17 +90,14 @@ function ReservationForm() {
   // 오늘 날짜
   const today = new Date();
 
-  // [form 관련]
   const { search } = useLocation();
   const query = new URLSearchParams(search);
   const h_code = query.get('id');
   const [hospital, setHospital] = useState({});
   const { user } = useUser();
-  console.log(user?.id);
   const nav = useNavigate();
 
-  console.log(user);
-
+  // 병원 정보 가져오기
   const fetch = async () => {
     const { data, error } = await axios.get(`http://localhost:8080/api/hs_info/${h_code}`);
 
@@ -111,7 +108,7 @@ function ReservationForm() {
 
     setHospital(data);
   };
-  // 정보 자동 기입 해야함
+
   const [isCalendar, setIsCalendar] = useState(false);
   const [privacyChecked, setPrivacyChecked] = useState(false);
   const [formData, setFormData] = useState({
@@ -124,6 +121,7 @@ function ReservationForm() {
     etc: '',
   });
 
+  // 예약 함수
   const postAppm = async () => {
     const { error } = await axios.post('http://localhost:8080/api/appm', {
       h_code: h_code,
@@ -152,6 +150,7 @@ function ReservationForm() {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    // 입력 폼 Validation
     if (formData.hospitalSymptom.trim() == '') alert('증상을 입력하세요.');
     else if (formData.userName.trim() == '') alert('이름을 입력하세요.');
     else if (formData.reservationDate.trim() == '') alert('날짜를 선택하세요.');
@@ -159,6 +158,15 @@ function ReservationForm() {
     else if (formData.userPhoneNumber.trim() == '') alert('핸드폰 번호를 입력하세요.');
     else postAppm();
   };
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      userName: user?.name || '김훈규',
+      userPhoneNumber: user?.phone || '없음',
+      etc: user?.text || '없음',
+    }));
+  }, [user]);
 
   useEffect(() => {
     fetch();
@@ -198,14 +206,14 @@ function ReservationForm() {
                 type="text"
                 name="userName"
                 placeholder="이름"
-                value={formData?.userName}
+                value={formData?.userName || '김훈규'}
                 className="outline-none placeholder-gray-mid rounded-sm text-[12px] bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 onChange={eventHandler}
               />
               <div className="w-[130px] flex justify-between my-2.5 cursor-pointer">
                 <div
                   className="flex items-center gap-[5px]"
-                  onClick={() => setFormData((prev) => ({ ...prev, gender: 'F' }))}
+                  onClick={() => setFormData((prev) => ({ ...prev, gender: 'M' }))}
                 >
                   <span className="material-icons text-main-02">
                     {formData.gender === 'M' ? 'radio_button_checked' : 'radio_button_unchecked'}
@@ -317,7 +325,7 @@ function ReservationForm() {
               <input
                 type="text"
                 name="userPhoneNumber"
-                value={user?.phone || '없음'}
+                value={formData?.userPhoneNumber || '없음'}
                 placeholder="연락처"
                 className="outline-none placeholder-gray-mid rounded-sm text-[12px] bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 onChange={eventHandler}
@@ -327,7 +335,7 @@ function ReservationForm() {
                 name="etc"
                 rows="4"
                 placeholder="특이 사항"
-                value={user?.text}
+                value={formData?.etc}
                 className="outline-none placeholder-gray-mid rounded-sm text-[12px] bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 onChange={eventHandler}
               ></textarea>

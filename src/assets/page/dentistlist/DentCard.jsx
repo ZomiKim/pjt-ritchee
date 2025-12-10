@@ -1,7 +1,6 @@
 import React from 'react';
 
 const DentCard = ({ hospital }) => {
-  console.log(hospital);
   return (
     <>
       <div className="tab_cont_tit flex flex-row md:flex-col items-center md:items-start mb-5">
@@ -59,9 +58,7 @@ const DentCard = ({ hospital }) => {
               edit_calendar
             </span>
           </div>
-          <span className="dummy text-gray-deep">
-            {hospital.h_tel1 || '02-000-0000'} / {hospital.h_tel2 || '010-0000-0000'}
-          </span>
+          <span className="dummy text-gray-deep">{hospital.h_tel1 || '02-000-0000'}</span>
         </li>
 
         <li className="review flex items-center gap-[5px] mb-[5px]">

@@ -86,9 +86,9 @@ function ReservationCheck() {
           </div>
         </div>
       ) : (
-        <div className="myBg bg-main-01 h-screen mb-[50px]">
-          <div className="wrap" style={{ backgroundColor: '#a1c5ff' }}>
-            <div className="container">
+        <div className="myBg bg-light-02 h-screen ">
+          <div className="wrap pl-1.5" style={{ backgroundColor: '#f4f8ff' }}>
+            <div className="reservation container">
               <h4 className="reservationTitle tit mb-5">
                 <span className="material-icons">health_and_safety</span>
                 소견서 작성

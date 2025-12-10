@@ -119,7 +119,7 @@ function MapPage() {
                 {hospital.h_name}
                 <div className="stars flex flex-row text-point items-end">
                   <span className="mr-1 text-[10px]!">
-                    {hospital.avg_eval_pt == 0 ? '(4.4)' : hospital.avg_eval_pt}
+                    {hospital.avg_eval_pt == 0 ? '0' : hospital.avg_eval_pt}
                   </span>
                   <div className="flex flex-row text-point items-center">
                     {Array.from({ length: 5 }).map((_, i) => {
@@ -145,13 +145,6 @@ function MapPage() {
                       );
                     })}
                   </div>
-                  {/* <div className="flex flex-row text-point items-center">
-                    <span className="material-icons">star</span>
-                    <span className="material-icons">star</span>
-                    <span className="material-icons">star</span>
-                    <span className="material-icons">star</span>
-                    <span className="material-icons">star_outline</span>
-                  </div> */}
                 </div>
               </div>
             </CustomOverlayMap>

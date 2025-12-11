@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../componetns/Button";
 import supabase from "../utils/supabase";
+import { useUser } from "../../context/UserContext";
 
 function SignUp() {
   const [loading, setLoading] = useState(false);
   const [gender, setGender] = useState("");
+  const { signIn } = useUser();
   const [formData, setFormData] = useState({
     name: "",
     birth: "",
@@ -111,19 +113,40 @@ function SignUp() {
 
       createdUserId = data.user.id;
 
-      const { error: dbError } = await supabase.from("h_user").insert({
-        id: createdUserId,
-        name: formData.name,
-        birth: formData.birth,
-        gender: formData.gender,
-        phone: formData.phone,
-        addr: formData.addr,
-        text: formData.text,
-      });
+      const { data: insertData, error: dbError } = await supabase
+        .from("h_user")
+        .insert({
+          id: createdUserId,
+          name: formData.name,
+          birth: formData.birth,
+          gender: formData.gender,
+          phone: formData.phone,
+          addr: formData.addr,
+          text: formData.text,
+          u_kind: 1,
+        })
+        .select();
 
       if (dbError) {
-        await supabase.auth.admin.deleteUser(createdUserId);
+        console.error("h_user 테이블 insert 에러:", dbError);
+        // admin.deleteUser는 서버 사이드에서만 가능하므로 클라이언트에서는 제거
+        throw new Error(`회원 정보 저장 중 오류가 발생했습니다: ${dbError.message}`);
+      }
+
+      if (!insertData || insertData.length === 0) {
+        console.error("h_user 테이블 insert 실패: 데이터가 반환되지 않음");
         throw new Error("회원 정보 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
+
+      // 회원가입 성공 후 자동 로그인 처리
+      const loginResult = await signIn(formData.useremail, formData.userpswd);
+      
+      if (loginResult?.error) {
+        console.error("자동 로그인 실패:", loginResult.error);
+        // 로그인 실패해도 회원가입은 성공했으므로 로그인 페이지로 이동
+        alert(`${formData.name}님, 회원가입을 환영합니다! 로그인해주세요.`);
+        navigate("/member/signin");
+        return;
       }
 
       // 성공
@@ -131,13 +154,11 @@ function SignUp() {
       navigate("/");
     } catch (err) {
       // 실패 메시지 표시
+      console.error("회원가입 에러:", err);
       setErrorM(err.message || "회원가입 중 오류가 발생했습니다.");
-
-      if (createdUserId) {
-        await supabase.auth.admin.deleteUser(createdUserId).catch(() => {
-          console.error("Auth 롤백 실패. 서비스 Key 권한을 확인하세요.");
-        });
-      }
+      
+      // admin.deleteUser는 서버 사이드에서만 가능하므로 클라이언트에서는 사용 불가
+      // 필요시 서버 사이드 함수나 트리거를 사용해야 함
     } finally {
       setLoading(false);
     }

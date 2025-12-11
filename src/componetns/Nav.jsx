@@ -91,7 +91,9 @@ function Nav() {
                 }`}
               ></span>
               <span
-                className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
+                className={`block w-6 h-0.5 bg-white transition-all duration-300 ${
+                  isOpen ? "opacity-0" : ""
+                }`}
               ></span>
               <span
                 className={`block w-6 h-0.5 bg-white transition-all duration-300 ${
@@ -103,7 +105,10 @@ function Nav() {
 
           {/* logo */}
           <div className="shrink-0">
-            <Link to="/" className="block hover:opacity-80 transition-opacity duration-300">
+            <Link
+              to="/"
+              className="block hover:opacity-80 transition-opacity duration-300"
+            >
               <img
                 src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/logo_wh.png"
                 alt="logo"
@@ -122,7 +127,7 @@ function Nav() {
                   className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group"
                 >
                   {link.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 pointer-events-none"></span>
                 </Link>
               ))}
               {user ? (
@@ -132,7 +137,7 @@ function Nav() {
                   className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group cursor-pointer"
                 >
                   로그아웃
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 pointer-events-none"></span>
                 </button>
               ) : (
                 <Link
@@ -140,7 +145,7 @@ function Nav() {
                   className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group"
                 >
                   로그인
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 pointer-events-none"></span>
                 </Link>
               )}
             </div>
@@ -187,7 +192,10 @@ function Nav() {
                 className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center gap-2 rounded-[10px] text-center"
                 onClick={() => setIsOpen(false)}
               >
-                <span className="material-icons text-main-02" style={{ fontSize: "48px" }}>
+                <span
+                  className="material-icons text-main-02"
+                  style={{ fontSize: "48px" }}
+                >
                   person
                 </span>
                 {user?.name ? (
@@ -205,7 +213,10 @@ function Nav() {
                 className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center justify-center gap-2 rounded-[10px] text-center"
                 onClick={() => setIsOpen(false)}
               >
-                <span className="material-icons text-main-02" style={{ fontSize: "48px" }}>
+                <span
+                  className="material-icons text-main-02"
+                  style={{ fontSize: "48px" }}
+                >
                   schedule
                 </span>
                 {navLinks[1].name}

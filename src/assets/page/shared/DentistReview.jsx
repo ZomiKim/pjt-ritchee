@@ -50,7 +50,7 @@ function DentistReview() {
                         </div>
                         <div className="reviewEvaluation flex justify-between items-center">
                           <div className="stars flex flex-row text-point">
-                            <span className="mr-1">{r.r_eval_pt || '4.4'}</span>
+                            <span className="mr-1">{r.r_eval_pt.toFixed(1) || '4.4'}</span>
                             <div className="flex flex-row text-point items-center">
                               {Array.from({ length: 5 }).map((_, i) => {
                                 if (r.r_eval_pt >= i + 1)

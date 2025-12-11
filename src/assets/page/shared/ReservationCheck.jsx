@@ -82,7 +82,7 @@ function ReservationCheck() {
                     · 예약 일자 : {date.split(' ')[0] ?? '2025년 12월 1일'}
                   </div>
                   <div className="reservationTime dummy text-gray-deep">
-                    · 예약 시간 : {date.split(' ')[1] + ' ' + date.split(' ')[2] ?? '14시 15분'}
+                    · 예약 시간 : {date.split(' ')[1] + ' ' + date.split(' ')[2] || '14시 15분'}
                   </div>
                   <div className="phoneNumber dummy text-gray-deep">
                     · 연락처 : {appointment?.phone || '010-0000-0000'}

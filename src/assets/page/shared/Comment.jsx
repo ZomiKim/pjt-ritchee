@@ -1,20 +1,85 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useUser } from '../../../context/UserContext';
+import Button from '../../../componetns/Button';
+import moment from 'moment';
 
-const Comment = () => {
+const Comment = ({ reviewId, countFn }) => {
+  const { user } = useUser();
+  const [comment, setComment] = useState({
+    comments: [],
+  });
+  const [formData, setFormData] = useState(''); // 댓글 입력 track state
+  const commentFetch = async () => {
+    const { data } = await axios.get(`http://localhost:8080/api/comment?reviewId=${reviewId}`);
+    setComment({
+      comments: data.comments,
+    });
+    countFn(data.commentCount);
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    if (formData.trim() == '') {
+      alert('댓글을 작성해 주세요.');
+      return;
+    }
+    const { error } = await axios.post('http://localhost:8080/api/comment', {
+      reviewId: +reviewId,
+      c_content: formData,
+      userId: user?.id,
+    });
+
+    if (error) {
+      console.error('에러 발생!!', error.message);
+      return;
+    }
+
+    setFormData('');
+    alert('댓글이 작성되었습니다.');
+    await commentFetch();
+  };
+
+  useEffect(() => {
+    commentFetch();
+  }, [reviewId]);
+
   return (
-    <div
-      className="comment dummy border-b border-b-main-01 first:border-t first:border-t-main-01"
-      style={{ padding: '14px 30px' }}
-    >
-      <div className="commentContent mb-5">
-        이 후기 보고 저도 다녀왔는데 진짜 안아프게 잘 해주세요! 좋은 정보 넘넘
-        감사합니다~!
-      </div>
-      <div className="commentEtc text-gray-deep flex justify-between">
-        <div className="commentWriter">작성자 : 김훈규</div>
-        <div className="commentCreatedAt">2025-02-11</div>
-      </div>
-    </div>
+    <ul className="comments">
+      {comment?.comments?.map((c, i) => (
+        <li
+          className={`myBg bg-light-02 border border-x-0 ${
+            i == 0 ? 'border-y-main-01' : 'border-b-main-01 border-t-0'
+          }`}
+          key={i}
+        >
+          <div className="comment dummy md:text-base! py-3.5! container">
+            <div className="commentContent mb-5">{c.c_content ?? '댓글 없음'}</div>
+            <div className="commentEtc text-gray-deep flex justify-between">
+              <div className="commentWriter">작성자 : {c?.name ?? '김훈규'}</div>
+              <div className="date">{moment(c?.createdAt).format('YYYY-MM-DD HH:mm:ss') ?? '2025-02-11 14:25:41'}</div>
+            </div>
+          </div>
+        </li>
+      ))}
+
+      {/* 댓글 작성 */}
+      <li className="myBg bg-light-02 border border-b-main-01 border-t-0 border-x-0">
+        <form className="comment dummy md:text-base! py-3.5! container" onSubmit={submitHandler}>
+          <textarea
+            id="comment"
+            name="comment"
+            rows="4"
+            placeholder="댓글을 작성해 주세요"
+            className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base! bg-white w-full py-2.5 pl-3 pr-2 border border-main-01 focus:border-main-02"
+            onChange={(e) => setFormData(e.target.value)}
+            value={formData}
+            style={{ resize: 'none' }}
+          ></textarea>
+          <Button className={'mt-5 mb-2.5 cursor-pointer'}>댓글 작성</Button>
+        </form>
+      </li>
+    </ul>
   );
 };
 

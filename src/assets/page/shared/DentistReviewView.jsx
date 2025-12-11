@@ -3,63 +3,26 @@ import Button from './../../../componetns/Button';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { useUser } from '../../../context/UserContext';
+import moment from 'moment';
+import Comment from './Comment';
 
 const DentistReviewView = () => {
-  const { user } = useUser();
   const [like, setLike] = useState(false);
   const [review, setReview] = useState({});
-  const [comment, setComment] = useState({
-    commentCount: 0,
-    comments: [],
-  });
-  const [formData, setFormData] = useState(''); // 댓글 입력 track state
+  const [commentCount, setCommentCount] = useState(0);
 
   const { search } = useLocation();
   const query = new URLSearchParams(search);
   const reviewId = query.get('reviewId'); // requestParam에 있는 값 가져오기
 
   const reviewFetch = async () => {
-    const { data } = await axios.get(
-      `http://localhost:8080/api/myreviewlist/${reviewId}`
-    );
+    const { data } = await axios.get(`http://localhost:8080/api/myreviewlist/${reviewId}`);
+    console.log('review', data);
     setReview(data[0]);
-  };
-
-  const commentFetch = async () => {
-    const { data } = await axios.get(
-      `http://localhost:8080/api/comment?reviewId=${reviewId}`
-    );
-    setComment({
-      commentCount: data.commentCount,
-      comments: data.comments,
-    });
-  };
-
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    if (formData.trim() == '') {
-      alert('댓글을 작성해 주세요.');
-      return;
-    }
-    const { error } = await axios.post('http://localhost:8080/api/comment', {
-      reviewId: +reviewId,
-      c_content: formData,
-      userId: user?.id,
-    });
-
-    if (error) {
-      console.error('에러 발생!!', error.message);
-      return;
-    }
-
-    setFormData('');
-    alert('댓글이 작성되었습니다.');
-    await commentFetch();
   };
 
   useEffect(() => {
     reviewFetch();
-    commentFetch();
   }, [reviewId]);
 
   return (
@@ -103,71 +66,27 @@ const DentistReviewView = () => {
                   })}
                 </div>
               </div>
-              <div className="dummy text-black">
-                조회수 : {review?.r_views ?? '854'}
-              </div>
+              <div className="dummy text-black">조회수 : {review?.r_views ?? '854'}</div>
             </div>
           </div>
-          <div className="dummy">{review?.r_content ?? '리뷰가 없습니다.'}</div>
+          <div className="dummy md:text-base!">{review?.r_content ?? '리뷰가 없습니다.'}</div>
           <div className="count flex gap-2 justify-end mt-7">
             <div className="like flex gap-2 items-center">
-              <span
-                className="material-icons cursor-pointer text-point-hov"
-                onClick={() => setLike((prev) => !prev)}
-              >
+              <span className="material-icons cursor-pointer text-point-hov" onClick={() => setLike((prev) => !prev)}>
                 {like ? 'favorite_border' : 'favorite'}
               </span>
               <span className="dummy">{review?.likeCount ?? '111'}</span>
             </div>
             <div className="comment flex gap-2 items-center">
               <span className="material-icons">chat_bubble_outline</span>
-              <span className="dummy">{comment?.commentCount ?? '111'}</span>
+              <span className="dummy">{commentCount ?? '111'}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* 댓글 */}
-      <ul className="comments">
-        {comment?.comments?.map((c, i) => (
-          <li
-            className={`myBg bg-light-02 md:px-6 xl:px-10 border border-x-0 ${
-              i == 0 ? 'border-y-main-01' : 'border-b-main-01 border-t-0'
-            }`}
-            key={i}
-          >
-            <div className="comment dummy px-[30px] py-3.5 ">
-              <div className="commentContent mb-5">
-                {c.c_content ?? '댓글 없음'}
-              </div>
-              <div className="commentEtc text-gray-deep flex justify-between">
-                <div className="commentWriter">작성자 : 김훈규</div>
-                <div className="commentCreatedAt">2025-02-11</div>
-              </div>
-            </div>
-          </li>
-        ))}
-
-        {/* 댓글 작성 */}
-        <li className="myBg bg-light-02 md:px-6 xl:px-10 border border-b-main-01 border-t-0 border-x-0">
-          <form
-            className="comment dummy px-[30px] py-3.5"
-            onSubmit={submitHandler}
-          >
-            <textarea
-              id="comment"
-              name="comment"
-              rows="4"
-              placeholder="댓글을 작성해 주세요"
-              className="outline-none placeholder-gray-mid rounded-sm text-[12px] bg-white w-full py-2.5 pl-3 pr-2 border border-main-01 focus:border-main-02"
-              onChange={(e) => setFormData(e.target.value)}
-              value={formData}
-              style={{ resize: 'none' }}
-            ></textarea>
-            <Button className={'mt-5 mb-2.5 cursor-pointer'}>댓글 작성</Button>
-          </form>
-        </li>
-      </ul>
+      <Comment reviewId={reviewId} countFn={setCommentCount} />
     </>
   );
 };

@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 
-function PageNatation({ totalPages = 10, onPageChange }) {
-  const [currentPage, setCurrentPage] = useState(1);
+function PageNatation({ totalPages = 10, onPageChange, pageFn, currentPage: externalCurrentPage }) {
+  const [internalCurrentPage, setInternalCurrentPage] = useState(1);
+  
+  // 외부에서 currentPage를 전달받으면 사용, 없으면 내부 상태 사용
+  const currentPage = externalCurrentPage !== undefined ? externalCurrentPage : internalCurrentPage;
+
+  useEffect(() => {
+    if (externalCurrentPage !== undefined) {
+      setInternalCurrentPage(externalCurrentPage);
+    }
+  }, [externalCurrentPage]);
 
   const handlePageChange = (page) => {
     if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
+    setInternalCurrentPage(page);
+    if (pageFn) pageFn(page - 1);
     if (onPageChange) onPageChange(page);
   };
 
@@ -27,7 +37,9 @@ function PageNatation({ totalPages = 10, onPageChange }) {
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="w-10 h-10 rounded-md bg-white text-gray-deep border border-main-01 hover:bg-main-01 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+        className={`${
+          currentPage === 1 ? '' : 'lg:hover:cursor-pointer'
+        } w-10 h-10 rounded-md bg-white text-gray-deep border border-main-01 hover:bg-main-01 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300`}
       >
         <i className="fa-solid fa-chevron-left"></i>
       </button>
@@ -37,10 +49,10 @@ function PageNatation({ totalPages = 10, onPageChange }) {
         <button
           key={page}
           onClick={() => handlePageChange(page)}
-          className={`w-10 h-10 rounded-md transition-colors duration-300 ${
+          className={`lg:hover:cursor-pointer w-10 h-10 rounded-md transition-colors duration-300 ${
             currentPage === page
-              ? "bg-point text-white"
-              : "bg-white text-gray-deep border border-main-01 hover:bg-light-01"
+              ? 'bg-point text-white'
+              : 'bg-white text-gray-deep border border-main-01 hover:bg-light-01'
           }`}
         >
           {page}
@@ -51,7 +63,9 @@ function PageNatation({ totalPages = 10, onPageChange }) {
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="w-10 h-10 rounded-md bg-white text-gray-deep border border-main-01 hover:bg-light-01 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+        className={`${
+          currentPage === totalPages ? '' : 'lg:hover:cursor-pointer'
+        } w-10 h-10 rounded-md bg-white text-gray-deep border border-main-01 hover:bg-light-01 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300`}
       >
         <i className="fa-solid fa-chevron-right"></i>
       </button>

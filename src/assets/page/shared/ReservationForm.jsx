@@ -324,15 +324,14 @@ function ReservationForm() {
                           <div
                             key={idx}
                             className={`h-10 flex items-center justify-center rounded cursor-pointer
-                                  ${date ? 'hover:border border-main-01' : ''}
-                                  ${isToday ? 'border border-blue-500' : ''}
-                                  ${isSelected ? 'bg-blue-500 text-white' : ''}
-                                  ${textColor}
-                                `}
+        ${date ? 'hover:border border-main-01' : ''}
+        ${isToday ? 'border border-blue-500' : ''}
+        ${isSelected ? 'bg-blue-500 text-white' : ''}
+        ${textColor}
+      `}
                             onClick={() => {
                               if (!date) return;
                               if (moment(date).isBefore(moment().startOf('day'))) {
-                                // 오늘보다 하루 전날인지 확인
                                 alert('오늘 이전 날짜는 선택할 수 없습니다.');
                                 return;
                               }
@@ -342,6 +341,15 @@ function ReservationForm() {
                                 ...prev,
                                 reservationDate: moment(date).format('YYYY-MM-DD'),
                               }));
+                            }}
+                            onDoubleClick={() => {
+                              if (!date) return;
+                              setSelectedDate(date);
+                              setFormData((prev) => ({
+                                ...prev,
+                                reservationDate: moment(date).format('YYYY-MM-DD'),
+                              }));
+                              setIsCalendar(false); // 🔹 달력 닫기
                             }}
                           >
                             {date.getDate()}

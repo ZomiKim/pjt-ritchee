@@ -1,42 +1,76 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import DentCard from './DentCard';
 import PageNatation from '../../../componetns/PageNatation';
 import axios from 'axios';
 
 const List = () => {
+  const nav = useNavigate();
   const [inputValue, setInputValue] = useState('');
   const [hospital, setHospital] = useState([]);
+  const [page, setPage] = useState(0);
+
+  const iValue = {
+    para1: inputValue.split(' ')[0],
+    para2: inputValue.split(' ')[1] ?? '',
+  };
 
   const fetch = async () => {
-    const { data, error } = await axios.get(
-      `http://localhost:8080/api/hs_evalpt?page=0&size=10`
-    );
+    const { data, error } = await axios.get(`http://localhost:8080/api/hs_evalpt?page=${page}&size=10`);
 
     if (error) {
-      console.error(
-        'Hospital order by avgEvaluationPoint Info Fetch Error',
-        error.message
-      );
+      console.error('Hospital order by avgEvaluationPoint Info Fetch Error', error.message);
       return;
     }
-    console.log(data.content);
     setHospital(data.content);
+  };
+
+  const searchFetch = async () => {
+    if (inputValue.trim() === '') {
+      alert('검색어를 입력하세요.');
+      fetch();
+      // http://localhost:5173/dentistList로 이동
+    } else {
+      const { data, error } = await axios.get(`http://localhost:8080/api/hs_find_para?page=${page}&size=10`, {
+        // &para1=튼튼&para2=개봉
+        params: {
+          para1: iValue.para1,
+          para2: iValue.para2,
+        },
+      });
+
+      if (error) {
+        console.error(error.message);
+        return;
+      } else {
+        setHospital(data.content);
+      }
+    }
+  };
+
+  const EnterHandler = (e) => {
+    if (e.key == 'Enter') {
+      searchFetch();
+      nav(
+        `${
+          inputValue.trim() == ''
+            ? '/dentistList'
+            : `/dentistList?para1=${iValue.para1}${iValue.para2 ? `&para2=${iValue.para2}` : ''}`
+        }`
+      );
+    }
   };
 
   useEffect(() => {
     fetch();
-  }, []);
+    window.scrollTo({ top: 0 });
+  }, [page]);
 
   return (
     <>
       <div className="myBg bg-light-02">
         <div className="wrap" style={{ backgroundColor: '#f4f8ff' }}>
-          <div
-            className="container"
-            style={{ paddingLeft: '5px', paddingRight: '5px' }}
-          >
-            테스트 : {inputValue}
+          <div className="container" style={{ paddingLeft: '5px', paddingRight: '5px' }}>
             <h4 className="tit mb-5">
               <i className="fa-solid fa-tooth"></i>
               구로구 리뷰 치과 릿치!
@@ -50,26 +84,42 @@ const List = () => {
                     placeholder="검색어를 입력하세요"
                     className="searchInput outline-none placeholder-gray-mid"
                     onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={EnterHandler}
                   />
-                  <div className="searchBtn bg-main-02 w-5 h-5 p-3 rounded-full flex justify-center items-center absolute right-3.5 xl:cursor-pointer">
-                    <span
-                      className="material-icons text-white"
-                      style={{ fontSize: '17px' }}
-                    >
+                  <Link
+                    className="searchBtn bg-main-02 w-5 h-5 p-3 rounded-full flex justify-center items-center absolute right-3.5 xl:cursor-pointer"
+                    onClick={searchFetch}
+                    to={
+                      inputValue.trim() == ''
+                        ? '/dentistList'
+                        : `/dentistList?para1=${iValue.para1}${iValue.para2 ? `&para2=${iValue.para2}` : ''}`
+                    }
+                  >
+                    <span className="material-icons text-white" style={{ fontSize: '17px' }}>
                       search
                     </span>
-                  </div>
+                  </Link>
                 </div>
-                <ul className="flex flex-col md:flex-row md:flex-wrap md:gap-4">
-                  {hospital.map((h, i) => {
-                    return (
-                      <li key={i} className="w-full md:w-[48%] xl:w-[32%]">
-                        <Link to={`/dentistList/dentistView?id=${h.h_code}`}>
-                          <DentCard hospital={h} />
-                        </Link>
-                      </li>
-                    );
-                  })}
+                <ul
+                  className={`py-6 flex flex-col md:flex-row md:flex-wrap ${
+                    hospital.length < 4 ? 'md:gap-20' : 'md:justify-between'
+                  } gap-4`}
+                >
+                  {hospital &&
+                    hospital.map((h, i) => {
+                      return (
+                        <li
+                          key={i}
+                          className={`tab_cont text-center text-deep p-6 bg-white rounded-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] w-full md:w-[48%] lg:w-[30%] ${
+                            i === 9 ? 'md:hidden' : ''
+                          }`}
+                        >
+                          <Link to={`/dentistList/dentistView?id=${h.h_code}`}>
+                            <DentCard hospital={h} />
+                          </Link>
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
             </div>
@@ -77,7 +127,7 @@ const List = () => {
         </div>
         {/* pagenation에 py-16 걸려있어서 mb-50 - 16 */}
         <div className="mb-[34px]">
-          <PageNatation />
+          <PageNatation pageFn={setPage} />
         </div>
       </div>
     </>

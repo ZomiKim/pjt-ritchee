@@ -1,27 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PageNatation from './../../../componetns/PageNatation';
 import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function DentistReview() {
   const { search } = useLocation();
   const query = new URLSearchParams(search);
   const h_code = query.get('id');
+  const [review, setReview] = useState([]);
+  const [page, setPage] = useState(0);
+
+  // 화면 크기에 따른 size 가져오기
+  const getDeviceSize = () => {
+    const width = window.innerWidth;
+    if (width >= 1280) return 9; // PC
+    else if (width >= 768) return 5; // TB
+    else return 5; // MB
+  };
+
+  const fetch = async () => {
+    const size = getDeviceSize();
+    const { data } = await axios.get(`http://localhost:8080/api/rs_review?page=${page}&size=${size}&h_code=${h_code}`);
+    console.log(data.content);
+    setReview(data.content);
+  };
+
+  useEffect(() => {
+    fetch();
+  }, [h_code, page]);
+
   return (
     <>
-      <div className="myBg bg-light-02">
-        <div className="wrap" style={{ backgroundColor: '#f4f8ff', marginTop: '30px' }}>
-          <div className="container">
-            <div className="flex items-center gap-[5px] mb-5">
-              <span className="material-icons">edit_calendar</span>
-              <h4>고객님들의 실제 후기</h4>
-            </div>
-            <div className="list flex flex-col xl:flex-row xl:flex-wrap xl:gap-4">
-              {/* api 완성 후 h_code를 통해 r_id를 가져올 예정 */}
-              {/* <ul className="list">
-                {hospital.map((h, i) => {
+      {review && (
+        <div className="myBg bg-light-02">
+          <div className="wrap" style={{ backgroundColor: '#f4f8ff', marginTop: '30px' }}>
+            <div className="container">
+              <div className="flex items-center gap-[5px] mb-5">
+                <span className="material-icons">edit_calendar</span>
+                <h4>고객님들의 실제 후기</h4>
+              </div>
+
+              <ul className="list flex flex-col xl:flex-row xl:flex-wrap xl:gap-4">
+                {review?.map((r, i) => {
                   return (
-                    <li>
-                      <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`}>
+                    <li key={i} className="w-full xl:w-[32%]">
+                      <Link to={`/dentistList/dentistView/dentistReview?reviewId=${r.r_id}`}>
                         <div
                           className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
                           style={{
@@ -29,257 +52,53 @@ function DentistReview() {
                           }}
                         >
                           <div className="reviewTitle flex items-center justify-between mb-3">
-                            <span>{h.r_title}</span>
+                            <span>{r.r_title ?? '리뷰 제목'}</span>
                             <span className="material-icons">keyboard_arrow_right</span>
                           </div>
                           <div className="reviewContent dummy text-gray-deep truncate mb-2.5">
-                            {h.r_content}
+                            {r.r_content ?? '리뷰 내용'}
                           </div>
-                          <div className="reviewEvaluation flex justify-between">
-                            <div className="stars flex flex-row text-point items-center">
-                              <span className="mr-1">4.4</span>
+                          <div className="reviewEvaluation flex justify-between items-center">
+                            <div className="stars flex flex-row text-point">
+                              <span className="mr-1">{r.r_eval_pt.toFixed(1) || '4.4'}</span>
                               <div className="flex flex-row text-point items-center">
-                                <span className="material-icons">star</span>
-                                <span className="material-icons">star</span>
-                                <span className="material-icons">star</span>
-                                <span className="material-icons">star</span>
-                                <span className="material-icons">star_outline</span>
+                                {Array.from({ length: 5 }).map((_, i) => {
+                                  if (r.r_eval_pt >= i + 1)
+                                    return (
+                                      <span key={i} className="material-icons">
+                                        star
+                                      </span>
+                                    );
+                                  if (r.r_eval_pt > i && r.r_eval_pt < i + 1)
+                                    return (
+                                      <span key={i} className="material-icons">
+                                        star_half
+                                      </span>
+                                    );
+                                  return (
+                                    <span key={i} className="material-icons">
+                                      star_outline
+                                    </span>
+                                  );
+                                })}
                               </div>
                             </div>
-                            <div className="dummy text-gray-mid">조회수 : {h.r_view}</div>
+                            <div className="dummy text-gray-mid">조회수 : {r.r_views ?? '0'}</div>
                           </div>
                         </div>
                       </Link>
                     </li>
                   );
                 })}
-              </ul> */}
-              {/* 한 줄에 3개는 32% 4개는 24% */}
-              {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
-                <div
-                  className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
-                  style={{
-                    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
-                  }}
-                >
-                  <div className="reviewTitle flex items-center justify-between mb-3">
-                    <span>너무 친절하고 진료를 잘 봐주세요!</span>
-                    <span className="material-icons">keyboard_arrow_right</span>
-                  </div>
-                  <div className="reviewContent dummy text-gray-deep truncate mb-2.5">
-                    부모님과 함께 방문했는데 치료 과정 내내 친절하게 설명해주셔서 엄마께서 정말 편안하게 진료를
-                    받으셨습니다. 돌아가시는 길에 “다음에도 여기 오자”라고 하실 만큼 만족하셨어요!
-                  </div>
-                  <div className="reviewEvaluation flex justify-between">
-                    <div className="stars flex flex-row text-point items-center">
-                      <span className="mr-1">4.4</span>
-                      <div className="flex flex-row text-point items-center">
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star_outline</span>
-                      </div>
-                    </div>
-                    <div className="dummy text-gray-mid">조회수 : 854</div>
-                  </div>
-                </div>
-              </Link>
-              {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
-                <div
-                  className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
-                  style={{
-                    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
-                  }}
-                >
-                  <div className="reviewTitle flex items-center justify-between mb-3">
-                    <span>너무 친절하고 진료를 잘 봐주세요!</span>
-                    <span className="material-icons">keyboard_arrow_right</span>
-                  </div>
-                  <div className="reviewContent dummy text-gray-deep truncate mb-2.5">
-                    부모님과 함께 방문했는데 치료 과정 내내 친절하게 설명해주셔서 엄마께서 정말 편안하게 진료를
-                    받으셨습니다. 돌아가시는 길에 “다음에도 여기 오자”라고 하실 만큼 만족하셨어요!
-                  </div>
-                  <div className="reviewEvaluation flex justify-between">
-                    <div className="stars flex flex-row text-point items-center">
-                      <span className="mr-1">4.4</span>
-                      <div className="flex flex-row text-point items-center">
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star_outline</span>
-                      </div>
-                    </div>
-                    <div className="dummy text-gray-mid">조회수 : 854</div>
-                  </div>
-                </div>
-              </Link>
-              {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
-                <div
-                  className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
-                  style={{
-                    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
-                  }}
-                >
-                  <div className="reviewTitle flex items-center justify-between mb-3">
-                    <span>너무 친절하고 진료를 잘 봐주세요!</span>
-                    <span className="material-icons">keyboard_arrow_right</span>
-                  </div>
-                  <div className="reviewContent dummy text-gray-deep truncate mb-2.5">
-                    부모님과 함께 방문했는데 치료 과정 내내 친절하게 설명해주셔서 엄마께서 정말 편안하게 진료를
-                    받으셨습니다. 돌아가시는 길에 “다음에도 여기 오자”라고 하실 만큼 만족하셨어요!
-                  </div>
-                  <div className="reviewEvaluation flex justify-between">
-                    <div className="stars flex flex-row text-point items-center">
-                      <span className="mr-1">4.4</span>
-                      <div className="flex flex-row text-point items-center">
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star_outline</span>
-                      </div>
-                    </div>
-                    <div className="dummy text-gray-mid">조회수 : 854</div>
-                  </div>
-                </div>
-              </Link>
-              {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
-                <div
-                  className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
-                  style={{
-                    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
-                  }}
-                >
-                  <div className="reviewTitle flex items-center justify-between mb-3">
-                    <span>너무 친절하고 진료를 잘 봐주세요!</span>
-                    <span className="material-icons">keyboard_arrow_right</span>
-                  </div>
-                  <div className="reviewContent dummy text-gray-deep truncate mb-2.5">
-                    부모님과 함께 방문했는데 치료 과정 내내 친절하게 설명해주셔서 엄마께서 정말 편안하게 진료를
-                    받으셨습니다. 돌아가시는 길에 “다음에도 여기 오자”라고 하실 만큼 만족하셨어요!
-                  </div>
-                  <div className="reviewEvaluation flex justify-between">
-                    <div className="stars flex flex-row text-point items-center">
-                      <span className="mr-1">4.4</span>
-                      <div className="flex flex-row text-point items-center">
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star_outline</span>
-                      </div>
-                    </div>
-                    <div className="dummy text-gray-mid">조회수 : 854</div>
-                  </div>
-                </div>
-              </Link>
-              {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
-                <div
-                  className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
-                  style={{
-                    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
-                  }}
-                >
-                  <div className="reviewTitle flex items-center justify-between mb-3">
-                    <span>너무 친절하고 진료를 잘 봐주세요!</span>
-                    <span className="material-icons">keyboard_arrow_right</span>
-                  </div>
-                  <div className="reviewContent dummy text-gray-deep truncate mb-2.5">
-                    부모님과 함께 방문했는데 치료 과정 내내 친절하게 설명해주셔서 엄마께서 정말 편안하게 진료를
-                    받으셨습니다. 돌아가시는 길에 “다음에도 여기 오자”라고 하실 만큼 만족하셨어요!
-                  </div>
-                  <div className="reviewEvaluation flex justify-between">
-                    <div className="stars flex flex-row text-point items-center">
-                      <span className="mr-1">4.4</span>
-                      <div className="flex flex-row text-point items-center">
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star_outline</span>
-                      </div>
-                    </div>
-                    <div className="dummy text-gray-mid">조회수 : 854</div>
-                  </div>
-                </div>
-              </Link>
-              {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
-                <div
-                  className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
-                  style={{
-                    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
-                  }}
-                >
-                  <div className="reviewTitle flex items-center justify-between mb-3">
-                    <span>너무 친절하고 진료를 잘 봐주세요!</span>
-                    <span className="material-icons">keyboard_arrow_right</span>
-                  </div>
-                  <div className="reviewContent dummy text-gray-deep truncate mb-2.5">
-                    부모님과 함께 방문했는데 치료 과정 내내 친절하게 설명해주셔서 엄마께서 정말 편안하게 진료를
-                    받으셨습니다. 돌아가시는 길에 “다음에도 여기 오자”라고 하실 만큼 만족하셨어요!
-                  </div>
-                  <div className="reviewEvaluation flex justify-between">
-                    <div className="stars flex flex-row text-point items-center">
-                      <span className="mr-1">4.4</span>
-                      <div className="flex flex-row text-point items-center">
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star_outline</span>
-                      </div>
-                    </div>
-                    <div className="dummy text-gray-mid">조회수 : 854</div>
-                  </div>
-                </div>
-              </Link>
-              {/* ======================================================================= */}
-              <Link to={`/dentistList/dentistView/dentistReview?id=${h_code}`} className="w-full xl:w-[32%]">
-                <div
-                  className="review w-full px-[13px] py-3.5 bg-white rounded-[5px] shadow-lg border border-main-01 mb-2.5"
-                  style={{
-                    boxShadow: 'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px',
-                  }}
-                >
-                  <div className="reviewTitle flex items-center justify-between mb-3">
-                    <span>너무 친절하고 진료를 잘 봐주세요!</span>
-                    <span className="material-icons">keyboard_arrow_right</span>
-                  </div>
-                  <div className="reviewContent dummy text-gray-deep truncate mb-2.5">
-                    부모님과 함께 방문했는데 치료 과정 내내 친절하게 설명해주셔서 엄마께서 정말 편안하게 진료를
-                    받으셨습니다. 돌아가시는 길에 “다음에도 여기 오자”라고 하실 만큼 만족하셨어요!
-                  </div>
-                  <div className="reviewEvaluation flex justify-between">
-                    <div className="stars flex flex-row text-point items-center">
-                      <span className="mr-1">4.4</span>
-                      <div className="flex flex-row text-point items-center">
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star</span>
-                        <span className="material-icons">star_outline</span>
-                      </div>
-                    </div>
-                    <div className="dummy text-gray-mid">조회수 : 854</div>
-                  </div>
-                </div>
-              </Link>
+              </ul>
             </div>
           </div>
+          {/* pagenation에 py-16 걸려있어서 mb-50 - 16 */}
+          <div className="mb-[34px]">
+            <PageNatation pageFn={setPage}></PageNatation>
+          </div>
         </div>
-        {/* pagenation에 py-16 걸려있어서 mb-50 - 16 */}
-        <div className="mb-[34px]">
-          <PageNatation></PageNatation>
-        </div>
-      </div>
+      )}
     </>
   );
 }

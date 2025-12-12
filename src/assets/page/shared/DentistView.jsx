@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../componetns/Button';
 import DentistReview from './DentistReview';
-import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 import supabase from '../../utils/supabase';
 import moment from 'moment';
 import axios from 'axios';
@@ -13,7 +18,9 @@ function DentistView() {
   const [hospital, setHospital] = useState({});
   const [isOpened, setIsOpened] = useState(false);
   const fetch = async () => {
-    const { data, error } = await axios.get('http://localhost:8080/api/hs_info/' + h_code);
+    const { data, error } = await axios.get(
+      'http://localhost:8080/api/hs_info/' + h_code
+    );
     setHospital(data);
   };
 
@@ -37,7 +44,9 @@ function DentistView() {
   const todayIndex = new Date().getDay();
 
   // 오늘부터 순서를 정렬
-  const adjustedOrder = weekdayOrder.slice(todayIndex).concat(weekdayOrder.slice(0, todayIndex));
+  const adjustedOrder = weekdayOrder
+    .slice(todayIndex)
+    .concat(weekdayOrder.slice(0, todayIndex));
 
   const sortedHours = adjustedOrder.map((day) => hours[day]);
 
@@ -62,7 +71,10 @@ function DentistView() {
               to={`/map?id=${h_code}`}
               className="bg-point rounded-md w-6 h-6 flex justify-center items-center mt-[3px] p-3"
             >
-              <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+              <span
+                className="material-icons text-white"
+                style={{ fontSize: '14px' }}
+              >
                 location_on
               </span>
             </Link>
@@ -71,15 +83,23 @@ function DentistView() {
             <div className="detail h-[100px]">
               <div className="addr flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                  <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+                  <span
+                    className="material-icons text-white"
+                    style={{ fontSize: '14px' }}
+                  >
                     location_on
                   </span>
                 </div>
-                <div className="dummy text-gray-deep">주소 : {hospital.h_addr || '주소'}</div>
+                <div className="dummy text-gray-deep">
+                  주소 : {hospital.h_addr || '주소'}
+                </div>
               </div>
               <div className="operationHours flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                  <div className="material-icons text-white" style={{ fontSize: '14px' }}>
+                  <div
+                    className="material-icons text-white"
+                    style={{ fontSize: '14px' }}
+                  >
                     access_time_filled
                   </div>
                 </div>
@@ -89,8 +109,13 @@ function DentistView() {
                 >
                   <span className="dummy">진료 시간 :</span>
                   <div className="flex items-center mr-1 text-black font-bold">
-                    {sortedHours[0][2]} {sortedHours[0][0]} ~ {sortedHours[0][1]}
-                    <span className={`material-icons ${isOpened ? 'hidden!' : ''} text-gray-deep font-normal`}>
+                    {sortedHours[0][2]} {sortedHours[0][0]} ~{' '}
+                    {sortedHours[0][1]}
+                    <span
+                      className={`material-icons ${
+                        isOpened ? 'hidden!' : ''
+                      } text-gray-deep font-normal`}
+                    >
                       keyboard_arrow_down
                     </span>
                   </div>
@@ -99,7 +124,12 @@ function DentistView() {
               <div className={`ml-[25px] ${isOpened ? '' : 'hidden'} mb-[5px]`}>
                 {sortedHours.map(([s, c, d], i) => {
                   return (
-                    <div key={i} className={`dummy ${i == 0 ? 'font-bold text-black' : 'text-gray-deep'}`}>
+                    <div
+                      key={i}
+                      className={`dummy ${
+                        i == 0 ? 'font-bold text-black' : 'text-gray-deep'
+                      }`}
+                    >
                       {d} {s} ~ {c}
                     </div>
                   );
@@ -107,47 +137,67 @@ function DentistView() {
               </div>
               <div className="lunchTime flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                  <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+                  <span
+                    className="material-icons text-white"
+                    style={{ fontSize: '14px' }}
+                  >
                     restaurant
                   </span>
                 </div>
                 <div className="dummy text-gray-deep">
-                  점심 시간 : {`${hospital[`h_lun_s`]} ~ ${hospital[`h_lun_c`]}` || '13 : 00 ~ 14 : 00'}
+                  점심 시간 :{' '}
+                  {`${hospital[`h_lun_s`]} ~ ${hospital[`h_lun_c`]}` ||
+                    '13 : 00 ~ 14 : 00'}
                 </div>
               </div>
               <div className="etc flex gap-[5px] mb-[5px]">
                 <div className="bg-main-02 rounded-full w-[15px] h-[15px] flex justify-center items-center mt-[3px] p-2.5">
-                  <span className="material-icons text-white" style={{ fontSize: '14px' }}>
+                  <span
+                    className="material-icons text-white"
+                    style={{ fontSize: '14px' }}
+                  >
                     local_parking
                   </span>
                 </div>
-                <div className="dummy text-gray-deep">주차 : 건물 지하 2층 차단기 통과 후 이용 가능</div>
+                <div className="dummy text-gray-deep">
+                  주차 : 건물 지하 2층 차단기 통과 후 이용 가능
+                </div>
               </div>
             </div>
-            <div className={`flex justify-between xl:justify-normal xl:gap-5 ${isOpened ? 'mt-[150px]' : ''}`}>
+            <div
+              className={`flex justify-between xl:justify-normal xl:gap-5 ${
+                isOpened ? 'mt-[150px]' : ''
+              }`}
+            >
               {/* mb */}
               <Button size="mid" className="xl:hidden">
-                <Link className="w-full" to={`../../map/reservationForm?id=${h_code}`}>
+                <Link
+                  className="w-full"
+                  to={`../../map/reservationForm?id=${h_code}`}
+                >
                   예약하기
                 </Link>
               </Button>
-              <Button size="mid" className="xl:hidden">
-                <Link className="w-full">전화하기</Link>
+              <Button size="mid" className="xl:hidden cursor-pointer">
+                <div className="w-full text-[16px]">전화하기</div>
               </Button>
               {/* pc */}
               <Button size="short" className="hidden xl:block">
-                <Link className="block w-full" to={`../../map/reservationForm?id=${h_code}`}>
+                <Link
+                  className="block w-full"
+                  to={`../../map/reservationForm?id=${h_code}`}
+                >
                   예약하기
                 </Link>
               </Button>
-              <Button size="short" className="hidden xl:block">
-                <Link className="block w-full">전화하기</Link>
+              <Button size="short" className="hidden xl:block cursor-pointer">
+                <div className="block w-full text-[16px]">전화하기</div>
               </Button>
             </div>
           </div>
         </div>
       </div>
-      <DentistReview />
+      <DentistReview hospital={hospital} />
 
       {/*Please refer to
       // 그냥 Map으로 이동

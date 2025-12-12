@@ -139,6 +139,10 @@ function SignUp() {
       }
 
       // 회원가입 성공 후 자동 로그인 처리
+      // UserContext의 signIn을 호출하여 user 정보를 명시적으로 설정
+      // DB 커밋을 위해 약간의 지연 추가
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       const loginResult = await signIn(formData.useremail, formData.userpswd);
       
       if (loginResult?.error) {
@@ -149,7 +153,7 @@ function SignUp() {
         return;
       }
 
-      // 성공
+      // 성공 - user 정보가 UserContext에 설정됨
       alert(`${formData.name}님, 회원가입을 환영합니다!`);
       navigate("/");
     } catch (err) {

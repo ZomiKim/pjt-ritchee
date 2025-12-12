@@ -7,19 +7,32 @@ import { getAppmList, getAppmListDelete } from "../../../api/AppmListApi_Mypg";
 function ReservationList() {
   const { user } = useUser();
   const [appmList, setAppmList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     const fetchAppmList = async () => {
       try {
         if (!user?.id) return;
-        const data = await getAppmList(user.id, 0, 100);
+        const data = await getAppmList(user.id, currentPage, itemsPerPage);
         setAppmList(data.content || data);
+        // API 응답에서 totalPages 또는 totalElements를 사용하여 총 페이지 수 계산
+        if (data.totalPages !== undefined) {
+          setTotalPages(data.totalPages);
+        } else if (data.totalElements !== undefined) {
+          setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
+        } else {
+          // content가 배열인 경우 배열 길이로 계산
+          const totalItems = data.content?.length || data.length || 0;
+          setTotalPages(Math.ceil(totalItems / itemsPerPage));
+        }
       } catch (error) {
         console.error("Error fetching appmList", error);
       }
     };
     fetchAppmList();
-  }, [user]);
+  }, [user, currentPage]);
 
   const handleCancel = async (reservation) => {
     const id = reservation.id ?? reservation.a_id;
@@ -33,18 +46,37 @@ function ReservationList() {
     try {
       await getAppmListDelete(id);
       alert("예약이 취소되었습니다.");
-      setAppmList((prev) => prev.filter((item) => (item.id ?? item.a_id) !== id));
+      // 현재 페이지의 데이터 다시 로드
+      const data = await getAppmList(user.id, currentPage, itemsPerPage);
+      setAppmList(data.content || data);
+      // 총 페이지 수 업데이트
+      if (data.totalPages !== undefined) {
+        setTotalPages(data.totalPages);
+      } else if (data.totalElements !== undefined) {
+        setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
+      }
+      // 현재 페이지에 아이템이 없고 이전 페이지가 있으면 이전 페이지로 이동
+      if ((data.content?.length || data.length || 0) === 0 && currentPage > 0) {
+        setCurrentPage(currentPage - 1);
+      }
     } catch (e) {
       console.error(e);
       alert("예약 취소 실패");
     }
   };
 
+  const handlePageChange = (apiPage) => {
+    // pageFn에서 이미 -1을 해서 전달하므로 API 기준(0부터) 페이지 번호
+    setCurrentPage(apiPage);
+  };
+
   const formatPhone = (phone) => {
     if (!phone) return "";
     const digits = phone.replace(/\D/g, "");
-    if (digits.length === 11) return digits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-    if (digits.length === 10) return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, "$1-$2-$3");
+    if (digits.length === 11)
+      return digits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+    if (digits.length === 10)
+      return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, "$1-$2-$3");
     return phone;
   };
 
@@ -63,6 +95,13 @@ function ReservationList() {
         grid 
         gap-6
         grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
+        md:flex
+        md:flex-wrap
+        md:justify-between
+        md:[&>div]:w-[45%]
+        2xl:grid
+        2xl:grid-cols-3
+        2xl:[&>div]:w-full
         mx-auto
       "
         >
@@ -75,7 +114,7 @@ function ReservationList() {
             break-words overflow-hidden
           "
             >
-              <ul className="pl-1 space-y-2 text-gray-500 overflow-hidden break-words">
+              <ul className=" pl-1 space-y-2 text-gray-500 overflow-hidden break-words">
                 <h4 className="tit my-3 mt-3 flex items-center gap-1 break-words overflow-hidden">
                   <span className="material-icons">local_hospital</span>
                   {reservation.h_name}
@@ -88,8 +127,12 @@ function ReservationList() {
                 <li>· 예약 시간: {reservation.a_time}</li>
                 <li>· 연락처: {formatPhone(reservation.phone)}</li>
                 <li className="break-words">· 특이 사항: {reservation.text}</li>
-                <li className="break-words">· 진단명: {reservation.a_dia_name}</li>
-                <li className="break-words">· 진단 내용: {reservation.a_dia_content}</li>
+                <li className="break-words">
+                  · 진단명: {reservation.a_dia_name}
+                </li>
+                <li className="break-words">
+                  · 진단 내용: {reservation.a_dia_content}
+                </li>
               </ul>
 
               <div className="flex flex-wrap justify-between w-full mt-5 gap-2">
@@ -97,7 +140,9 @@ function ReservationList() {
                   size="mid"
                   variant="primary"
                   className="flex-1 min-w-[100px]"
-                  onClick={() => alert("수정중입니다. 병원 연락처로 문의바랍니다.")}
+                  onClick={() =>
+                    alert("수정중입니다. 병원 연락처로 문의바랍니다.")
+                  }
                 >
                   예약 수정
                 </Button>
@@ -115,7 +160,13 @@ function ReservationList() {
           ))}
         </div>
 
-        <PageNatation />
+        {totalPages > 1 && (
+          <PageNatation
+            totalPages={totalPages}
+            currentPage={currentPage + 1}
+            pageFn={handlePageChange}
+          />
+        )}
       </div>
     </div>
   );

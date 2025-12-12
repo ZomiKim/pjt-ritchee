@@ -6,7 +6,19 @@ const UserContext = createContext();
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("userprovider 안에 있어야함.");
+    // 개발 환경에서만 에러를 던지고, 프로덕션에서는 기본값 반환
+    if (process.env.NODE_ENV === 'development') {
+      console.error("useUser는 UserProvider 안에서 사용되어야 합니다.");
+    }
+    // 기본값 반환하여 앱이 크래시되지 않도록 함
+    return {
+      loading: false,
+      user: null,
+      signUp: async () => ({ error: new Error("UserProvider not found") }),
+      signIn: async () => ({ error: new Error("UserProvider not found") }),
+      signOut: async () => {},
+      setLoading: () => {},
+    };
   }
   return context;
 };
@@ -16,10 +28,18 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const fetchUserInfo = async (userId) => {
-    const { data, error } = await supabase.from("h_user").select("*").eq("id", userId).single();
+    try {
+      const { data, error } = await supabase.from("h_user").select("*").eq("id", userId).single();
 
-    if (error) return null;
-    return data;
+      if (error) {
+        console.error("fetchUserInfo 에러:", error);
+        return null;
+      }
+      return data;
+    } catch (err) {
+      console.error("fetchUserInfo 예외:", err);
+      return null;
+    }
   };
 
   const setUserSession = async (sessionUser) => {
@@ -29,7 +49,8 @@ export const UserProvider = ({ children }) => {
     }
     const extra = await fetchUserInfo(sessionUser.id);
     // email은 sessionUser에서 가져오므로 명시적으로 보존
-    setUser({ ...sessionUser, ...extra, email: sessionUser.email });
+    // extra가 null이어도 기본 user 정보는 설정
+    setUser({ ...sessionUser, ...(extra || {}), email: sessionUser.email });
   };
 
   useEffect(() => {
@@ -114,7 +135,8 @@ export const UserProvider = ({ children }) => {
     if (!error && data?.user) {
       const extra = await fetchUserInfo(data.user.id);
       // email은 data.user에서 가져오므로 명시적으로 보존
-      setUser({ ...data.user, ...extra, email: data.user.email });
+      // extra가 null이어도 기본 user 정보는 설정
+      setUser({ ...data.user, ...(extra || {}), email: data.user.email });
       return { error: null };
     } else {
       return { error: error || new Error("데이터 반환X") };

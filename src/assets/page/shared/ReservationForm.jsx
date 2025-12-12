@@ -99,25 +99,20 @@ function ReservationForm() {
 
   // 병원 정보 가져오기
   const fetch = async () => {
-    const { data, error } = await axios.get(`http://localhost:8080/api/hs_info/${h_code}`);
-
-    if (error) {
-      console.error('Single Hospital Info Fetch Error', error.message);
+    try {
+      const { data } = await axios.get(`http://localhost:8080/api/hs_info/${h_code}`);
+      setHospital(data);
+    } catch (err) {
+      console.error('Single Hospital Info Fetch Error', err.message);
       return;
     }
-
-    setHospital(data);
   };
   const [isCalendar, setIsCalendar] = useState(false);
   const [privacyChecked, setPrivacyChecked] = useState(false);
   const [formData, setFormData] = useState({
     hospitalSymptom: '',
-    userName: '',
-    gender: 'M',
     reservationDate: '',
     reservationTime: '',
-    userPhoneNumber: '',
-    etc: '',
   });
 
   // 예약 함수
@@ -126,22 +121,23 @@ function ReservationForm() {
     if (res && moment(res).isValid()) {
       res = moment(res).format('YYYY-MM-DD HH:mm');
     } else {
-      alert('올바른 날짜/시간 형식이 아닙니다.');
+      alert('올바른 시간 형식이 아닙니다. ex) 13:00');
       return;
     }
-    const { error } = await axios.post('http://localhost:8080/api/appm', {
-      h_code: h_code,
-      a_date: res,
-      a_content: formData.hospitalSymptom,
-      a_user_id: user.id,
-      a_del_yn: 'N',
-    });
 
-    if (error) {
-      console.error('error!', error.message);
-    } else {
+    try {
+      await axios.post('http://localhost:8080/api/appm', {
+        h_code: h_code,
+        a_date: res,
+        a_content: formData.hospitalSymptom,
+        a_user_id: user.id,
+        a_del_yn: 'N',
+      });
+
       alert('예약이 완료되었습니다.');
       nav(`/map/reservationForm/reservationCheck?h_code=${h_code}`);
+    } catch (error) {
+      console.error('error!', error.message);
     }
   };
 
@@ -157,23 +153,45 @@ function ReservationForm() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // 입력 폼 Validation
-    if (formData.hospitalSymptom.trim() == '') alert('증상을 입력하세요.');
-    else if (formData.userName.trim() == '') alert('이름을 입력하세요.');
-    else if (formData.reservationDate.trim() == '') alert('날짜를 선택하세요.');
-    else if (formData.reservationTime.trim() == '') alert('시간을 입력하세요.');
-    else if (formData.userPhoneNumber.trim() == '') alert('핸드폰 번호를 입력하세요.');
-    else postAppm();
-  };
 
-  useEffect(() => {
-    setFormData((prev) => ({
-      ...prev,
-      userName: user?.name || '김훈규',
-      userPhoneNumber: user?.phone || '없음',
-      etc: user?.text || '없음',
-    }));
-  }, [user]);
+    if (!user) {
+      alert('로그인이 필요합니다.');
+      nav('/member/signin');
+      return;
+    }
+
+    // Validation
+    if (formData.hospitalSymptom.trim() === '') {
+      alert('증상을 입력하세요.');
+      return;
+    }
+    if (formData.reservationDate.trim() === '') {
+      alert('날짜를 선택하세요.');
+      return;
+    }
+    if (formData.reservationTime.trim() === '') {
+      alert('시간을 입력하세요.');
+      return;
+    }
+
+    // 현재 시간 기준 1시간 전 체크
+    const [hour, minute] = formData.reservationTime.split(':');
+    const selectedMoment = moment(formData.reservationDate)
+      .hours(Number(hour))
+      .minutes(Number(minute))
+      .seconds(0)
+      .milliseconds(0);
+
+    const oneHourAgo = moment().subtract(1, 'hours');
+
+    if (selectedMoment.isBefore(oneHourAgo)) {
+      alert('현재 시간 기준 1시간 전인 시간은 선택할 수 없습니다.');
+      return;
+    }
+
+    // 예약 진행
+    postAppm();
+  };
 
   useEffect(() => {
     fetch();
@@ -212,11 +230,11 @@ function ReservationForm() {
                 type="text"
                 name="userName"
                 placeholder="이름"
-                value={formData?.userName || '김훈규'}
-                className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
-                onChange={eventHandler}
+                value={user?.name}
+                className="opacity-50 cursor-not-allowed outline-none rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
+                disabled
               />
-              <div className="w-[130px] flex justify-between my-2.5 cursor-pointer">
+              {/* <div className="w-[130px] flex justify-between my-2.5 cursor-pointer">
                 <div
                   className="flex items-center gap-[5px]"
                   onClick={() => setFormData((prev) => ({ ...prev, gender: 'M' }))}
@@ -235,7 +253,7 @@ function ReservationForm() {
                   </span>
                   <span className="female dummy">여</span>
                 </div>
-              </div>
+              </div> */}
               {/* 달력 */}
               <div className="relative">
                 <div
@@ -251,13 +269,21 @@ function ReservationForm() {
                   <div className="w-full max-w-md  p-4 bg-white rounded-lg shadow-md">
                     {/* 헤더 */}
                     <div className="flex justify-between items-center mb-4">
-                      <button onClick={prevMonth} className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">
+                      <button
+                        type="button"
+                        onClick={prevMonth}
+                        className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer"
+                      >
                         {'<'}
                       </button>
                       <div className="font-bold text-lg">
                         {year} - {month + 1}
                       </div>
-                      <button onClick={nextMonth} className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">
+                      <button
+                        type="button"
+                        onClick={nextMonth}
+                        className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer"
+                      >
                         {'>'}
                       </button>
                     </div>
@@ -305,6 +331,12 @@ function ReservationForm() {
                                 `}
                             onClick={() => {
                               if (!date) return;
+                              if (moment(date).isBefore(moment().startOf('day'))) {
+                                // 오늘보다 하루 전날인지 확인
+                                alert('오늘 이전 날짜는 선택할 수 없습니다.');
+                                return;
+                              }
+
                               setSelectedDate(date);
                               setFormData((prev) => ({
                                 ...prev,
@@ -324,26 +356,26 @@ function ReservationForm() {
               <input
                 type="text"
                 name="reservationTime"
-                placeholder="예약 시간"
+                placeholder="예약 시간 ex) 13:00"
                 className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 onChange={eventHandler}
               />
               <input
                 type="text"
                 name="userPhoneNumber"
-                value={formData?.userPhoneNumber || '없음'}
+                value={user?.phone}
                 placeholder="연락처"
-                className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
-                onChange={eventHandler}
+                className="opacity-50 cursor-not-allowed outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
+                disabled
               />
               <textarea
                 id="etc"
                 name="etc"
                 rows="4"
                 placeholder="특이 사항"
-                value={formData?.etc}
-                className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base! resize-none bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
-                onChange={eventHandler}
+                value={user?.text}
+                disabled
+                className="opacity-50 cursor-not-allowed outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base! resize-none bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
               ></textarea>
               <div className="flex gap-[7px] select-none cursor-pointer">
                 {privacyChecked ? (
@@ -363,6 +395,7 @@ function ReservationForm() {
                 size="long"
                 className={`mb-[50px] ${privacyChecked ? '' : 'opacity-50! cursor-not-allowed!'} cursor-pointer`}
                 onClick={privacyChecked ? null : (e) => e.preventDefault()}
+                disabled={!privacyChecked}
               >
                 <div className={`w-full ${privacyChecked ? '' : 'pointer-events-none!'}`}>예약하기</div>
               </Button>

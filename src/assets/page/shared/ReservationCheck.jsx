@@ -16,7 +16,7 @@ function ReservationCheck() {
   // 현재 유저 예약 내역 가져오기
   const userReservationFetch = async () => {
     try {
-      const { data, error } = await axios.get(`http://localhost:8080/api/appmUser/${id}/hCode/${h_code}`);
+      const { data } = await axios.get(`http://localhost:8080/api/appmUser/${id}/hCode/${h_code}`);
       console.log(data);
       setAppointment(data);
     } catch (error) {
@@ -25,7 +25,6 @@ function ReservationCheck() {
     }
   };
 
-  console.log(appointment);
   // 생년월일 -> 만 나이 변환 함수
   function getAge(birthString) {
     const today = new Date();
@@ -50,7 +49,8 @@ function ReservationCheck() {
     }
   }, [id]);
 
-  let date = moment(appointment?.appms?.[appointment?.appms?.length - 1].a_date).format('YYYY-MM-DD HH시 mm분');
+  let date = moment(appointment?.appms?.[appointment?.appms?.length - 1].a_date).format('YYYY-MM-DD HH:mm');
+  console.log(date);
 
   return (
     <>
@@ -66,30 +66,22 @@ function ReservationCheck() {
                 <div className="hospitalTitle mb-2.5">
                   <h4 className="tit">
                     <span className="material-icons">local_hospital</span>
-                    {appointment?.appms?.[appointment.appms.length - 1]?.h_name || '병원명'}
+                    {appointment?.appms?.[appointment.appms.length - 1]?.h_name || ''}
                   </h4>
                 </div>
                 <div className="reservationBody">
-                  <div className="patient dummy text-gray-deep">· 환자명 : {appointment?.name || '김훈규'}</div>
+                  <div className="patient dummy text-gray-deep">· 환자명 : {appointment?.name || ''}</div>
                   <div className="symptom dummy text-gray-deep">
-                    · 증상 : {appointment?.appms?.[appointment.appms.length - 1]?.a_content || '어금니 통증'}
+                    · 증상 : {appointment?.appms?.[appointment.appms.length - 1]?.a_content || ''}
                   </div>
-                  <div className="age dummy text-gray-deep">
-                    · 나이 : {`만 ${getAge(appointment?.birth)}세` || '만 35세'}
+                  <div className="age dummy text-gray-deep">· 나이 : {`만 ${getAge(appointment?.birth)}세` || ''}</div>
+                  <div className="gender dummy text-gray-deep">
+                    · 성별 : {appointment?.gender?.[0] === 'M' ? '남' : appointment?.gender?.[0] === 'F' ? '여' : ''}
                   </div>
-                  <div className="gender dummy text-gray-deep">· 성별 : {appointment?.gender?.[0] || '남'}</div>
-                  <div className="reservationDate dummy text-gray-deep">
-                    · 예약 일자 : {date.split(' ')[0] ?? '2025년 12월 1일'}
-                  </div>
-                  <div className="reservationTime dummy text-gray-deep">
-                    · 예약 시간 : {date.split(' ')[1] + ' ' + date.split(' ')[2] || '14시 15분'}
-                  </div>
-                  <div className="phoneNumber dummy text-gray-deep">
-                    · 연락처 : {appointment?.phone || '010-0000-0000'}
-                  </div>
-                  <div className="etc dummy text-gray-deep">
-                    · 특이 사항 : {appointment?.text || '고혈압, 고지혈증 약 복용 중'}
-                  </div>
+                  <div className="reservationDate dummy text-gray-deep">· 예약 일자 : {date.split(' ')[0] ?? ''}</div>
+                  <div className="reservationTime dummy text-gray-deep">· 예약 시간 : {date.split(' ')[1]}</div>
+                  <div className="phoneNumber dummy text-gray-deep">· 연락처 : {appointment?.phone || ''}</div>
+                  <div className="etc dummy text-gray-deep">· 특이 사항 : {appointment?.text || ''}</div>
                 </div>
               </div>
             </div>

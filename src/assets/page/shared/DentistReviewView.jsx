@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import Button from './../../../componetns/Button';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { useUser } from '../../../context/UserContext';
-import moment from 'moment';
 import Comment from './Comment';
 
 const DentistReviewView = () => {
+  const { user } = useUser();
   const [like, setLike] = useState(false);
+  const [likeId, setLikeId] = useState(null);
   const [review, setReview] = useState({});
   const [commentCount, setCommentCount] = useState(0);
 
@@ -20,6 +20,53 @@ const DentistReviewView = () => {
     console.log('review', data);
     setReview(data[0]);
   };
+
+  const likeFetch = async () => {
+    const { data } = await axios.get(`http://localhost:8080/api/onelike/${user.id}/reviewId/${reviewId}`);
+    if (data) {
+      setLike(true);
+      setLikeId(data.l_id);
+    } else {
+      setLike(false);
+      setLikeId(null);
+    }
+  };
+
+  const likeClicked = async () => {
+    const { error } = await axios.post(`http://localhost:8080/api/LikeOne`, {
+      r_id: reviewId,
+      h_user_id: user?.id,
+    });
+    if (error) {
+      console.error('like error', error.message);
+      return;
+    } else {
+      setLike(true);
+      reviewFetch();
+    }
+  };
+
+  const likeUnclicked = async () => {
+    const { error } = await axios.delete(`http://localhost:8080/api/LikeOne`, {
+      data: {
+        l_id: likeId,
+        r_id: reviewId,
+        h_user_id: user?.id,
+      },
+    });
+
+    if (error) {
+      console.error('unlike error', error.message);
+      return;
+    } else {
+      setLike(false);
+      reviewFetch();
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) likeFetch();
+  }, [user]);
 
   useEffect(() => {
     reviewFetch();
@@ -72,8 +119,11 @@ const DentistReviewView = () => {
           <div className="dummy md:text-base!">{review?.r_content ?? '리뷰가 없습니다.'}</div>
           <div className="count flex gap-2 justify-end mt-7">
             <div className="like flex gap-2 items-center">
-              <span className="material-icons cursor-pointer text-point-hov" onClick={() => setLike((prev) => !prev)}>
-                {like ? 'favorite_border' : 'favorite'}
+              <span
+                className="material-icons cursor-pointer text-point-hov"
+                onClick={like ? likeUnclicked : likeClicked}
+              >
+                {like ? 'favorite' : 'favorite_border'}
               </span>
               <span className="dummy">{review?.likeCount ?? '111'}</span>
             </div>

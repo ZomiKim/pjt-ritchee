@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Nav from "./componetns/Nav";
 import Home from "./assets/page/home/Home";

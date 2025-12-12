@@ -1,11 +1,25 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
 function Nav() {
   const { user, signOut } = useUser();
   const navigate = useNavigate();
+
   const [isOpen, setIsOpen] = useState(false);
+
+  {
+    /* 에러페이지 */
+  }
+
+  // const location = useLocation();
+
+  // const hidePaths = ["/test"];
+
+  // const shouldHide = hidePaths.some((path) => location.pathname.startsWith(path));
+
+  // if (shouldHide) return null;
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -113,7 +127,7 @@ function Nav() {
                   className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group"
                 >
                   {link.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 pointer-events-none"></span>
                 </Link>
               ))}
               {user ? (
@@ -123,7 +137,7 @@ function Nav() {
                   className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group cursor-pointer"
                 >
                   로그아웃
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 pointer-events-none"></span>
                 </button>
               ) : (
                 <Link
@@ -131,7 +145,7 @@ function Nav() {
                   className="relative text-white hover:text-light-01 transition-colors duration-300 py-2 group"
                 >
                   로그인
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 pointer-events-none"></span>
                 </Link>
               )}
             </div>

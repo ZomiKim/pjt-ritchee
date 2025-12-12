@@ -242,7 +242,8 @@ function Home() {
               {topHospitals.map((hospital) => (
                 <div
                   key={hospital.h_code}
-                  className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden"
+                  className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden cursor-pointer"
+                  onClick={() => navigate(`/dentistList/dentistView?id=${hospital.h_code}`)}
                 >
                   <div className="w-full h-[150px] md:h-[300px] overflow-hidden rounded-[10px]">
                     <img

@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function PageNatation({ totalPages = 10, onPageChange, pageFn }) {
-  const [currentPage, setCurrentPage] = useState(1);
+function PageNatation({ totalPages = 10, onPageChange, pageFn, currentPage: externalCurrentPage }) {
+  const [internalCurrentPage, setInternalCurrentPage] = useState(1);
+  
+  // 외부에서 currentPage를 전달받으면 사용, 없으면 내부 상태 사용
+  const currentPage = externalCurrentPage !== undefined ? externalCurrentPage : internalCurrentPage;
+
+  useEffect(() => {
+    if (externalCurrentPage !== undefined) {
+      setInternalCurrentPage(externalCurrentPage);
+    }
+  }, [externalCurrentPage]);
 
   const handlePageChange = (page) => {
     if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-    pageFn(page - 1);
+    setInternalCurrentPage(page);
+    if (pageFn) pageFn(page - 1);
     if (onPageChange) onPageChange(page);
   };
 

@@ -1,21 +1,27 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useUser } from '../../../context/UserContext';
 import Button from '../../../componetns/Button';
 import moment from 'moment';
 
 const Comment = ({ reviewId, countFn }) => {
-  const { user } = useUser();
-  const [comment, setComment] = useState({
-    comments: [],
-  });
+  const [comment, setComment] = useState();
   const [formData, setFormData] = useState(''); // 댓글 입력 track state
   const commentFetch = async () => {
-    const { data } = await axios.get(`http://localhost:8080/api/comment?reviewId=${reviewId}`);
-    setComment({
-      comments: data.comments,
-    });
-    countFn(data.commentCount);
+    try {
+      const { data } = await axios.get(
+        `http://localhost:8080/api/comment?reviewId=${reviewId}`
+      );
+      setComment({
+        comments: data.comments,
+      });
+      countFn(data.commentCount || 0);
+    } catch (error) {
+      console.error('Comment Fetch error', error);
+      setComment({
+        comments: [],
+      });
+      countFn(0);
+    }
   };
 
   const submitHandler = async (e) => {
@@ -24,20 +30,22 @@ const Comment = ({ reviewId, countFn }) => {
       alert('댓글을 작성해 주세요.');
       return;
     }
-    const { error } = await axios.post('http://localhost:8080/api/comment', {
-      reviewId: +reviewId,
-      c_content: formData,
-      userId: user?.id,
-    });
 
-    if (error) {
+    try {
+      await axios.post('http://localhost:8080/api/comment', {
+        reviewId: +reviewId,
+        c_content: formData,
+        userId: user?.id,
+      });
+
+      setFormData('');
+      alert('댓글이 작성되었습니다.');
+      await commentFetch();
+    } catch (error) {
       console.error('에러 발생!!', error.message);
+      setFormData('');
       return;
     }
-
-    setFormData('');
-    alert('댓글이 작성되었습니다.');
-    await commentFetch();
   };
 
   useEffect(() => {
@@ -54,10 +62,18 @@ const Comment = ({ reviewId, countFn }) => {
           key={i}
         >
           <div className="comment dummy md:text-base! py-3.5! container">
-            <div className="commentContent mb-5">{c.c_content ?? '댓글 없음'}</div>
+            <div className="commentContent mb-5">
+              {c.c_content || '댓글 없음'}
+            </div>
             <div className="commentEtc text-gray-deep flex justify-between">
-              <div className="commentWriter">작성자 : {c?.name ?? '김훈규'}</div>
-              <div className="date">{moment(c?.createdAt).format('YYYY-MM-DD HH:mm:ss') ?? '2025-02-11 14:25:41'}</div>
+              <div className="commentWriter">
+                작성자 : {c?.name || '작성자 없음'}
+              </div>
+              <div className="date">
+                {c?.createdAt
+                  ? moment(c.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                  : '2025-02-11 14:25:41'}
+              </div>
             </div>
           </div>
         </li>
@@ -65,7 +81,10 @@ const Comment = ({ reviewId, countFn }) => {
 
       {/* 댓글 작성 */}
       <li className="myBg bg-light-02 border border-b-main-01 border-t-0 border-x-0">
-        <form className="comment dummy md:text-base! py-3.5! container" onSubmit={submitHandler}>
+        <form
+          className="comment dummy md:text-base! py-3.5! container"
+          onSubmit={submitHandler}
+        >
           <textarea
             id="comment"
             name="comment"
@@ -76,7 +95,9 @@ const Comment = ({ reviewId, countFn }) => {
             value={formData}
             style={{ resize: 'none' }}
           ></textarea>
-          <Button className={'mt-5 mb-2.5 cursor-pointer'}>댓글 작성</Button>
+          <Button className={'mt-5 mb-2.5 cursor-pointer'} type="submit">
+            댓글 작성
+          </Button>
         </form>
       </li>
     </ul>

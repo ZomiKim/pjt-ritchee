@@ -97,10 +97,27 @@ function ReservationForm() {
   const { user } = useUser();
   const nav = useNavigate();
 
+  const runTime = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:8080/api/run', {
+        params: {
+          h_code: h_code,
+          time: formData.reservationTime,
+        },
+      });
+      return data;
+    } catch (error) {
+      console.error('run time info fetch error', error);
+      return;
+    }
+  };
+
   // 병원 정보 가져오기
   const fetch = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/hs_info/${h_code}`);
+      const { data } = await axios.get(
+        `http://localhost:8080/api/hs_info/${h_code}`
+      );
       setHospital(data);
     } catch (err) {
       console.error('Single Hospital Info Fetch Error', err.message);
@@ -117,6 +134,11 @@ function ReservationForm() {
 
   // 예약 함수
   const postAppm = async () => {
+    console.log(await runTime());
+    if ((await runTime()) === 'N') {
+      alert('치과의 운영 시간이 아닙니다.');
+      return;
+    }
     let res = formData.reservationDate + ' ' + formData.reservationTime;
     if (res && moment(res).isValid()) {
       res = moment(res).format('YYYY-MM-DD HH:mm');
@@ -126,16 +148,19 @@ function ReservationForm() {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/appm', {
-        h_code: h_code,
-        a_date: res,
-        a_content: formData.hospitalSymptom,
-        a_user_id: user.id,
-        a_del_yn: 'N',
-      });
+      const { data: a_id } = await axios.post(
+        'http://localhost:8080/api/appm',
+        {
+          h_code: h_code,
+          a_date: res,
+          a_content: formData.hospitalSymptom,
+          a_user_id: user.id,
+          a_del_yn: 'N',
+        }
+      );
 
       alert('예약이 완료되었습니다.');
-      nav(`/map/reservationForm/reservationCheck?h_code=${h_code}`);
+      nav(`/map/reservationForm/reservationCheck?a_id=${a_id}`);
     } catch (error) {
       console.error('error!', error.message);
     }
@@ -195,6 +220,7 @@ function ReservationForm() {
 
   useEffect(() => {
     fetch();
+    runTime();
   }, []);
 
   return (
@@ -230,7 +256,7 @@ function ReservationForm() {
                 type="text"
                 name="userName"
                 placeholder="이름"
-                value={user?.name}
+                value={user?.name || ''}
                 className="opacity-50 cursor-not-allowed outline-none rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 disabled
               />
@@ -257,15 +283,25 @@ function ReservationForm() {
               {/* 달력 */}
               <div className="relative">
                 <div
-                  className={`rounded-sm text-[12px] md:text-base text-${selectedDate ? 'black' : 'gray-mid'} bg-white 
+                  className={`rounded-sm text-[12px] md:text-base text-${
+                    selectedDate ? 'black' : 'gray-mid'
+                  } bg-white 
                   w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 
                   flex items-center gap-2 cursor-pointer`}
                   onClick={() => setIsCalendar((prev) => !prev)}
                 >
-                  <span className="material-icons text-[15px]! md:text-[20px]!">edit_calendar</span>
-                  {selectedDate ? moment(selectedDate).format('YYYY-MM-DD') : '날짜 선택'}
+                  <span className="material-icons text-[15px]! md:text-[20px]!">
+                    edit_calendar
+                  </span>
+                  {selectedDate
+                    ? moment(selectedDate).format('YYYY-MM-DD')
+                    : '날짜 선택'}
                 </div>
-                <div className={`${isCalendar ? '' : 'hidden'} absolute w-full z-10`}>
+                <div
+                  className={`${
+                    isCalendar ? '' : 'hidden'
+                  } absolute w-full z-10`}
+                >
                   <div className="w-full max-w-md  p-4 bg-white rounded-lg shadow-md">
                     {/* 헤더 */}
                     <div className="flex justify-between items-center mb-4">
@@ -313,25 +349,31 @@ function ReservationForm() {
 
                         const dayOfWeek = date.getDay(); // 0:일, 6:토
                         const dateStr = moment(date).format('YYYY-MM-DD');
-                        const isHoliday = holidays.some((h) => h.date === dateStr);
+                        const isHoliday = holidays.some(
+                          (h) => h.date === dateStr
+                        );
 
                         // 텍스트 색상 결정
                         let textColor = '';
-                        if (dayOfWeek === 6) textColor = 'text-blue-500'; // 토요일은 파랑
-                        else if (dayOfWeek === 0 || isHoliday) textColor = 'text-red-500'; // 일요일 또는 공휴일 빨강
+                        if (dayOfWeek === 6)
+                          textColor = 'text-blue-500'; // 토요일은 파랑
+                        else if (dayOfWeek === 0 || isHoliday)
+                          textColor = 'text-red-500'; // 일요일 또는 공휴일 빨강
 
                         return (
                           <div
                             key={idx}
                             className={`h-10 flex items-center justify-center rounded cursor-pointer
-        ${date ? 'hover:border border-main-01' : ''}
-        ${isToday ? 'border border-blue-500' : ''}
-        ${isSelected ? 'bg-blue-500 text-white' : ''}
-        ${textColor}
-      `}
+                            ${date ? 'hover:border border-main-01' : ''}
+                            ${isToday ? 'border border-blue-500' : ''}
+                            ${isSelected ? 'bg-blue-500 text-white' : ''}
+                            ${textColor}
+                          `}
                             onClick={() => {
                               if (!date) return;
-                              if (moment(date).isBefore(moment().startOf('day'))) {
+                              if (
+                                moment(date).isBefore(moment().startOf('day'))
+                              ) {
                                 alert('오늘 이전 날짜는 선택할 수 없습니다.');
                                 return;
                               }
@@ -339,7 +381,8 @@ function ReservationForm() {
                               setSelectedDate(date);
                               setFormData((prev) => ({
                                 ...prev,
-                                reservationDate: moment(date).format('YYYY-MM-DD'),
+                                reservationDate:
+                                  moment(date).format('YYYY-MM-DD'),
                               }));
                             }}
                             onDoubleClick={() => {
@@ -347,7 +390,8 @@ function ReservationForm() {
                               setSelectedDate(date);
                               setFormData((prev) => ({
                                 ...prev,
-                                reservationDate: moment(date).format('YYYY-MM-DD'),
+                                reservationDate:
+                                  moment(date).format('YYYY-MM-DD'),
                               }));
                               setIsCalendar(false); // 🔹 달력 닫기
                             }}
@@ -371,7 +415,7 @@ function ReservationForm() {
               <input
                 type="text"
                 name="userPhoneNumber"
-                value={user?.phone}
+                value={user?.phone || ''}
                 placeholder="연락처"
                 className="opacity-50 cursor-not-allowed outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 disabled
@@ -381,31 +425,49 @@ function ReservationForm() {
                 name="etc"
                 rows="4"
                 placeholder="특이 사항"
-                value={user?.text}
+                value={user?.text || ''}
                 disabled
                 className="opacity-50 cursor-not-allowed outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base! resize-none bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
               ></textarea>
               <div className="flex gap-[7px] select-none cursor-pointer">
                 {privacyChecked ? (
-                  <span className="material-icons text-main-02" onClick={() => setPrivacyChecked((prev) => !prev)}>
+                  <span
+                    className="material-icons text-main-02"
+                    onClick={() => setPrivacyChecked((prev) => !prev)}
+                  >
                     check_box
                   </span>
                 ) : (
-                  <span className="material-icons text-main-02" onClick={() => setPrivacyChecked((prev) => !prev)}>
+                  <span
+                    className="material-icons text-main-02"
+                    onClick={() => setPrivacyChecked((prev) => !prev)}
+                  >
                     check_box_outline_blank
                   </span>
                 )}
-                <label className="dummy text-gray-deep" onClick={() => setPrivacyChecked((prev) => !prev)}>
-                  병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료 후 관련 법령에 따라 보관 후 파기합니다.
+                <label
+                  className="dummy text-gray-deep"
+                  onClick={() => setPrivacyChecked((prev) => !prev)}
+                >
+                  병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료 후
+                  관련 법령에 따라 보관 후 파기합니다.
                 </label>
               </div>
               <Button
                 size="long"
-                className={`mb-[50px] ${privacyChecked ? '' : 'opacity-50! cursor-not-allowed!'} cursor-pointer`}
+                className={`mb-[50px] ${
+                  privacyChecked ? '' : 'opacity-50! cursor-not-allowed!'
+                } cursor-pointer`}
                 onClick={privacyChecked ? null : (e) => e.preventDefault()}
                 disabled={!privacyChecked}
               >
-                <div className={`w-full ${privacyChecked ? '' : 'pointer-events-none!'}`}>예약하기</div>
+                <div
+                  className={`w-full ${
+                    privacyChecked ? '' : 'pointer-events-none!'
+                  }`}
+                >
+                  예약하기
+                </div>
               </Button>
             </form>
           </div>

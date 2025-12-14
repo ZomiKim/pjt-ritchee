@@ -204,7 +204,7 @@ function Home() {
               {topHospitals.map((hospital) => (
                 <div
                   key={hospital.h_code}
-                  className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden cursor-pointer"
+                  className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-[1.03] hover:opacity-80"
                   onClick={() =>
                     navigate(`/dentistList/dentistView?id=${hospital.h_code}`)
                   }
@@ -234,7 +234,7 @@ function Home() {
         <div className="flex">
           <button
             onClick={() => setActiveTab(0)}
-            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white cursor-pointer ${
               activeTab === 0
                 ? "bg-main-02 text-white"
                 : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"
@@ -244,7 +244,7 @@ function Home() {
           </button>
           <button
             onClick={() => setActiveTab(1)}
-            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white cursor-pointer ${
               activeTab === 1
                 ? "bg-main-02 text-white"
                 : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"
@@ -254,7 +254,7 @@ function Home() {
           </button>
           <button
             onClick={() => setActiveTab(2)}
-            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white cursor-pointer ${
               activeTab === 2
                 ? "bg-main-02 text-white"
                 : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"

@@ -41,16 +41,21 @@ function SignIn() {
       if (result?.error) {
         setErrorM("로그인 실패: 이메일 또는 비밀번호를 확인해주세요.");
         setFormData({ useremail: "", userpwd: "" });
-
         emailRef.current?.focus();
-      } else {
-        navigate("/");
+        setLoading(false);
+        return;
       }
+      
+      // 로그인 성공 시 약간의 지연 후 이동 (상태 업데이트 대기)
+      setTimeout(() => {
+        navigate("/");
+        setLoading(false);
+      }, 200);
     } catch (err) {
+      console.error("로그인 예외:", err);
       setErrorM("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

@@ -154,9 +154,8 @@ function ReservationForm() {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (!user) {
+    if (!user || !user.id) {
       alert('로그인이 필요합니다.');
-      nav('/member/signin');
       return;
     }
 

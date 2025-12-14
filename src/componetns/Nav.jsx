@@ -68,9 +68,11 @@ function Nav() {
     try {
       await signOut();
       setIsOpen(false);
+      alert("로그아웃 되었습니다.");
       navigate("/member/signin");
     } catch (error) {
       console.error("로그아웃 에러:", error);
+      alert("로그아웃 중 오류가 발생했습니다.");
     }
   };
 

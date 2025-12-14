@@ -8,18 +8,13 @@ import Event from "./assets/page/event/Event";
 import Member from "./assets/member/Member";
 import Map from "./assets/page/shared/Map";
 import Footer from "./componetns/footer";
+import ProtectedRoute from "./componetns/ProtectedRoute";
 
 function App() {
   const location = useLocation();
 
-  // 첫 방문 홈 로딩 중인지 확인
-  const isFirstVisitHome =
-    location.pathname === "/" &&
-    sessionStorage.getItem("homeVisited") !== "true";
-
-  // /member 경로 또는 첫 방문 홈 로딩 중에는 Nav와 Footer 숨김
-  const hideNavFooter =
-    location.pathname.startsWith("/member") || isFirstVisitHome;
+  // /member 경로에서는 Nav와 Footer 숨김
+  const hideNavFooter = location.pathname.startsWith("/member");
 
   return (
     <>
@@ -30,7 +25,14 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about/*" element={<About />} />
             <Route path="/dentistList/*" element={<DentList />} />
-            <Route path="/mypage/*" element={<Mypage />} />
+            <Route
+              path="/mypage/*"
+              element={
+                <ProtectedRoute>
+                  <Mypage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/event/*" element={<Event />} />
             <Route path="/map/*" element={<Map />} />
             <Route path="/member/*" element={<Member />} />

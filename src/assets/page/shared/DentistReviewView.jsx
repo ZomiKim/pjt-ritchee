@@ -33,6 +33,12 @@ const DentistReviewView = () => {
   };
 
   const likeClicked = async () => {
+    // 로그인 체크
+    if (!user || !user.id) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    
     const { error } = await axios.post(`http://localhost:8080/api/LikeOne`, {
       r_id: reviewId,
       h_user_id: user?.id,
@@ -47,6 +53,12 @@ const DentistReviewView = () => {
   };
 
   const likeUnclicked = async () => {
+    // 로그인 체크
+    if (!user || !user.id) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    
     const { error } = await axios.delete(`http://localhost:8080/api/LikeOne`, {
       data: {
         l_id: likeId,

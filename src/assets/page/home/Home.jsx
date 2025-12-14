@@ -11,32 +11,11 @@ import {
 function Home() {
   const navigate = useNavigate();
 
-  // 첫 방문만 로딩화면이 뜹니다. 화면을 종료시킨 후 재방문 시에는 다시 로딩창이 뜹니다.
-  // 페이지 이동 후 홈화면으로 들어갈때는 로딩창 안뜹니다.
-  const [firstVisit, setFirstVisit] = useState(() => {
-    return sessionStorage.getItem("homeVisited") !== "true";
-  });
-  const [loading, setLoading] = useState(firstVisit);
-
   const [activeTab, setActiveTab] = useState(0);
   const [hospitals, setHospitals] = useState([]);
   const [hospitalsReview, setHospitalsReview] = useState([]);
   const [hospitalsComment, setHospitalsComment] = useState([]);
   const [topHospitals, setTopHospitals] = useState([]);
-
-  // 첫 방문 시 로딩 후 회원가입 페이지로 이동
-  useEffect(() => {
-    if (firstVisit) {
-      const timer = setTimeout(() => {
-        sessionStorage.setItem("homeVisited", "true");
-        setLoading(false);
-        setFirstVisit(false);
-        navigate("/member", { replace: true });
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [firstVisit, navigate]);
 
   // 별점 렌더링 함수
   const renderStars = (rating) => {
@@ -149,23 +128,6 @@ function Home() {
     };
   }, []);
 
-  // 로딩 화면
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-main-01 myBg">
-        <div>
-          <img
-            src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/logo_wh.png"
-            alt="logo"
-            className="w-32 mb-6"
-          />
-        </div>
-        <div className="w-16 h-16 border-4 border-gray-100 border-t-blue-500 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // 첫 방문이 아니거나 로딩 끝난 상태 (홈 화면)
   return (
     <>
       {/* 메인 슬라이더 */}

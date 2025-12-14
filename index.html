@@ -17,12 +17,22 @@
     <!-- Open Graph 메타태그 -->
     <meta property="og:title" content="RETCEE" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="/" />
+    <meta property="og:url" id="og-url" content="/" />
     <meta
       property="og:description"
       content="구로구 주민들을 위한 솔직한 치과 리뷰, 릿치!"
     />
-    <meta property="og:image" content="/og.png" />
+    <meta property="og:image" id="og-image" content="/og.png" />
+    <script>
+      // 현재 도메인을 자동으로 가져와서 절대 URL로 설정
+      (function () {
+        const baseUrl = window.location.origin;
+        const ogUrl = document.getElementById("og-url");
+        const ogImage = document.getElementById("og-image");
+        if (ogUrl) ogUrl.setAttribute("content", baseUrl + "/");
+        if (ogImage) ogImage.setAttribute("content", baseUrl + "/og.png");
+      })();
+    </script>
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"

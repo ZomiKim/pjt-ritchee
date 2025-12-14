@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DentCard from './DentCard';
 import PageNatation from '../../../componetns/PageNatation';
 import axios from 'axios';
 
 const List = () => {
   const nav = useNavigate();
+  const [searchParams] = useSearchParams();
   const [inputValue, setInputValue] = useState('');
   const [hospital, setHospital] = useState([]);
   const [page, setPage] = useState(0);
+  const sortType = searchParams.get('sort') || 'rating'; // 기본값은 별점 순
 
   const iValue = {
     para1: inputValue.split(' ')[0],
@@ -16,10 +18,18 @@ const List = () => {
   };
 
   const fetch = async () => {
-    const { data, error } = await axios.get(`http://localhost:8080/api/hs_evalpt?page=${page}&size=10`);
+    // sort 파라미터에 따라 다른 API 엔드포인트 사용
+    let apiEndpoint = 'hs_evalpt'; // 기본값: 별점 순
+    if (sortType === 'review') {
+      apiEndpoint = 'hs_review'; // 리뷰 많은 순
+    } else if (sortType === 'comment') {
+      apiEndpoint = 'hs_commentcnt'; // 댓글 많은 순
+    }
+
+    const { data, error } = await axios.get(`http://localhost:8080/api/${apiEndpoint}?page=${page}&size=10`);
 
     if (error) {
-      console.error('Hospital order by avgEvaluationPoint Info Fetch Error', error.message);
+      console.error('Hospital Info Fetch Error', error.message);
       return;
     }
     setHospital(data.content);
@@ -51,11 +61,12 @@ const List = () => {
   const EnterHandler = (e) => {
     if (e.key == 'Enter') {
       searchFetch();
+      const sortParam = sortType !== 'rating' ? `&sort=${sortType}` : '';
       nav(
         `${
           inputValue.trim() == ''
-            ? '/dentistList'
-            : `/dentistList?para1=${iValue.para1}${iValue.para2 ? `&para2=${iValue.para2}` : ''}`
+            ? `/dentistList${sortParam ? `?sort=${sortType}` : ''}`
+            : `/dentistList?para1=${iValue.para1}${iValue.para2 ? `&para2=${iValue.para2}` : ''}${sortParam}`
         }`
       );
     }
@@ -64,7 +75,7 @@ const List = () => {
   useEffect(() => {
     fetch();
     window.scrollTo({ top: 0 });
-  }, [page]);
+  }, [page, sortType]);
 
   return (
     <>
@@ -91,8 +102,8 @@ const List = () => {
                     onClick={searchFetch}
                     to={
                       inputValue.trim() == ''
-                        ? '/dentistList'
-                        : `/dentistList?para1=${iValue.para1}${iValue.para2 ? `&para2=${iValue.para2}` : ''}`
+                        ? `/dentistList${sortType !== 'rating' ? `?sort=${sortType}` : ''}`
+                        : `/dentistList?para1=${iValue.para1}${iValue.para2 ? `&para2=${iValue.para2}` : ''}${sortType !== 'rating' ? `&sort=${sortType}` : ''}`
                     }
                   >
                     <span className="material-icons text-white" style={{ fontSize: '17px' }}>

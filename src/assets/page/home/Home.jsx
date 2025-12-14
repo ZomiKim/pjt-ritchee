@@ -135,7 +135,7 @@ function Home() {
         <div className="swiper home-swiper">
           <div className="swiper-wrapper">
             <div className="swiper-slide">
-              <div 
+              <div
                 className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
                 onClick={() => navigate("/event/eventview/1")}
               >
@@ -148,7 +148,7 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div 
+              <div
                 className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
                 onClick={() => navigate("/event/eventview/2")}
               >
@@ -161,7 +161,7 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div 
+              <div
                 className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
                 onClick={() => navigate("/event/eventview/3")}
               >
@@ -174,7 +174,7 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div 
+              <div
                 className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
                 onClick={() => navigate("/event/eventview/4")}
               >
@@ -205,7 +205,9 @@ function Home() {
                 <div
                   key={hospital.h_code}
                   className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden cursor-pointer"
-                  onClick={() => navigate(`/dentistList/dentistView?id=${hospital.h_code}`)}
+                  onClick={() =>
+                    navigate(`/dentistList/dentistView?id=${hospital.h_code}`)
+                  }
                 >
                   <div className="w-full h-[150px] md:h-[300px] overflow-hidden rounded-[10px]">
                     <img
@@ -565,7 +567,16 @@ function Home() {
           <Button
             size="long"
             variant="primary"
-            onClick={() => navigate("/dentistList")}
+            onClick={() => {
+              // activeTab에 따라 정렬 파라미터 추가
+              const sortParam =
+                activeTab === 0
+                  ? "rating"
+                  : activeTab === 1
+                  ? "review"
+                  : "comment";
+              navigate(`/dentistList?sort=${sortParam}`);
+            }}
             className="cursor-pointer"
           >
             더보기

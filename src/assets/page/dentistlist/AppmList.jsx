@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import PageNatation from './../../../componetns/PageNatation';
 import Button from '../../../componetns/Button';
 import { useUser } from '../../../context/UserContext';
 import { getAppmList, getAppmListDelete } from '../../../api/AppmListApi_Mypg';
 import axios from 'axios';
-import PageNatation from '../../../componetns/PageNatation';
 import { useNavigate } from 'react-router-dom';
 
 function AppmList() {
@@ -11,12 +11,9 @@ function AppmList() {
   const nav = useNavigate();
   const [appmList, setAppmList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalElements, setTotalElements] = useState(0);
   const itemsPerPage = 3;
   const hospitalName = appmList?.[0]?.h_name || '';
-
-  console.log('totalPages:', totalPages);
-  console.log('currentPage:', currentPage);
 
   const opinionHandler = (i) => {
     if (!appmList) return;
@@ -27,7 +24,7 @@ function AppmList() {
     const fetchAppmList = async () => {
       try {
         if (!user?.id) return;
-
+        // 데이터 fetch해오는 곳
         const { data } = await axios.get('http://localhost:8080/api/appmListOfHospital', {
           params: {
             a_user_id: user.id,
@@ -35,27 +32,25 @@ function AppmList() {
             size: itemsPerPage,
           },
         });
-
-        const content = data.content ?? [];
-        setAppmList(content);
-
-        let nextTotalPages = 1;
-
-        if (typeof data.totalPages === 'number') {
-          nextTotalPages = data.totalPages;
-        } else if (typeof data.totalElements === 'number') {
-          nextTotalPages = Math.ceil(data.totalElements / itemsPerPage);
+        console.log(data.content);
+        setAppmList(Array.isArray(data.content) ? data.content : []);
+        // API 응답에서 totalElements를 사용하여 총 요소 수 저장
+        if (data.totalElements !== undefined) {
+          setTotalElements(data.totalElements);
+        } else if (data.totalPages !== undefined) {
+          // totalPages만 있는 경우 역으로 계산
+          setTotalElements(data.totalPages * itemsPerPage);
+        } else {
+          // content가 배열인 경우 배열 길이로 계산
+          const totalItems = data.content?.length || data.length || 0;
+          setTotalElements(totalItems);
         }
-
-        // 🔥 PageNatation 보호용 (0 방지)
-        setTotalPages(Math.max(nextTotalPages, 1));
-      } catch (e) {
-        console.error(e);
+      } catch (error) {
+        console.error('Error fetching appmList', error);
       }
     };
-
     fetchAppmList();
-  }, [user?.id, currentPage]);
+  }, [user, currentPage]);
 
   const handleCancel = async (reservation) => {
     const id = reservation.id ?? reservation.a_id;
@@ -72,11 +67,11 @@ function AppmList() {
       // 현재 페이지의 데이터 다시 로드
       const data = await getAppmList(user.id, currentPage, itemsPerPage);
       setAppmList(data.content || data);
-      // 총 페이지 수 업데이트
-      if (data.totalPages !== undefined) {
-        setTotalPages(data.totalPages);
-      } else if (data.totalElements !== undefined) {
-        setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
+      // 총 요소 수 업데이트
+      if (data.totalElements !== undefined) {
+        setTotalElements(data.totalElements);
+      } else if (data.totalPages !== undefined) {
+        setTotalElements(data.totalPages * itemsPerPage);
       }
       // 현재 페이지에 아이템이 없고 이전 페이지가 있으면 이전 페이지로 이동
       if ((data.content?.length || data.length || 0) === 0 && currentPage > 0) {
@@ -88,8 +83,9 @@ function AppmList() {
     }
   };
 
-  const handlePageChange = (uiPage) => {
-    setCurrentPage(uiPage - 1); // ⭐ UI(1) → API(0)
+  const handlePageChange = (apiPage) => {
+    // pageFn에서 이미 -1을 해서 전달하므로 API 기준(0부터) 페이지 번호
+    setCurrentPage(apiPage);
   };
 
   const formatPhone = (phone) => {
@@ -147,8 +143,8 @@ function AppmList() {
                 <li>· 예약 시간: {reservation.a_time}</li>
                 <li>· 연락처: {formatPhone(reservation.phone)}</li>
                 <li className="break-words">· 특이 사항: {reservation.text}</li>
-                <li className="break-words">· 진단명: {reservation.a_dia_name || '진료 '}</li>
-                <li className="break-words">· 진단 내용: {reservation.a_dia_content || '진료 '}</li>
+                <li className="break-words">· 진단명: {reservation.a_dia_name || '진료 대기 중입니다.'}</li>
+                <li className="break-words">· 진단 내용: {reservation.a_dia_content || '진료 대기 중입니다.'}</li>
               </ul>
 
               <div className="flex flex-wrap justify-between w-full mt-5 gap-2">
@@ -164,7 +160,7 @@ function AppmList() {
                 <Button
                   size="mid"
                   variant="primary"
-                  className="flex-1 min-w-[100px]"
+                  className="flex-1 min-w-[100px] xl:cursor-pointer"
                   onClick={() => handleCancel(reservation)}
                 >
                   {reservation.u_name} 환자 진료 리스트
@@ -174,8 +170,15 @@ function AppmList() {
           ))}
         </div>
 
-        {totalPages > 1 && (
-          <PageNatation totalPages={totalPages} currentPage={currentPage + 1} pageFn={handlePageChange} />
+        {totalElements > 0 && (
+          <div className="mb-[34px]">
+            <PageNatation
+              totalElements={totalElements}
+              pageSize={itemsPerPage}
+              currentPage={currentPage}
+              pageFn={handlePageChange}
+            />
+          </div>
         )}
       </div>
     </div>

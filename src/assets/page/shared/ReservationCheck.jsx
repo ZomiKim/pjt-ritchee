@@ -16,13 +16,10 @@ function ReservationCheck() {
   const { search } = useLocation();
   const query = new URLSearchParams(search);
   const a_id = query.get('a_id');
-
   // 현재 유저 예약 내역 가져오기
   const userReservationFetch = async () => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:8080/api/appmUser/${a_id}/userId/${id}`
-      );
+      const { data } = await axios.get(`http://localhost:8080/api/appmUser/${a_id}/userId/${id}`);
       setAppointment(data);
     } catch (error) {
       console.error('error', error.message);
@@ -33,14 +30,11 @@ function ReservationCheck() {
   // a_id를 통해 데이터 추출 후 소견서 작성(병원 관계자용)
   const getappmContent = async () => {
     try {
-      const { data } = await axios.get(
-        'http://localhost:8080/api/appmContent',
-        {
-          params: {
-            a_id: a_id,
-          },
-        }
-      );
+      const { data } = await axios.get('http://localhost:8080/api/appmContent', {
+        params: {
+          a_id: a_id,
+        },
+      });
       setAppointment(data);
     } catch (error) {
       console.error('고객이 입력한 증상을 불러오지 못했습니다.', error);
@@ -62,16 +56,12 @@ function ReservationCheck() {
   // 소견서 작성
   const postOpinion = async () => {
     try {
-      await axios.put(
-        `http://localhost:8080/api/appmlist/opinionUpdate/${a_id}`,
-        null,
-        {
-          params: {
-            a_dia_name: formData.opinion,
-            a_dia_content: formData.warning,
-          },
-        }
-      );
+      await axios.put(`http://localhost:8080/api/appmlist/opinionUpdate/${a_id}`, null, {
+        params: {
+          a_dia_name: formData.opinion,
+          a_dia_content: formData.warning,
+        },
+      });
 
       alert('소견서 작성이 완료되었습니다.');
     } catch (error) {
@@ -139,35 +129,16 @@ function ReservationCheck() {
                   </h4>
                 </div>
                 <div className="reservationBody">
-                  <div className="patient dummy text-gray-deep">
-                    · 환자명 : {appointment?.name || ''}
-                  </div>
-                  <div className="symptom dummy text-gray-deep">
-                    · 증상 : {appointment?.a_content || ''}
-                  </div>
-                  <div className="age dummy text-gray-deep">
-                    · 나이 : {`만 ${getAge(appointment?.birth)}세` || ''}
-                  </div>
+                  <div className="patient dummy text-gray-deep">· 환자명 : {appointment?.name || ''}</div>
+                  <div className="symptom dummy text-gray-deep">· 증상 : {appointment?.a_content || ''}</div>
+                  <div className="age dummy text-gray-deep">· 나이 : {`만 ${getAge(appointment?.birth)}세` || ''}</div>
                   <div className="gender dummy text-gray-deep">
-                    · 성별 :{' '}
-                    {appointment?.gender === 'M'
-                      ? '남'
-                      : appointment?.gender === 'F'
-                      ? '여'
-                      : ''}
+                    · 성별 : {appointment?.gender === 'M' ? '남' : appointment?.gender === 'F' ? '여' : ''}
                   </div>
-                  <div className="reservationDate dummy text-gray-deep">
-                    · 예약 일자 : {date.split(' ')[0] ?? ''}
-                  </div>
-                  <div className="reservationTime dummy text-gray-deep">
-                    · 예약 시간 : {date.split(' ')[1]}
-                  </div>
-                  <div className="phoneNumber dummy text-gray-deep">
-                    · 연락처 : {appointment?.phone || ''}
-                  </div>
-                  <div className="etc dummy text-gray-deep">
-                    · 특이 사항 : {appointment?.text || ''}
-                  </div>
+                  <div className="reservationDate dummy text-gray-deep">· 예약 일자 : {date.split(' ')[0] ?? ''}</div>
+                  <div className="reservationTime dummy text-gray-deep">· 예약 시간 : {date.split(' ')[1]}</div>
+                  <div className="phoneNumber dummy text-gray-deep">· 연락처 : {appointment?.phone || ''}</div>
+                  <div className="etc dummy text-gray-deep">· 특이 사항 : {appointment?.text || ''}</div>
                 </div>
               </div>
             </div>

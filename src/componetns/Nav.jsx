@@ -51,9 +51,7 @@ function Nav() {
     };
   }, []);
 
-  
-
-  const navLinks = [
+  const allNavLinks = [
     {
       name: user?.name ? `${user.name} 님의 마이페이지` : "마이페이지",
       to: "/mypage",
@@ -63,6 +61,14 @@ function Nav() {
     { name: "치과 리스트", to: "/dentistList" },
     { name: "이벤트", to: "/event" },
   ];
+
+  // u_kind가 2일 때 특정 메뉴 숨기기
+  const navLinks =
+    user?.u_kind === 2 || user?.u_kind === "2"
+      ? allNavLinks.filter(
+          (link) => !["릿치 소개", "치과 리스트", "이벤트"].includes(link.name)
+        )
+      : allNavLinks;
 
   // 로그아웃 핸들러
   const handleLogout = async (e) => {

@@ -20,6 +20,11 @@ function AppmList() {
     nav(`/map/reservationForm/reservationCheck?a_id=${i}`);
   };
 
+  const listHandler = (i, h) => {
+    if (!appmList) return;
+    nav(`/mypage/medicalList?id=${i}&h_code=${h}`);
+  };
+
   useEffect(() => {
     const fetchAppmList = async () => {
       try {
@@ -172,7 +177,7 @@ function AppmList() {
                   size="mid"
                   variant="primary"
                   className="flex-1 min-w-[100px] xl:cursor-pointer"
-                  onClick={() => handleCancel(reservation)}
+                  onClick={() => listHandler(reservation.u_id, reservation.h_code)}
                 >
                   {reservation.u_name} 환자 진료 리스트
                 </Button>

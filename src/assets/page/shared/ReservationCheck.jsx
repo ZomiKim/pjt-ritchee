@@ -177,7 +177,7 @@ function ReservationCheck() {
                 <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
                   {appointment.text || ''}
                 </div> */}
-                <ul className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
+                <ul className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full pt-2 pb-4 pl-3 pr-2 mb-[5px] border border-main-01">
                   <h4 className="tit my-3 mt-3 flex items-center gap-1 break-words overflow-hidden">
                     <span className="material-icons">local_hospital</span>
                     {appointment.h_name}

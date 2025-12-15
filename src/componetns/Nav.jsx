@@ -51,6 +51,8 @@ function Nav() {
     };
   }, []);
 
+  
+
   const navLinks = [
     {
       name: user?.name ? `${user.name} 님의 마이페이지` : "마이페이지",

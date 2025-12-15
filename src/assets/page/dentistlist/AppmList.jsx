@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
-import PageNatation from "./../../../componetns/PageNatation";
-import Button from "../../../componetns/Button";
-import { useUser } from "../../../context/UserContext";
-import { getAppmList, getAppmListDelete } from "../../../api/AppmListApi_Mypg";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import PageNatation from './../../../componetns/PageNatation';
+import Button from '../../../componetns/Button';
+import { useUser } from '../../../context/UserContext';
+import { getAppmList, getAppmListDelete } from '../../../api/AppmListApi_Mypg';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function AppmList() {
   const { user } = useUser();
   const nav = useNavigate();
   const [appmList, setAppmList] = useState([]);
+
+  // ✅ PageNatation 기준: 무조건 0-based
   const [currentPage, setCurrentPage] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const itemsPerPage = 6;
-  const hospitalName = appmList?.[0]?.h_name || "";
 
-  console.log("유저", user?.id);
+  const itemsPerPage = 6;
+  const hospitalName = appmList?.[0]?.h_name || '';
+
+  console.log('유저', user?.id);
 
   const opinionHandler = (i) => {
     if (!appmList) return;
@@ -31,76 +34,67 @@ function AppmList() {
     const fetchAppmList = async () => {
       try {
         if (!user?.id) return;
-        // 데이터 fetch해오는 곳
-        const { data } = await axios.get(
-          "http://localhost:8080/api/appmListOfHospital",
-          {
-            params: {
-              a_user_id: user.id,
-              page: currentPage,
-              size: itemsPerPage,
-            },
-          }
-        );
-        console.log("API 응답 데이터:", data);
+
+        const { data } = await axios.get('http://localhost:8080/api/appmListOfHospital', {
+          params: {
+            a_user_id: user.id,
+            page: currentPage, // ✅ 그대로 0-based
+            size: itemsPerPage,
+          },
+        });
+
+        console.log('API 응답 데이터:', data);
+
         setAppmList(Array.isArray(data.content) ? data.content : []);
-        // API 응답에서 totalElements 저장
         setTotalElements(data.totalElements || 0);
       } catch (error) {
-        console.error("Error fetching appmList", error);
-        console.error("Error details:", {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          url: error.config?.url,
-          params: error.config?.params,
-        });
+        console.error('Error fetching appmList', error);
         setAppmList([]);
         setTotalElements(0);
       }
     };
+
     fetchAppmList();
-  }, [user, currentPage]);
+  }, [user, currentPage, itemsPerPage]);
 
   const handleCancel = async (reservation) => {
     const id = reservation.id ?? reservation.a_id;
     if (!id) {
-      alert("예약 ID가 없습니다.");
+      alert('예약 ID가 없습니다.');
       return;
     }
 
-    if (!window.confirm("예약을 취소하시겠습니까?")) return;
+    if (!window.confirm('예약을 취소하시겠습니까?')) return;
 
     try {
       await getAppmListDelete(id);
-      alert("예약이 취소되었습니다.");
-      // 현재 페이지의 데이터 다시 로드
+      alert('예약이 취소되었습니다.');
+
       const data = await getAppmList(user.id, currentPage, itemsPerPage);
+
       setAppmList(data.content || data);
-      // 총 요소 수 업데이트
       setTotalElements(data.totalElements || 0);
-      // 현재 페이지에 아이템이 없고 이전 페이지가 있으면 이전 페이지로 이동
+
+      // 현재 페이지가 비었으면 이전 페이지로
       if ((data.content?.length || data.length || 0) === 0 && currentPage > 0) {
-        setCurrentPage(currentPage - 1);
+        setCurrentPage((prev) => prev - 1);
       }
     } catch (e) {
       console.error(e);
-      alert("예약 취소 실패");
+      alert('예약 취소 실패');
     }
   };
 
-  const handlePageChange = (apiPage) => {
-    // pageFn에서 이미 -1을 해서 전달하므로 API 기준(0부터) 페이지 번호
-    setCurrentPage(apiPage);
+  // ✅ pageFn에서 넘어오는 값은 이미 0-based
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const formatPhone = (phone) => {
-    if (!phone) return "";
-    const digits = phone.replace(/\D/g, "");
-    if (digits.length === 11)
-      return digits.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
-    if (digits.length === 10)
-      return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, "$1-$2-$3");
+    if (!phone) return '';
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length === 11) return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 10) return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
     return phone;
   };
 
@@ -109,7 +103,7 @@ function AppmList() {
       <div className="container flex flex-col max-w-screen-xl mx-auto">
         <h4 className="tit my-5 mt-10 mx-[1vw] break-words">
           <span className="material-icons">alarm</span>
-          {hospitalName || "병원"}의 예약 내역
+          {hospitalName || '병원'}의 예약 내역
         </h4>
 
         {/* 중간에서 절대 깨지지 않는 Grid */}
@@ -151,13 +145,8 @@ function AppmList() {
                 <li>· 예약 시간: {reservation.a_time}</li>
                 <li>· 연락처: {formatPhone(reservation.phone)}</li>
                 <li className="break-words">· 특이 사항: {reservation.text}</li>
-                <li className="break-words">
-                  · 진단명: {reservation.a_dia_name || "진료 대기 중입니다."}
-                </li>
-                <li className="break-words">
-                  · 진단 내용:{" "}
-                  {reservation.a_dia_content || "진료 대기 중입니다."}
-                </li>
+                <li className="break-words">· 진단명: {reservation.a_dia_name || '진료 대기 중입니다.'}</li>
+                <li className="break-words">· 진단 내용: {reservation.a_dia_content || '진료 대기 중입니다.'}</li>
               </ul>
 
               <div className="flex flex-wrap justify-between w-full mt-5 gap-2">
@@ -174,9 +163,7 @@ function AppmList() {
                   size="mid"
                   variant="primary"
                   className="flex-1 min-w-[100px] xl:cursor-pointer"
-                  onClick={() =>
-                    listHandler(reservation.u_id, reservation.h_code)
-                  }
+                  onClick={() => listHandler(reservation.u_id, reservation.h_code)}
                 >
                   {reservation.u_name} 환자 진료 리스트
                 </Button>
@@ -190,7 +177,7 @@ function AppmList() {
           <PageNatation
             totalElements={totalElements}
             pageSize={itemsPerPage}
-            currentPage={currentPage}
+            currentPage={currentPage} // ✅ 0-based 그대로
             pageFn={handlePageChange}
           />
         </div>

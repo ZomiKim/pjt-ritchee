@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUser } from "../context/UserContext";
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useUser();
@@ -20,8 +20,8 @@ function ProtectedRoute({ children }) {
         // 여전히 user가 없으면 리다이렉트
         if (!user && !hasAlerted.current) {
           hasAlerted.current = true;
-          alert("로그인이 필요합니다.");
-          navigate("/member/signin");
+          alert('로그인이 필요합니다.');
+          navigate('/member/signin');
         }
         setCheckingAuth(false);
       }, 500); // 500ms 지연

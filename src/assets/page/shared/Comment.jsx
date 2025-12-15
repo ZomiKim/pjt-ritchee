@@ -2,15 +2,17 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Button from '../../../componetns/Button';
 import moment from 'moment';
+import { useUser } from '../../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const Comment = ({ reviewId, countFn }) => {
+  const { user } = useUser();
+  const nav = useNavigate();
   const [comment, setComment] = useState();
   const [formData, setFormData] = useState(''); // 댓글 입력 track state
   const commentFetch = async () => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:8080/api/comment?reviewId=${reviewId}`
-      );
+      const { data } = await axios.get(`http://localhost:8080/api/comment?reviewId=${reviewId}`);
       setComment({
         comments: data.comments,
       });
@@ -26,13 +28,14 @@ const Comment = ({ reviewId, countFn }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    
+
     // 로그인 체크
     if (!user || !user.id) {
-      alert("로그인이 필요합니다.");
+      alert('로그인이 필요합니다.');
+      // nav('/member/signin');
       return;
     }
-    
+
     if (formData.trim() == '') {
       alert('댓글을 작성해 주세요.');
       return;
@@ -69,17 +72,11 @@ const Comment = ({ reviewId, countFn }) => {
           key={i}
         >
           <div className="comment dummy md:text-base! py-3.5! container">
-            <div className="commentContent mb-5">
-              {c.c_content || '댓글 없음'}
-            </div>
+            <div className="commentContent mb-5">{c.c_content || '댓글 없음'}</div>
             <div className="commentEtc text-gray-deep flex justify-between">
-              <div className="commentWriter">
-                작성자 : {c?.name || '작성자 없음'}
-              </div>
+              <div className="commentWriter">작성자 : {c?.name || '작성자 없음'}</div>
               <div className="date">
-                {c?.createdAt
-                  ? moment(c.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                  : '2025-02-11 14:25:41'}
+                {c?.createdAt ? moment(c.createdAt).format('YYYY-MM-DD HH:mm:ss') : '2025-02-11 14:25:41'}
               </div>
             </div>
           </div>
@@ -88,10 +85,7 @@ const Comment = ({ reviewId, countFn }) => {
 
       {/* 댓글 작성 */}
       <li className="myBg bg-light-02 border border-b-main-01 border-t-0 border-x-0">
-        <form
-          className="comment dummy md:text-base! py-3.5! container"
-          onSubmit={submitHandler}
-        >
+        <form className="comment dummy md:text-base! py-3.5! container" onSubmit={submitHandler}>
           <textarea
             id="comment"
             name="comment"

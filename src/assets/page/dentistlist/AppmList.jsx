@@ -1,50 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import PageNatation from './../../../componetns/PageNatation';
 import Button from '../../../componetns/Button';
 import { useUser } from '../../../context/UserContext';
 import { getAppmList, getAppmListDelete } from '../../../api/AppmListApi_Mypg';
 import axios from 'axios';
+import PageNatation from '../../../componetns/PageNatation';
 
 function AppmList() {
   const { user } = useUser();
   const [appmList, setAppmList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 3;
   const hospitalName = appmList?.[0]?.h_name || '';
+
+  console.log('totalPages:', totalPages);
+  console.log('currentPage:', currentPage);
+
+  const opinionHandler = () => {};
+
   useEffect(() => {
     const fetchAppmList = async () => {
       try {
         if (!user?.id) return;
-        // 데이터 fetch해오는 곳
-        const { data } = await axios.get(
-          'http://localhost:8080/api/appmListOfHospital',
-          {
-            params: {
-              a_user_id: user.id,
-              page: currentPage,
-              size: itemsPerPage,
-            },
-          }
-        );
-        console.log(data.content);
-        setAppmList(Array.isArray(data.content) ? data.content : []);
-        // API 응답에서 totalPages 또는 totalElements를 사용하여 총 페이지 수 계산
-        if (data.totalPages !== undefined) {
-          setTotalPages(data.totalPages);
-        } else if (data.totalElements !== undefined) {
-          setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
-        } else {
-          // content가 배열인 경우 배열 길이로 계산
-          const totalItems = data.content?.length || data.length || 0;
-          setTotalPages(Math.ceil(totalItems / itemsPerPage));
+
+        const { data } = await axios.get('http://localhost:8080/api/appmListOfHospital', {
+          params: {
+            a_user_id: user.id,
+            page: currentPage,
+            size: itemsPerPage,
+          },
+        });
+
+        const content = data.content ?? [];
+        setAppmList(content);
+
+        let nextTotalPages = 1;
+
+        if (typeof data.totalPages === 'number') {
+          nextTotalPages = data.totalPages;
+        } else if (typeof data.totalElements === 'number') {
+          nextTotalPages = Math.ceil(data.totalElements / itemsPerPage);
         }
-      } catch (error) {
-        console.error('Error fetching appmList', error);
+
+        // 🔥 PageNatation 보호용 (0 방지)
+        setTotalPages(Math.max(nextTotalPages, 1));
+      } catch (e) {
+        console.error(e);
       }
     };
+
     fetchAppmList();
-  }, [user, currentPage]);
+  }, [user?.id, currentPage]);
 
   const handleCancel = async (reservation) => {
     const id = reservation.id ?? reservation.a_id;
@@ -77,18 +83,15 @@ function AppmList() {
     }
   };
 
-  const handlePageChange = (apiPage) => {
-    // pageFn에서 이미 -1을 해서 전달하므로 API 기준(0부터) 페이지 번호
-    setCurrentPage(apiPage);
+  const handlePageChange = (uiPage) => {
+    setCurrentPage(uiPage - 1); // ⭐ UI(1) → API(0)
   };
 
   const formatPhone = (phone) => {
     if (!phone) return '';
     const digits = phone.replace(/\D/g, '');
-    if (digits.length === 11)
-      return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    if (digits.length === 10)
-      return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 11) return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 10) return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
     return phone;
   };
 
@@ -139,12 +142,8 @@ function AppmList() {
                 <li>· 예약 시간: {reservation.a_time}</li>
                 <li>· 연락처: {formatPhone(reservation.phone)}</li>
                 <li className="break-words">· 특이 사항: {reservation.text}</li>
-                <li className="break-words">
-                  · 진단명: {reservation.a_dia_name}
-                </li>
-                <li className="break-words">
-                  · 진단 내용: {reservation.a_dia_content}
-                </li>
+                <li className="break-words">· 진단명: {reservation.a_dia_name}</li>
+                <li className="break-words">· 진단 내용: {reservation.a_dia_content}</li>
               </ul>
 
               <div className="flex flex-wrap justify-between w-full mt-5 gap-2">
@@ -152,11 +151,9 @@ function AppmList() {
                   size="mid"
                   variant="primary"
                   className="flex-1 min-w-[100px]"
-                  onClick={() =>
-                    alert('수정중입니다. 병원 연락처로 문의바랍니다.')
-                  }
+                  onClick={() => alert('수정중입니다. 병원 연락처로 문의바랍니다.')}
                 >
-                  예약 수정
+                  소견서 작성
                 </Button>
 
                 <Button
@@ -165,7 +162,7 @@ function AppmList() {
                   className="flex-1 min-w-[100px]"
                   onClick={() => handleCancel(reservation)}
                 >
-                  예약 취소
+                  {reservation.u_name} 환자 진료 리스트
                 </Button>
               </div>
             </div>
@@ -173,11 +170,7 @@ function AppmList() {
         </div>
 
         {totalPages > 1 && (
-          <PageNatation
-            totalPages={totalPages}
-            currentPage={currentPage + 1}
-            pageFn={handlePageChange}
-          />
+          <PageNatation totalPages={totalPages} currentPage={currentPage + 1} pageFn={handlePageChange} />
         )}
       </div>
     </div>

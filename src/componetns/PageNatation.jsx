@@ -6,9 +6,7 @@ function PageNatation({
   currentPage = 0, // 0-based
   pageFn, // 클릭 시 호출
 }) {
-  const [internalCurrentPage, setInternalCurrentPage] = useState(
-    currentPage + 1
-  );
+  const [internalCurrentPage, setInternalCurrentPage] = useState(currentPage + 1);
 
   // 총 페이지 수 계산
   const totalPages = Math.ceil(totalElements / pageSize);
@@ -37,7 +35,7 @@ function PageNatation({
     return pages;
   };
 
-  if (totalPages === 0) return null; // 페이지가 없으면 렌더링 X
+  if (totalPages === 0) return null;
 
   return (
     <div className="flex items-center justify-center gap-2 py-4">

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DentCard from './DentCard';
 import PageNatation from '../../../componetns/PageNatation';
 import axios from 'axios';
@@ -17,17 +16,28 @@ const List = () => {
   const page = Number(searchParams.get('page')) || 0;
   const para1 = searchParams.get('para1') || '';
   const para2 = searchParams.get('para2') || '';
+  const para3 = searchParams.get('para3') || '';
+
+  const sortType = searchParams.get('sort') || 'rating'; // 기본값은 별점 순
 
   const fetchHospital = async () => {
-    const isSearch = para1 || para2;
-    const url = isSearch ? 'http://localhost:8080/api/hs_find_para' : 'http://localhost:8080/api/hs_evalpt';
+    const isSearch = para1 || para2 || para3;
+    let apiEndpoint = 'hs_evalpt';
+    if (sortType === 'review') apiEndpoint = 'hs_review';
+    else if (sortType === 'comment') apiEndpoint = 'hs_commentcnt';
+
+    const url = isSearch
+      ? `http://localhost:8080/api/hs${
+          sortType === 'review' ? '_review' : sortType === 'comment' ? '_comment' : ''
+        }_find_para`
+      : `http://localhost:8080/api/${apiEndpoint}`;
 
     try {
       const { data } = await axios.get(url, {
         params: {
           page,
           size: 10,
-          ...(isSearch && { para1, para2 }),
+          ...(isSearch && { para1, para2, para3 }),
         },
       });
 
@@ -51,7 +61,11 @@ const List = () => {
 
     const words = value.split(/\s+/);
 
-    nav(`/dentistList?page=0&para1=${words[0]}${words[1] ? `&para2=${words[1]}` : ''}`);
+    nav(
+      `/dentistList?sort=${sortType}&page=0&para1=${words[0]}${words[1] ? `&para2=${words[1]}` : ''}${
+        words[2] ? `&para3=${words[2]}` : ''
+      }`
+    );
   };
 
   // 엔터 검색
@@ -63,13 +77,17 @@ const List = () => {
 
   // 페이지 클릭 시 URL 이동
   const onPageChange = (newPage) => {
-    nav(`/dentistList?page=${newPage}${para1 ? `&para1=${para1}` : ''}${para2 ? `&para2=${para2}` : ''}`);
+    nav(
+      `/dentistList?sort=${sortType}&page=${newPage}${para1 ? `&para1=${para1}` : ''}${para2 ? `&para2=${para2}` : ''}${
+        words[2] ? `&para3=${words[2]}` : ''
+      }`
+    );
   };
 
   useEffect(() => {
     fetchHospital();
     window.scrollTo({ top: 0 });
-  }, [page, para1, para2]);
+  }, [page, para1, para2, para3]);
 
   return (
     <div className="myBg bg-light-02">

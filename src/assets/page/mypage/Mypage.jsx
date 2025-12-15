@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import EditInfo from './EditInfo';
 import MedicalList from './MedicalList';
 import ReviewHistory from './ReviewHistory';
-import ReservationList from '../dentistlist/ReservationList'; // ReservationList or AppmList
+import ReservationList from '../mypage/ReservationList';
 import ReviewForm from './ReviewForm';
 import DentistReview from '../shared/DentistReview';
 import { Link } from 'react-router-dom';
@@ -70,10 +70,7 @@ function Mypage() {
       <Route path="medicalList" element={<MedicalList />} />
       <Route path="medicalList/reviewForm/:id" element={<ReviewForm />} />
       <Route path="reviewHistory" element={<ReviewHistory />} />
-      <Route
-        path="reviewHistory/dentistReview/:id"
-        element={<DentistReview />}
-      />
+      <Route path="reviewHistory/dentistReview/:id" element={<DentistReview />} />
       <Route path="reservationList" element={<ReservationList />} />
     </Routes>
   );

@@ -79,7 +79,7 @@ const List = () => {
   const onPageChange = (newPage) => {
     nav(
       `/dentistList?sort=${sortType}&page=${newPage}${para1 ? `&para1=${para1}` : ''}${para2 ? `&para2=${para2}` : ''}${
-        words[2] ? `&para3=${words[2]}` : ''
+        para3 ? `&para3=${para3}` : ''
       }`
     );
   };
@@ -87,7 +87,7 @@ const List = () => {
   useEffect(() => {
     fetchHospital();
     window.scrollTo({ top: 0 });
-  }, [page, para1, para2, para3]);
+  }, [page, para1, para2, para3, sortType]);
 
   return (
     <div className="myBg bg-light-02">

@@ -3,7 +3,6 @@ import PageNatation from "./../../../componetns/PageNatation";
 import Button from "../../../componetns/Button";
 import { useUser } from "../../../context/UserContext";
 import { getAppmList, getAppmListDelete } from "../../../api/AppmListApi_Mypg";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function AppmList() {
@@ -14,8 +13,6 @@ function AppmList() {
   const [totalElements, setTotalElements] = useState(0);
   const itemsPerPage = 6;
   const hospitalName = appmList?.[0]?.h_name || "";
-
-  console.log("유저", user?.id);
 
   const opinionHandler = (i) => {
     if (!appmList) return;
@@ -31,36 +28,19 @@ function AppmList() {
     const fetchAppmList = async () => {
       try {
         if (!user?.id) return;
-        // 데이터 fetch해오는 곳
-        const { data } = await axios.get(
-          "http://localhost:8080/api/appmListOfHospital",
-          {
-            params: {
-              a_user_id: user.id,
-              page: currentPage,
-              size: itemsPerPage,
-            },
-          }
-        );
-        console.log("API 응답 데이터:", data);
+        // ReservationList와 동일한 방식으로 API 호출
+        const data = await getAppmList(user.id, currentPage, itemsPerPage);
         setAppmList(Array.isArray(data.content) ? data.content : []);
-        // API 응답에서 totalElements 저장
+        // API 응답에서 totalElements 저장 (List.jsx와 동일한 방식)
         setTotalElements(data.totalElements || 0);
       } catch (error) {
         console.error("Error fetching appmList", error);
-        console.error("Error details:", {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-          url: error.config?.url,
-          params: error.config?.params,
-        });
         setAppmList([]);
         setTotalElements(0);
       }
     };
     fetchAppmList();
-  }, [user, currentPage]);
+  }, [user?.id, currentPage]);
 
   const handleCancel = async (reservation) => {
     const id = reservation.id ?? reservation.a_id;

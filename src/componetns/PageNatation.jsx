@@ -55,7 +55,6 @@ function PageNatation({
   };
 
   // totalPages가 0이면 표시하지 않음
-  // totalPages가 1일 때는 표시 (데이터가 있으면 표시)
   if (calculatedTotalPages === 0) return null;
 
   return (

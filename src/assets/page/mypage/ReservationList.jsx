@@ -8,7 +8,7 @@ function ReservationList() {
   const { user } = useUser();
   const [appmList, setAppmList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalElements, setTotalElements] = useState(0);
   const itemsPerPage = 6;
 
   useEffect(() => {
@@ -17,18 +17,12 @@ function ReservationList() {
         if (!user?.id) return;
         const data = await getAppmList(user.id, currentPage, itemsPerPage);
         setAppmList(data.content || data);
-        // API 응답에서 totalPages 또는 totalElements를 사용하여 총 페이지 수 계산
-        if (data.totalPages !== undefined) {
-          setTotalPages(data.totalPages);
-        } else if (data.totalElements !== undefined) {
-          setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
-        } else {
-          // content가 배열인 경우 배열 길이로 계산
-          const totalItems = data.content?.length || data.length || 0;
-          setTotalPages(Math.ceil(totalItems / itemsPerPage));
-        }
+        // API 응답에서 totalElements 저장
+        setTotalElements(data.totalElements || 0);
       } catch (error) {
         console.error("Error fetching appmList", error);
+        setAppmList([]);
+        setTotalElements(0);
       }
     };
     fetchAppmList();
@@ -58,12 +52,8 @@ function ReservationList() {
           const data = await getAppmList(user.id, currentPage, itemsPerPage);
           setAppmList(data.content || data);
 
-          // 총 페이지 수 업데이트
-          if (data.totalPages !== undefined) {
-            setTotalPages(data.totalPages);
-          } else if (data.totalElements !== undefined) {
-            setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
-          }
+          // 총 요소 수 업데이트
+          setTotalElements(data.totalElements || 0);
 
           // 현재 페이지에 아이템이 없고 이전 페이지가 있으면 이전 페이지로 이동
           if (
@@ -92,10 +82,11 @@ function ReservationList() {
             const data = await getAppmList(user.id, currentPage, itemsPerPage);
             setAppmList(data.content || data);
 
-            if (data.totalPages !== undefined) {
-              setTotalPages(data.totalPages);
-            } else if (data.totalElements !== undefined) {
-              setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
+            if (data.totalElements !== undefined) {
+              setTotalElements(data.totalElements);
+            } else {
+              const totalItems = data.content?.length || data.length || 0;
+              setTotalElements(totalItems);
             }
 
             if (
@@ -219,13 +210,15 @@ function ReservationList() {
           ))}
         </div>
 
-        {totalPages > 1 && (
+        {/* 페이지네이션 */}
+        <div className="mb-[34px]">
           <PageNatation
-            totalPages={totalPages}
-            currentPage={currentPage + 1}
+            totalElements={totalElements}
+            pageSize={itemsPerPage}
+            currentPage={currentPage}
             pageFn={handlePageChange}
           />
-        )}
+        </div>
       </div>
     </div>
   );

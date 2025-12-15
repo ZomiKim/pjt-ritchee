@@ -11,7 +11,7 @@ function PageNatation({
   // totalPages가 직접 전달되면 사용, 아니면 totalElements와 pageSize로 계산
   const calculatedTotalPages = totalPages !== undefined 
     ? totalPages 
-    : (totalElements !== undefined && pageSize > 0 
+    : (totalElements !== undefined && totalElements !== null && pageSize > 0 
         ? Math.ceil(totalElements / pageSize) 
         : 0);
 
@@ -54,7 +54,9 @@ function PageNatation({
     return pages;
   };
 
-  if (calculatedTotalPages === 0 || calculatedTotalPages === 1) return null;
+  // totalPages가 0이면 표시하지 않음
+  // totalPages가 1일 때는 표시 (데이터가 있으면 표시)
+  if (calculatedTotalPages === 0) return null;
 
   return (
     <div className="flex items-center justify-center gap-2 py-4">

@@ -28,25 +28,36 @@ function AppmList() {
         const { data } = await axios.get('http://localhost:8080/api/appmListOfHospital', {
           params: {
             a_user_id: user.id,
-            page: currentPage,
-            size: itemsPerPage,
           },
         });
-        console.log(data.content);
+        console.log('API 응답 데이터:', data);
         setAppmList(Array.isArray(data.content) ? data.content : []);
         // API 응답에서 totalElements를 사용하여 총 요소 수 저장
         if (data.totalElements !== undefined) {
           setTotalElements(data.totalElements);
+          console.log('totalElements 설정:', data.totalElements);
         } else if (data.totalPages !== undefined) {
           // totalPages만 있는 경우 역으로 계산
-          setTotalElements(data.totalPages * itemsPerPage);
+          const calculatedTotal = data.totalPages * itemsPerPage;
+          setTotalElements(calculatedTotal);
+          console.log('totalPages로 계산:', calculatedTotal);
         } else {
           // content가 배열인 경우 배열 길이로 계산
           const totalItems = data.content?.length || data.length || 0;
           setTotalElements(totalItems);
+          console.log('배열 길이로 계산:', totalItems);
         }
       } catch (error) {
         console.error('Error fetching appmList', error);
+        console.error('Error details:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+          url: error.config?.url,
+          params: error.config?.params,
+        });
+        setAppmList([]);
+        setTotalElements(0);
       }
     };
     fetchAppmList();
@@ -170,16 +181,15 @@ function AppmList() {
           ))}
         </div>
 
-        {totalElements > 0 && (
-          <div className="mb-[34px]">
-            <PageNatation
-              totalElements={totalElements}
-              pageSize={itemsPerPage}
-              currentPage={currentPage}
-              pageFn={handlePageChange}
-            />
-          </div>
-        )}
+        {/* 페이지네이션 - totalElements가 0보다 크면 표시 */}
+        <div className="mb-[34px]">
+          <PageNatation
+            totalElements={totalElements}
+            pageSize={itemsPerPage}
+            currentPage={currentPage}
+            pageFn={handlePageChange}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Button from '../../../componetns/Button';
 import { useUser } from '../../../context/UserContext';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import moment from 'moment';
 
 function ReservationCheck() {
   const { user } = useUser();
+  const nav = useNavigate();
   const id = user?.id;
   const [appointment, setAppointment] = useState({});
   const [formData, setFormData] = useState({
@@ -30,11 +31,12 @@ function ReservationCheck() {
   // a_id를 통해 데이터 추출 후 소견서 작성(병원 관계자용)
   const getappmContent = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8080/api/appmContent', {
+      const { data } = await axios.get('http://localhost:8080/api/appminfo', {
         params: {
           a_id: a_id,
         },
       });
+      console.log(data);
       setAppointment(data);
     } catch (error) {
       console.error('고객이 입력한 증상을 불러오지 못했습니다.', error);
@@ -64,6 +66,7 @@ function ReservationCheck() {
       });
 
       alert('소견서 작성이 완료되었습니다.');
+      nav('/');
     } catch (error) {
       console.error('소견서 작성이 실패하였습니다.', error);
       return;
@@ -153,9 +156,41 @@ function ReservationCheck() {
                 소견서 작성
               </h4>
               <form onSubmit={submitHandler}>
+                {/* <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
+                  {appointment.u_name || ''}
+                </div>
                 <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
                   {appointment.a_content || ''}
                 </div>
+                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
+                  {appointment.age || ''}
+                </div>
+                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
+                  {appointment.gender || ''}
+                </div>
+                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
+                  {appointment.a_date || ''}
+                </div>
+                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
+                  {appointment.a_time || ''}
+                </div>
+                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
+                  {appointment.text || ''}
+                </div> */}
+                <ul className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
+                  <h4 className="tit my-3 mt-3 flex items-center gap-1 break-words overflow-hidden">
+                    <span className="material-icons">local_hospital</span>
+                    {appointment.h_name}
+                  </h4>
+                  <li className="break-words">· 환자명: {appointment.u_name || ''}</li>
+                  <li className="break-words">· 증상: {appointment.a_content || ''}</li>
+                  <li>· 나이: {appointment.age || ''}</li>
+                  <li>· 성별: {appointment.gender || ''}</li>
+                  <li>· 예약 일자: {appointment.a_date || ''}</li>
+                  <li>· 예약 시간: {appointment.a_time || ''}</li>
+                  <li>· 연락처: {appointment.phone || ''}</li>
+                  <li className="break-words">· 특이 사항: {appointment.text || ''}</li>
+                </ul>
                 <textarea
                   id="opinion"
                   name="opinion"
@@ -174,7 +209,9 @@ function ReservationCheck() {
                   onChange={changeHandler}
                   className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02 resize-none"
                 ></textarea>
-                <Button size="long">의사 소견 작성</Button>
+                <Button size="long" className={'lg: cursor-pointer'}>
+                  의사 소견 작성
+                </Button>
               </form>
             </div>
           </div>

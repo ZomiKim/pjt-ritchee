@@ -19,9 +19,7 @@ const DentistReviewView = () => {
   // 리뷰 불러오기
   const reviewFetch = async () => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:8080/api/myreviewlist/${reviewId}`
-      );
+      const { data } = await axios.get(`http://localhost:8080/api/myreviewlist/${reviewId}`);
       setReview(Array.isArray(data) ? data[0] : {});
     } catch (error) {
       console.error('Detailed Review Fetch Erorr', error);
@@ -32,9 +30,7 @@ const DentistReviewView = () => {
   // 좋아요 수 불러오기
   const likeCountFetch = async () => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:8080/api/likeRVCnt/${reviewId}`
-      );
+      const { data } = await axios.get(`http://localhost:8080/api/likeRVCnt/${reviewId}`);
       setLikeCount(data);
     } catch (error) {
       console.error('Like Count Fetch Error', error);
@@ -44,9 +40,7 @@ const DentistReviewView = () => {
   // 좋아요
   const likeFetch = async () => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:8080/api/onelike/${user.id}/reviewId/${reviewId}`
-      );
+      const { data } = await axios.get(`http://localhost:8080/api/onelike/${user.id}/reviewId/${reviewId}`);
 
       if (data) {
         setLike(true);
@@ -61,6 +55,11 @@ const DentistReviewView = () => {
   };
 
   const likeClicked = async () => {
+    // 로그인 체크
+    if (!user || !user.id) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
     try {
       await axios.post(`http://localhost:8080/api/LikeOne`, {
         r_id: reviewId,
@@ -74,6 +73,11 @@ const DentistReviewView = () => {
   };
 
   const likeUnclicked = async () => {
+    // 로그인 체크
+    if (!user || !user.id) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
     try {
       await axios.delete(`http://localhost:8080/api/LikeOne`, {
         data: {
@@ -82,6 +86,7 @@ const DentistReviewView = () => {
           h_user_id: user?.id,
         },
       });
+
       setLike(false);
       likeCountFetch();
     } catch (error) {
@@ -141,14 +146,10 @@ const DentistReviewView = () => {
                   })}
                 </div>
               </div>
-              <div className="dummy text-black">
-                조회수 : {review?.r_views ?? '0'}
-              </div>
+              <div className="dummy text-black">조회수 : {review?.r_views ?? '0'}</div>
             </div>
           </div>
-          <div className="dummy md:text-base!">
-            {review?.r_content || '리뷰가 없습니다.'}
-          </div>
+          <div className="dummy md:text-base!">{review?.r_content || '리뷰가 없습니다.'}</div>
           <div className="count flex gap-4 justify-end mt-7">
             <div className="like flex gap-2 items-center">
               <span

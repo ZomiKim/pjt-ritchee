@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DentCard from './DentCard';
 import PageNatation from '../../../componetns/PageNatation';
 import axios from 'axios';
@@ -19,9 +20,7 @@ const List = () => {
 
   const fetchHospital = async () => {
     const isSearch = para1 || para2;
-    const url = isSearch
-      ? 'http://localhost:8080/api/hs_find_para'
-      : 'http://localhost:8080/api/hs_evalpt';
+    const url = isSearch ? 'http://localhost:8080/api/hs_find_para' : 'http://localhost:8080/api/hs_evalpt';
 
     try {
       const { data } = await axios.get(url, {
@@ -52,11 +51,7 @@ const List = () => {
 
     const words = value.split(/\s+/);
 
-    nav(
-      `/dentistList?page=0&para1=${words[0]}${
-        words[1] ? `&para2=${words[1]}` : ''
-      }`
-    );
+    nav(`/dentistList?page=0&para1=${words[0]}${words[1] ? `&para2=${words[1]}` : ''}`);
   };
 
   // 엔터 검색
@@ -68,11 +63,7 @@ const List = () => {
 
   // 페이지 클릭 시 URL 이동
   const onPageChange = (newPage) => {
-    nav(
-      `/dentistList?page=${newPage}${para1 ? `&para1=${para1}` : ''}${
-        para2 ? `&para2=${para2}` : ''
-      }`
-    );
+    nav(`/dentistList?page=${newPage}${para1 ? `&para1=${para1}` : ''}${para2 ? `&para2=${para2}` : ''}`);
   };
 
   useEffect(() => {
@@ -83,10 +74,7 @@ const List = () => {
   return (
     <div className="myBg bg-light-02">
       <div className="wrap" style={{ backgroundColor: '#f4f8ff' }}>
-        <div
-          className="container"
-          style={{ paddingLeft: '5px', paddingRight: '5px' }}
-        >
+        <div className="container" style={{ paddingLeft: '5px', paddingRight: '5px' }}>
           <h4 className="tit mb-5">
             <i className="fa-solid fa-tooth"></i>
             구로구 리뷰 치과 릿치!
@@ -107,10 +95,7 @@ const List = () => {
                 className="searchBtn bg-main-02 w-5 h-5 p-3 rounded-full flex justify-center items-center absolute right-3.5 xl:cursor-pointer"
                 onClick={onSearch}
               >
-                <span
-                  className="material-icons text-white"
-                  style={{ fontSize: '17px' }}
-                >
+                <span className="material-icons text-white" style={{ fontSize: '17px' }}>
                   search
                 </span>
               </button>

@@ -43,25 +43,83 @@ function ReservationList() {
 
     if (!window.confirm("예약을 취소하시겠습니까?")) return;
 
+    // 낙관적 업데이트: 취소된 항목을 즉시 목록에서 제거
+    const previousList = [...appmList];
+    setAppmList((prevList) =>
+      prevList.filter((item) => (item.id ?? item.a_id) !== id)
+    );
+
     try {
       await getAppmListDelete(id);
+
+      // 성공 시 데이터 새로고침 (백그라운드)
+      const refreshData = async () => {
+        try {
+          const data = await getAppmList(user.id, currentPage, itemsPerPage);
+          setAppmList(data.content || data);
+
+          // 총 페이지 수 업데이트
+          if (data.totalPages !== undefined) {
+            setTotalPages(data.totalPages);
+          } else if (data.totalElements !== undefined) {
+            setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
+          }
+
+          // 현재 페이지에 아이템이 없고 이전 페이지가 있으면 이전 페이지로 이동
+          if (
+            (data.content?.length || data.length || 0) === 0 &&
+            currentPage > 0
+          ) {
+            setCurrentPage(currentPage - 1);
+          }
+        } catch (refreshError) {
+          console.error("데이터 새로고침 오류:", refreshError);
+        }
+      };
+
+      // 비동기로 데이터 새로고침 (alert를 막지 않음)
+      refreshData();
+
       alert("예약이 취소되었습니다.");
-      // 현재 페이지의 데이터 다시 로드
-      const data = await getAppmList(user.id, currentPage, itemsPerPage);
-      setAppmList(data.content || data);
-      // 총 페이지 수 업데이트
-      if (data.totalPages !== undefined) {
-        setTotalPages(data.totalPages);
-      } else if (data.totalElements !== undefined) {
-        setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
-      }
-      // 현재 페이지에 아이템이 없고 이전 페이지가 있으면 이전 페이지로 이동
-      if ((data.content?.length || data.length || 0) === 0 && currentPage > 0) {
-        setCurrentPage(currentPage - 1);
-      }
     } catch (e) {
-      console.error(e);
-      alert("예약 취소 실패");
+      console.error("예약 취소 에러 상세:", e);
+
+      // 서버가 응답을 보냈으면 성공으로 처리
+      if (e.response) {
+        // 이미 목록에서 제거했으므로 데이터 새로고침만
+        const refreshData = async () => {
+          try {
+            const data = await getAppmList(user.id, currentPage, itemsPerPage);
+            setAppmList(data.content || data);
+
+            if (data.totalPages !== undefined) {
+              setTotalPages(data.totalPages);
+            } else if (data.totalElements !== undefined) {
+              setTotalPages(Math.ceil(data.totalElements / itemsPerPage));
+            }
+
+            if (
+              (data.content?.length || data.length || 0) === 0 &&
+              currentPage > 0
+            ) {
+              setCurrentPage(currentPage - 1);
+            }
+          } catch (refreshError) {
+            console.error("데이터 새로고침 오류:", refreshError);
+          }
+        };
+
+        refreshData();
+        alert("예약이 취소되었습니다.");
+      } else if (e.request) {
+        // 네트워크 오류인 경우 원래 목록으로 복구
+        setAppmList(previousList);
+        alert("예약 취소 실패: 서버 응답이 없습니다.");
+      } else {
+        // 요청 설정 오류인 경우 원래 목록으로 복구
+        setAppmList(previousList);
+        alert("예약 취소 실패: 요청을 보낼 수 없습니다.");
+      }
     }
   };
 
@@ -103,6 +161,7 @@ function ReservationList() {
         2xl:grid-cols-3
         2xl:[&>div]:w-full
         mx-auto
+        mb-10
       "
         >
           {appmList.map((reservation, index) => (
@@ -111,7 +170,7 @@ function ReservationList() {
               className="
             border p-4 rounded-lg bg-white text-gray-200 shadow-lg 
             flex flex-col justify-between
-            break-words overflow-hidden
+            break-words overflow-hidden 
           "
             >
               <ul className=" pl-1 space-y-2 text-gray-500 overflow-hidden break-words">

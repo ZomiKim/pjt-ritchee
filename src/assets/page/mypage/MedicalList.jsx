@@ -35,6 +35,12 @@ function MedicalList() {
               <Link
                 to="/mypage/medicalList/reviewForm/:id"
                 className="nav-link flex-grow text-center py-2  bg-main-02 text-white rounded-md hover:bg-main-02"
+                onClick={(e) => {
+                  if (!user || !user.id) {
+                    e.preventDefault();
+                    alert("로그인이 필요합니다.");
+                  }
+                }}
               >
                 후기 작성 하기
               </Link>
@@ -58,6 +64,12 @@ function MedicalList() {
               <Link
                 to="/mypage/medicalList/reviewForm/:id"
                 className="nav-link flex-grow text-center py-2  bg-main-02 text-white rounded-md hover:bg-main-02"
+                onClick={(e) => {
+                  if (!user || !user.id) {
+                    e.preventDefault();
+                    alert("로그인이 필요합니다.");
+                  }
+                }}
               >
                 후기 작성 하기
               </Link>
@@ -81,6 +93,12 @@ function MedicalList() {
               <Link
                 to="/mypage/medicalList/reviewForm/:id"
                 className="nav-link flex-grow text-center py-2  bg-main-02 text-white rounded-md hover:bg-main-02"
+                onClick={(e) => {
+                  if (!user || !user.id) {
+                    e.preventDefault();
+                    alert("로그인이 필요합니다.");
+                  }
+                }}
               >
                 후기 작성 하기
               </Link>
@@ -104,6 +122,12 @@ function MedicalList() {
               <Link
                 to="/mypage/medicalList/reviewForm/:id"
                 className="nav-link flex-grow text-center py-2  bg-main-02 text-white rounded-md hover:bg-main-02"
+                onClick={(e) => {
+                  if (!user || !user.id) {
+                    e.preventDefault();
+                    alert("로그인이 필요합니다.");
+                  }
+                }}
               >
                 후기 작성 하기
               </Link>
@@ -127,6 +151,12 @@ function MedicalList() {
               <Link
                 to="/mypage/medicalList/reviewForm/:id"
                 className="nav-link flex-grow text-center py-2  bg-main-02 text-white rounded-md hover:bg-main-02"
+                onClick={(e) => {
+                  if (!user || !user.id) {
+                    e.preventDefault();
+                    alert("로그인이 필요합니다.");
+                  }
+                }}
               >
                 후기 작성 하기
               </Link>
@@ -150,6 +180,12 @@ function MedicalList() {
               <Link
                 to="/mypage/medicalList/reviewForm/:id"
                 className="nav-link flex-grow text-center py-2  bg-main-02 text-white rounded-md hover:bg-main-02"
+                onClick={(e) => {
+                  if (!user || !user.id) {
+                    e.preventDefault();
+                    alert("로그인이 필요합니다.");
+                  }
+                }}
               >
                 후기 작성 하기
               </Link>

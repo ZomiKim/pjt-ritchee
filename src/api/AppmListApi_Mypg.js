@@ -14,6 +14,7 @@ export const getAppmListUpdate = async (a_id, updateData) => {
 };
 
 export const getAppmListDelete = async (a_id) => {
-  const { data } = await axios.put(`${BASE_URL}/appmlist/delete/${a_id}`);
-  return data;
+  const response = await axios.put(`${BASE_URL}/appmlist/delete/${a_id}`);
+  // 응답이 있으면 성공으로 간주 (상태 코드가 2xx가 아니어도 응답이 있으면 성공)
+  return response.data || response;
 };

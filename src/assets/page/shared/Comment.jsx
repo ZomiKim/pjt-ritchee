@@ -26,6 +26,13 @@ const Comment = ({ reviewId, countFn }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    
+    // 로그인 체크
+    if (!user || !user.id) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    
     if (formData.trim() == '') {
       alert('댓글을 작성해 주세요.');
       return;

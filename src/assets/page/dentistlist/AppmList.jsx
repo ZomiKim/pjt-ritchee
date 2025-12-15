@@ -4,9 +4,11 @@ import { useUser } from '../../../context/UserContext';
 import { getAppmList, getAppmListDelete } from '../../../api/AppmListApi_Mypg';
 import axios from 'axios';
 import PageNatation from '../../../componetns/PageNatation';
+import { useNavigate } from 'react-router-dom';
 
 function AppmList() {
   const { user } = useUser();
+  const nav = useNavigate();
   const [appmList, setAppmList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -16,7 +18,10 @@ function AppmList() {
   console.log('totalPages:', totalPages);
   console.log('currentPage:', currentPage);
 
-  const opinionHandler = () => {};
+  const opinionHandler = (i) => {
+    if (!appmList) return;
+    nav(`/map/reservationForm/reservationCheck?a_id=${i}`);
+  };
 
   useEffect(() => {
     const fetchAppmList = async () => {
@@ -142,16 +147,16 @@ function AppmList() {
                 <li>· 예약 시간: {reservation.a_time}</li>
                 <li>· 연락처: {formatPhone(reservation.phone)}</li>
                 <li className="break-words">· 특이 사항: {reservation.text}</li>
-                <li className="break-words">· 진단명: {reservation.a_dia_name}</li>
-                <li className="break-words">· 진단 내용: {reservation.a_dia_content}</li>
+                <li className="break-words">· 진단명: {reservation.a_dia_name || '진료 '}</li>
+                <li className="break-words">· 진단 내용: {reservation.a_dia_content || '진료 '}</li>
               </ul>
 
               <div className="flex flex-wrap justify-between w-full mt-5 gap-2">
                 <Button
                   size="mid"
                   variant="primary"
-                  className="flex-1 min-w-[100px]"
-                  onClick={() => alert('수정중입니다. 병원 연락처로 문의바랍니다.')}
+                  className="flex-1 min-w-[100px] xl:cursor-pointer"
+                  onClick={() => opinionHandler(reservation.a_id)}
                 >
                   소견서 작성
                 </Button>

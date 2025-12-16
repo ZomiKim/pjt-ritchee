@@ -5,6 +5,7 @@ import moment from 'moment';
 import axios from 'axios';
 import { useUser } from '../../../context/UserContext';
 import { getHospitalInfo, getRunTime } from '../../../api/ReservationApi';
+import { BASE_URL } from '../../../api/config';
 
 // 요일 이름
 const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -146,7 +147,7 @@ function ReservationForm() {
     }
 
     try {
-      const { data: a_id } = await axios.post('http://localhost:8080/api/appm', {
+      const { data: a_id } = await axios.post(`${BASE_URL}/appm`, {
         h_code: h_code,
         a_date: res,
         a_content: formData.hospitalSymptom,

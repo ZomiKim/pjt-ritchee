@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DentCard from './DentCard';
 import PageNatation from '../../../componetns/PageNatation';
-import axios from 'axios';
+import { getHospitalList } from '../../../api/listApi';
 
 const List = () => {
   const nav = useNavigate();
@@ -21,30 +21,19 @@ const List = () => {
   const sortType = searchParams.get('sort') || 'rating'; // 기본값은 별점 순
 
   const fetchHospital = async () => {
-    const isSearch = para1 || para2 || para3;
-    let apiEndpoint = 'hs_evalpt';
-    if (sortType === 'review') apiEndpoint = 'hs_review';
-    else if (sortType === 'comment') apiEndpoint = 'hs_commentcnt';
-
-    const url = isSearch
-      ? `http://localhost:8080/api/hs${
-          sortType === 'review' ? '_review' : sortType === 'comment' ? '_comment' : ''
-        }_find_para`
-      : `http://localhost:8080/api/${apiEndpoint}`;
-
     try {
-      const { data } = await axios.get(url, {
-        params: {
-          page,
-          size: 10,
-          ...(isSearch && { para1, para2, para3 }),
-        },
+      const data = await getHospitalList({
+        page,
+        size: 10,
+        sortType,
+        para1,
+        para2,
+        para3,
       });
-
       setHospital(Array.isArray(data.content) ? data.content : []);
       setTotalElements(data.totalElements || 0); // 총 병원 수 저장
     } catch (error) {
-      console.error(isSearch ? 'Search Error' : 'Fetch Error', error);
+      console.error('Fetch Hospital List Error', error);
       setHospital([]);
       setTotalElements(0);
     }

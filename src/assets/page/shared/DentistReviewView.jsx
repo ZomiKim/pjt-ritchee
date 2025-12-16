@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { useUser } from '../../../context/UserContext';
 import Comment from './Comment';
+import { getReviewDetail } from '../../../api/ReviewAndCommentApi';
 
 const DentistReviewView = () => {
   const { user } = useUser();
@@ -19,7 +20,8 @@ const DentistReviewView = () => {
   // 리뷰 불러오기
   const reviewFetch = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/myreviewlist/${reviewId}`);
+      const data = await getReviewDetail(reviewId);
+      console.log('리뷰 불러오기 테스트', data);
       setReview(Array.isArray(data) ? data[0] : {});
     } catch (error) {
       console.error('Detailed Review Fetch Erorr', error);

@@ -5,20 +5,18 @@ import { useUser } from '../../../context/UserContext';
 import { getAppmList, getAppmListDelete } from '../../../api/AppmListApi_Mypg';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { getAppmListOfHospital } from '../../../api/listApi';
 
 function AppmList() {
   const { user } = useUser();
   const nav = useNavigate();
   const [appmList, setAppmList] = useState([]);
 
-  // ✅ PageNatation 기준: 무조건 0-based
   const [currentPage, setCurrentPage] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
 
   const itemsPerPage = 6;
   const hospitalName = appmList?.[0]?.h_name || '';
-
-  console.log('유저', user?.id);
 
   const opinionHandler = (i) => {
     if (!appmList) return;
@@ -35,15 +33,7 @@ function AppmList() {
       try {
         if (!user?.id) return;
 
-        const { data } = await axios.get('http://localhost:8080/api/appmListOfHospital', {
-          params: {
-            a_user_id: user.id,
-            page: currentPage, // ✅ 그대로 0-based
-            size: itemsPerPage,
-          },
-        });
-
-        console.log('API 응답 데이터:', data);
+        const data = await getAppmListOfHospital(user.id, currentPage, itemsPerPage);
 
         setAppmList(Array.isArray(data.content) ? data.content : []);
         setTotalElements(data.totalElements || 0);
@@ -57,35 +47,6 @@ function AppmList() {
     fetchAppmList();
   }, [user, currentPage, itemsPerPage]);
 
-  const handleCancel = async (reservation) => {
-    const id = reservation.id ?? reservation.a_id;
-    if (!id) {
-      alert('예약 ID가 없습니다.');
-      return;
-    }
-
-    if (!window.confirm('예약을 취소하시겠습니까?')) return;
-
-    try {
-      await getAppmListDelete(id);
-      alert('예약이 취소되었습니다.');
-
-      const data = await getAppmList(user.id, currentPage, itemsPerPage);
-
-      setAppmList(data.content || data);
-      setTotalElements(data.totalElements || 0);
-
-      // 현재 페이지가 비었으면 이전 페이지로
-      if ((data.content?.length || data.length || 0) === 0 && currentPage > 0) {
-        setCurrentPage((prev) => prev - 1);
-      }
-    } catch (e) {
-      console.error(e);
-      alert('예약 취소 실패');
-    }
-  };
-
-  // ✅ pageFn에서 넘어오는 값은 이미 0-based
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };

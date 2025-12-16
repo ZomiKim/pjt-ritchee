@@ -1,5 +1,5 @@
-import axios from "axios";
-import { BASE_URL } from "./config";
+import axios from 'axios';
+import { BASE_URL } from './config';
 
 export const getAppmList = async (a_user_id, page = 0, size = 100) => {
   const { data } = await axios.get(`${BASE_URL}/appmlist/${a_user_id}`, {

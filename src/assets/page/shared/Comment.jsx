@@ -1,9 +1,9 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Button from '../../../componetns/Button';
 import moment from 'moment';
 import { useUser } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { createComment, getCommentsByReviewId } from '../../../api/ReviewAndCommentApi';
 
 const Comment = ({ reviewId, countFn }) => {
   const { user } = useUser();
@@ -12,7 +12,8 @@ const Comment = ({ reviewId, countFn }) => {
   const [formData, setFormData] = useState(''); // 댓글 입력 track state
   const commentFetch = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/comment?reviewId=${reviewId}`);
+      const data = await getCommentsByReviewId(reviewId);
+
       setComment({
         comments: data.comments,
       });
@@ -32,7 +33,6 @@ const Comment = ({ reviewId, countFn }) => {
     // 로그인 체크
     if (!user || !user.id) {
       alert('로그인이 필요합니다.');
-      // nav('/member/signin');
       return;
     }
 
@@ -42,9 +42,9 @@ const Comment = ({ reviewId, countFn }) => {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/comment', {
+      await createComment({
         reviewId: +reviewId,
-        c_content: formData,
+        content: formData,
         userId: user?.id,
       });
 

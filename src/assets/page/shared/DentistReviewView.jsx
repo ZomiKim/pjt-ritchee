@@ -3,7 +3,13 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { useUser } from '../../../context/UserContext';
 import Comment from './Comment';
-import { getReviewDetail } from '../../../api/ReviewAndCommentApi';
+import {
+  getMyReviewLike,
+  getReviewDetail,
+  getReviewLikeCount,
+  likeReview,
+  unlikeReview,
+} from '../../../api/ReviewAndCommentApi';
 
 const DentistReviewView = () => {
   const { user } = useUser();
@@ -21,7 +27,6 @@ const DentistReviewView = () => {
   const reviewFetch = async () => {
     try {
       const data = await getReviewDetail(reviewId);
-      console.log('리뷰 불러오기 테스트', data);
       setReview(Array.isArray(data) ? data[0] : {});
     } catch (error) {
       console.error('Detailed Review Fetch Erorr', error);
@@ -32,7 +37,7 @@ const DentistReviewView = () => {
   // 좋아요 수 불러오기
   const likeCountFetch = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/likeRVCnt/${reviewId}`);
+      const data = await getReviewLikeCount(reviewId);
       setLikeCount(data);
     } catch (error) {
       console.error('Like Count Fetch Error', error);
@@ -42,7 +47,10 @@ const DentistReviewView = () => {
   // 좋아요
   const likeFetch = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/onelike/${user.id}/reviewId/${reviewId}`);
+      const data = await getMyReviewLike({
+        userId: user.id,
+        reviewId,
+      });
 
       if (data) {
         setLike(true);
@@ -63,9 +71,9 @@ const DentistReviewView = () => {
       return;
     }
     try {
-      await axios.post(`http://localhost:8080/api/LikeOne`, {
-        r_id: reviewId,
-        h_user_id: user?.id,
+      await likeReview({
+        reviewId,
+        userId: user.id,
       });
       setLike(true);
       likeCountFetch();
@@ -81,12 +89,10 @@ const DentistReviewView = () => {
       return;
     }
     try {
-      await axios.delete(`http://localhost:8080/api/LikeOne`, {
-        data: {
-          l_id: likeId,
-          r_id: reviewId,
-          h_user_id: user?.id,
-        },
+      await unlikeReview({
+        likeId,
+        reviewId,
+        userId: user.id,
       });
 
       setLike(false);

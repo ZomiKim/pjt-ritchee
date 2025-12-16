@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Button from '../../../componetns/Button';
 import { useUser } from '../../../context/UserContext';
-import axios from 'axios';
 import moment from 'moment';
+import { getAppmContent, getUserReservation, postOpinionUpdate } from '../../../api/ReservationApi';
 
 function ReservationCheck() {
   const { user } = useUser();
@@ -20,7 +20,7 @@ function ReservationCheck() {
   // 현재 유저 예약 내역 가져오기
   const userReservationFetch = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/appmUser/${a_id}/userId/${id}`);
+      const data = await getUserReservation(a_id, id);
       setAppointment(data);
     } catch (error) {
       console.error('error', error.message);
@@ -31,11 +31,7 @@ function ReservationCheck() {
   // a_id를 통해 데이터 추출 후 소견서 작성(병원 관계자용)
   const getappmContent = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8080/api/appminfo', {
-        params: {
-          a_id: a_id,
-        },
-      });
+      const data = await getAppmContent(a_id);
       console.log(data);
       setAppointment(data);
     } catch (error) {
@@ -58,12 +54,7 @@ function ReservationCheck() {
   // 소견서 작성
   const postOpinion = async () => {
     try {
-      await axios.put(`http://localhost:8080/api/appmlist/opinionUpdate/${a_id}`, null, {
-        params: {
-          a_dia_name: formData.opinion,
-          a_dia_content: formData.warning,
-        },
-      });
+      await postOpinionUpdate(a_id, formData.opinion, formData.warning);
 
       alert('소견서 작성이 완료되었습니다.');
       nav('/');
@@ -156,27 +147,6 @@ function ReservationCheck() {
                 소견서 작성
               </h4>
               <form onSubmit={submitHandler}>
-                {/* <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
-                  {appointment.u_name || ''}
-                </div>
-                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
-                  {appointment.a_content || ''}
-                </div>
-                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
-                  {appointment.age || ''}
-                </div>
-                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
-                  {appointment.gender || ''}
-                </div>
-                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
-                  {appointment.a_date || ''}
-                </div>
-                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
-                  {appointment.a_time || ''}
-                </div>
-                <div className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01">
-                  {appointment.text || ''}
-                </div> */}
                 <ul className="outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full pt-2 pb-4 pl-3 pr-2 mb-[5px] border border-main-01">
                   <h4 className="tit my-3 mt-3 flex items-center gap-1 break-words overflow-hidden">
                     <span className="material-icons">local_hospital</span>

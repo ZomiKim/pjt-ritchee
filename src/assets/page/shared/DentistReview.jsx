@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PageNatation from './../../../componetns/PageNatation';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { getReviewsByHospital } from '../../../api/ReviewAndCommentApi';
 
 function DentistReview() {
   const { search } = useLocation();
@@ -53,7 +54,7 @@ function DentistReview() {
 
   return (
     <>
-      {review && (
+      {review.length > 0 ? (
         <div className="myBg bg-light-02">
           <div className="wrap" style={{ backgroundColor: '#f4f8ff', marginTop: '30px' }}>
             <div className="container">
@@ -120,6 +121,8 @@ function DentistReview() {
             <PageNatation totalElements={totalReviews} pageSize={pageSize} currentPage={page} pageFn={setPage} />
           </div>
         </div>
+      ) : (
+        <p className="w-full text-center text-gray-500 my-30">작성된 후기가 없습니다.</p>
       )}
     </>
   );

@@ -24,6 +24,7 @@ function MedicalList() {
         if (!userId) return;
 
         const medicalData = await getMedicalList(userId, page, pageSize);
+        setMedicals(Array.isArray(medicalData.content) ? medicalData.content : []);
         const hospitalData = await getHospitalList();
 
         const hospitalMap = {};
@@ -35,7 +36,6 @@ function MedicalList() {
           ...item,
           h_name: hospitalMap[item.h_code] || '병원 정보 없음',
         }));
-        console.log(mergedList);
         setList(mergedList);
         setTotalPages(medicalData.totalPages);
       } catch (error) {
@@ -118,7 +118,7 @@ function MedicalList() {
               medicals.length < 4 ? 'md:gap-20' : 'md:justify-between'
             } mx-auto`}
           >
-            {medicals.map((m, i) => (
+            {medicals?.map((m, i) => (
               <li
                 key={i}
                 className="w-full sm:w-[45%] lg:w-[30%] border p-4 rounded-lg mb-5 bg-white text-gray-700 shadow-lg"

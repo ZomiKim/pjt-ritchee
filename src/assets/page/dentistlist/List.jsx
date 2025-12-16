@@ -30,6 +30,7 @@ const List = () => {
         para2,
         para3,
       });
+
       setHospital(Array.isArray(data.content) ? data.content : []);
       setTotalElements(data.totalElements || 0); // 총 병원 수 저장
     } catch (error) {
@@ -114,18 +115,22 @@ const List = () => {
                 hospital?.length < 4 ? 'md:gap-20' : 'md:justify-between'
               } gap-4`}
             >
-              {hospital.map((h, i) => (
-                <li
-                  key={h.h_code}
-                  className={`tab_cont text-center text-deep p-6 bg-white rounded-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] w-full md:w-[48%] lg:w-[30%] ${
-                    i === 9 ? 'md:hidden' : ''
-                  }`}
-                >
-                  <Link to={`/dentistList/dentistView?id=${h.h_code}`}>
-                    <DentCard hospital={h} />
-                  </Link>
-                </li>
-              ))}
+              {hospital.length !== 0 ? (
+                hospital.map((h, i) => (
+                  <li
+                    key={h.h_code}
+                    className={`tab_cont text-center text-deep p-6 bg-white rounded-[10px] shadow-[0_4px_10px_rgba(0,0,0,0.1)] w-full md:w-[48%] lg:w-[30%] ${
+                      i === 9 ? 'md:hidden' : ''
+                    }`}
+                  >
+                    <Link to={`/dentistList/dentistView?id=${h.h_code}`}>
+                      <DentCard hospital={h} />
+                    </Link>
+                  </li>
+                ))
+              ) : para1 ? (
+                <li className="text-deep">검색 결과가 없습니다.</li>
+              ) : null}
             </ul>
           </div>
         </div>

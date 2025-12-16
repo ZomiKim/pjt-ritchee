@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../componetns/Button';
 import supabase from '../utils/supabase';
 import { useUser } from '../../context/UserContext';
+import { checkUserEmail } from '../../api/userEmailCheck';
 
 function SignUp() {
   const [loading, setLoading] = useState(false);
@@ -20,6 +21,8 @@ function SignUp() {
     addr: '',
   });
   const [errorM, setErrorM] = useState('');
+  const [emailCheckMessage, setEmailCheckMessage] = useState('');
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const navigate = useNavigate();
 
   const isValidBirth = (str) => {
@@ -51,8 +54,44 @@ function SignUp() {
     if (validateField(name, value)) {
       setFormData((prev) => ({ ...prev, [name]: value }));
       setErrorM('');
+      // 이메일이 변경되면 중복 체크 메시지 초기화
+      if (name === 'useremail') {
+        setEmailCheckMessage('');
+      }
     } else {
       setErrorM(`${name} 입력이 유효하지 않습니다.`);
+    }
+  };
+
+  const handleEmailCheck = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.useremail) {
+      setEmailCheckMessage('이메일을 입력해주세요.');
+      return;
+    }
+    if (!emailRegex.test(formData.useremail)) {
+      setEmailCheckMessage('올바른 이메일 형식을 입력해주세요.');
+      return;
+    }
+
+    setIsCheckingEmail(true);
+    setEmailCheckMessage('');
+
+    try {
+      const result = await checkUserEmail(formData.useremail);
+      const checkResult = typeof result === 'string' ? result : result?.userInfoCheckYn || result;
+      
+      if (checkResult === 'Y' || checkResult === 'y') {
+        setEmailCheckMessage('이미 가입된 이메일입니다.');
+      } else if (checkResult === 'N' || checkResult === 'n') {
+        setEmailCheckMessage('사용 가능한 이메일입니다.');
+      } else {
+        setEmailCheckMessage('이메일 확인 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      setEmailCheckMessage('이메일 확인 중 오류가 발생했습니다.');
+    } finally {
+      setIsCheckingEmail(false);
     }
   };
 
@@ -179,6 +218,37 @@ function SignUp() {
       </div>
 
       <form onSubmit={confirmHandler} className="flex flex-col items-center w-[90%] max-w-[480px] py-10">
+        <div className="w-full mb-2">
+          <div className="flex gap-2">
+            <input
+              type="email"
+              placeholder="이메일"
+              name="useremail"
+              value={formData.useremail}
+              onChange={eventHandler}
+              disabled={loading || isCheckingEmail}
+              className="outline-none placeholder-gray-mid rounded text-[13px] bg-white flex-1 py-2 px-3 border border-main-01"
+            />
+            <button
+              type="button"
+              onClick={handleEmailCheck}
+              disabled={loading || isCheckingEmail}
+              className="px-4 py-2 bg-white text-main-01 rounded text-[13px] border border-main-01 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            >
+              {isCheckingEmail ? '확인중...' : '중복체크'}
+            </button>
+          </div>
+          {emailCheckMessage && (
+            <div
+              className={`text-[12px] mt-1 ${
+                emailCheckMessage === '사용 가능한 이메일입니다.' ? 'text-green-400' : 'text-red-400'
+              }`}
+            >
+              {emailCheckMessage}
+            </div>
+          )}
+        </div>
+
         <input
           type="text"
           placeholder="이름"
@@ -193,16 +263,6 @@ function SignUp() {
           placeholder="생년월일 (YYYYMMDD)"
           name="birth"
           value={formData.birth}
-          onChange={eventHandler}
-          disabled={loading}
-          className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full py-2 px-3 mb-2 border border-main-01"
-        />
-
-        <input
-          type="email"
-          placeholder="이메일"
-          name="useremail"
-          value={formData.useremail}
           onChange={eventHandler}
           disabled={loading}
           className="outline-none placeholder-gray-mid rounded text-[13px] bg-white w-full py-2 px-3 mb-2 border border-main-01"

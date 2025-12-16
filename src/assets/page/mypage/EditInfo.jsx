@@ -34,7 +34,7 @@ function EditInfo() {
         addr: user.addr || '',
         bigo: user.text || '',
       });
-      
+
       // 성별 설정 (user.gender가 '남'이면 option1, '여'이면 option2)
       if (user.gender === '남' || user.gender === '남자' || user.gender === 'M') {
         setSelect('option1');
@@ -55,13 +55,13 @@ function EditInfo() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     console.log('handleSubmit 실행됨');
     console.log('checked:', checked);
     console.log('form:', form);
     console.log('select:', select);
     console.log('user:', user);
-    
+
     if (!checked) {
       alert('개인 정보 체크 동의해 주세요.');
       return;
@@ -106,7 +106,7 @@ function EditInfo() {
 
     try {
       // 성별을 DB 형식으로 변환 (option1 -> 남, option2 -> 여)
-      const genderValue = select === 'option1' ? '남' : '여';
+      const genderValue = select === 'option1' ? 'M' : 'F';
 
       // h_user 테이블 업데이트
       const updateData = {
@@ -120,11 +120,7 @@ function EditInfo() {
       console.log('업데이트할 데이터:', updateData);
       console.log('사용자 ID:', user.id);
 
-      const { data, error: updateError } = await supabase
-        .from('h_user')
-        .update(updateData)
-        .eq('id', user.id)
-        .select();
+      const { data, error: updateError } = await supabase.from('h_user').update(updateData).eq('id', user.id).select();
 
       console.log('업데이트 결과:', { data, error: updateError });
 
@@ -140,16 +136,16 @@ function EditInfo() {
       if (form.pwd && form.pwd.trim() !== '') {
         try {
           console.log('비밀번호 업데이트 시작');
-          
+
           // 타임아웃 추가 (1초)
           const updatePasswordPromise = supabase.auth.updateUser({
             password: form.pwd,
           });
-          
-          const timeoutPromise = new Promise((_, reject) => 
+
+          const timeoutPromise = new Promise((_, reject) =>
             setTimeout(() => reject(new Error('비밀번호 업데이트 타임아웃')), 1000)
           );
-          
+
           const { data: pwdData, error: passwordError } = await Promise.race([
             updatePasswordPromise,
             timeoutPromise,
@@ -289,10 +285,7 @@ function EditInfo() {
                 </div>
                 {/* 성별 */}
                 <div className="flex gap-4 mb-3">
-                  <label
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => setSelect('option1')}
-                  >
+                  <label className="flex items-center gap-2 cursor-pointer" onClick={() => setSelect('option1')}>
                     <input
                       type="radio"
                       name="gender"
@@ -301,21 +294,14 @@ function EditInfo() {
                       onChange={() => setSelect('option1')}
                     />
                     {select === 'option1' ? (
-                      <span className="material-icons text-main-02">
-                        radio_button_checked
-                      </span>
+                      <span className="material-icons text-main-02">radio_button_checked</span>
                     ) : (
-                      <span className="material-icons text-main-02">
-                        radio_button_unchecked
-                      </span>
+                      <span className="material-icons text-main-02">radio_button_unchecked</span>
                     )}
                     남
                   </label>
 
-                  <label
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => setSelect('option2')}
-                  >
+                  <label className="flex items-center gap-2 cursor-pointer" onClick={() => setSelect('option2')}>
                     <input
                       type="radio"
                       name="gender"
@@ -324,13 +310,9 @@ function EditInfo() {
                       onChange={() => setSelect('option2')}
                     />
                     {select === 'option2' ? (
-                      <span className="material-icons text-main-02">
-                        radio_button_checked
-                      </span>
+                      <span className="material-icons text-main-02">radio_button_checked</span>
                     ) : (
-                      <span className="material-icons text-main-02">
-                        radio_button_unchecked
-                      </span>
+                      <span className="material-icons text-main-02">radio_button_unchecked</span>
                     )}
                     여
                   </label>
@@ -389,14 +371,13 @@ function EditInfo() {
                   </span>
 
                   <span className="text-gray-mid !text-xs md:!text-base">
-                    병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료
-                    후 관련 법령에 따라 보관 후 파기합니다.
+                    병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료 후 관련 법령에 따라 보관 후 파기합니다.
                   </span>
                 </div>
                 {/* 버튼 */}
-                <Button 
-                  size="long" 
-                  variant="primary" 
+                <Button
+                  size="long"
+                  variant="primary"
                   type="submit"
                   onClick={(e) => {
                     console.log('Button 클릭됨');

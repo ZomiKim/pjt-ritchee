@@ -3,7 +3,9 @@ import { Route, Routes } from 'react-router-dom';
 import EditInfo from './EditInfo';
 import MedicalList from './MedicalList';
 import ReviewHistory from './ReviewHistory';
-import ReservationList from '../mypage/ReservationList';
+
+import ReservationList from './ReservationList';
+
 import ReviewForm from './ReviewForm';
 import DentistReview from '../shared/DentistReview';
 import { Link } from 'react-router-dom';

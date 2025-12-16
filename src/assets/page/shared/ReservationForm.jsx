@@ -129,7 +129,7 @@ function ReservationForm() {
   // 예약 함수
   const postAppm = async () => {
     if ((await runTime()) === 'N') {
-      alert('치과의 운영 시간이 아닙니다.');
+      alert('예약은 치과 운영 시간 내에서 가능하며, 점심시간을 제외한 시간대로 선택해 주시기 바랍니다.');
       return;
     }
 
@@ -212,7 +212,7 @@ function ReservationForm() {
     const oneHourAgo = moment().subtract(1, 'hours');
 
     if (selectedMoment.isBefore(oneHourAgo)) {
-      alert('현재 시간 기준 1시간 전인 시간은 선택할 수 없습니다.');
+      alert('과거시간으로 예약할수 없습니다. 현재시간 이후로 예약하세요. ');
       return;
     }
 
@@ -359,7 +359,7 @@ function ReservationForm() {
                             onClick={() => {
                               if (!date) return;
                               if (moment(date).isBefore(moment().startOf('day'))) {
-                                alert('오늘 이전 날짜는 선택할 수 없습니다.');
+                                alert('과거일자로 예약할수 없습니다. 현재일자 이후로 예약하세요.');
                                 return;
                               }
 

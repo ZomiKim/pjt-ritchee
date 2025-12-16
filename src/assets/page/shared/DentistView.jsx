@@ -15,6 +15,10 @@ function DentistView() {
     setHospital(data);
   };
 
+  const telHandler = () => {
+    alert(`${hospital?.h_tel1}으로 전화 연결합니다.`);
+  };
+
   useEffect(() => {
     fetch();
   }, []);
@@ -129,7 +133,7 @@ function DentistView() {
                   예약하기
                 </Link>
               </Button>
-              <Button size="mid" className="xl:hidden cursor-pointer">
+              <Button size="mid" className="xl:hidden cursor-pointer" onClick={telHandler}>
                 <div className="w-full text-[16px]">전화하기</div>
               </Button>
               {/* pc */}
@@ -138,7 +142,7 @@ function DentistView() {
                   예약하기
                 </Link>
               </Button>
-              <Button size="short" className="hidden xl:block cursor-pointer">
+              <Button size="short" className="hidden xl:block cursor-pointer" onClick={telHandler}>
                 <div className="block w-full text-[16px]">전화하기</div>
               </Button>
             </div>

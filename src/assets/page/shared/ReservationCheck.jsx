@@ -32,7 +32,7 @@ function ReservationCheck() {
   const getappmContent = async () => {
     try {
       const data = await getAppmContent(a_id);
-      console.log(data);
+      console.log('소견서 데이터 ', data);
       setAppointment(data);
     } catch (error) {
       console.error('고객이 입력한 증상을 불러오지 못했습니다.', error);
@@ -95,6 +95,14 @@ function ReservationCheck() {
     if (age) return age;
     else return '';
   }
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      opinion: appointment?.a_dia_name,
+      warning: appointment?.a_dia_content,
+    }));
+  }, [appointment]);
 
   useEffect(() => {
     if (id && a_id) {

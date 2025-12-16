@@ -155,15 +155,20 @@ function ReservationList() {
         mb-10
       "
         >
-          {appmList.map((reservation, index) => (
-            <div
-              key={reservation.id ?? index}
-              className="
+          {appmList.length === 0 ? (
+            <p className="w-full text-left text-gray-500 pl-[1vw]">
+              작성한 예약 내역이 없습니다.
+            </p>
+          ) : (
+            appmList.map((reservation, index) => (
+              <div
+                key={reservation.id ?? index}
+                className="
             border p-4 rounded-lg bg-white text-gray-200 shadow-lg 
             flex flex-col justify-between
             break-words overflow-hidden 
           "
-            >
+              >
               <ul className=" pl-1 space-y-2 text-gray-500 overflow-hidden break-words">
                 <h4 className="tit my-3 mt-3 flex items-center gap-1 break-words overflow-hidden">
                   <span className="material-icons">local_hospital</span>
@@ -207,7 +212,8 @@ function ReservationList() {
                 </Button>
               </div>
             </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* 페이지네이션 */}

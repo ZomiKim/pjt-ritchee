@@ -81,15 +81,20 @@ function MedicalList() {
             mb-10
           "
             >
-              {list.map((item) => (
-                <div
-                  key={item.a_id}
-                  className="
+              {list.length === 0 ? (
+                <p className="w-full text-left text-gray-500 pl-[1vw]">
+                  작성한 진료 기록이 없습니다.
+                </p>
+              ) : (
+                list.map((item) => (
+                  <div
+                    key={item.a_id}
+                    className="
             border border-main-01 p-4 rounded-lg bg-white text-gray-700 shadow-lg 
             flex flex-col justify-between
             break-words overflow-hidden 
           "
-                >
+                  >
                   <ul className="pl-1 space-y-2 text-gray-500 overflow-hidden break-words">
                     <h4 className="tit my-3 mt-3 flex items-center gap-1 break-words overflow-hidden">
                       <span className="material-icons">local_hospital</span>
@@ -122,7 +127,8 @@ function MedicalList() {
                     </Button>
                   </div>
                 </div>
-              ))}
+                ))
+              )}
             </div>
 
             {/* 페이지네이션 */}
@@ -149,7 +155,12 @@ function MedicalList() {
                 medicals.length < 4 ? 'md:gap-20' : 'md:justify-between'
               } mx-auto`}
             >
-              {medicals?.map((m, i) => (
+              {medicals?.length === 0 ? (
+                <p className="w-full text-left text-gray-500 pl-[1vw]">
+                  작성한 진료 기록이 없습니다.
+                </p>
+              ) : (
+                medicals?.map((m, i) => (
                 <li
                   key={i}
                   className="w-full sm:w-[45%] lg:w-[30%] border p-4 rounded-lg mb-5 bg-white text-gray-700 shadow-lg"
@@ -166,7 +177,8 @@ function MedicalList() {
                     <li className="break-words">· 주의 사항 : {m.a_dia_content || '진료 대기 중입니다.'}</li>
                   </ul>
                 </li>
-              ))}
+                ))
+              )}
             </ul>
 
             {/* 페이지네이션 */}

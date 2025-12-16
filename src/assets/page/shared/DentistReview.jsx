@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PageNatation from './../../../componetns/PageNatation';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { getReviewsByHospital } from '../../../api/ReviewAndCommentApi';
+import { getReviewsByHospital } from './../../../api/ReviewAndCommentApi';
 
 function DentistReview() {
   const { search } = useLocation();

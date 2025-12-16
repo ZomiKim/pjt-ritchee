@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import axios from 'axios';
 import { useUser } from '../../../context/UserContext';
+import { getHospitalInfo, getRunTime } from '../../../api/ReservationApi';
 
 // 요일 이름
 const WEEK_DAYS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -97,10 +98,20 @@ function ReservationForm() {
   const { user } = useUser();
   const nav = useNavigate();
 
+  const runTime = async () => {
+    try {
+      const data = await getRunTime(h_code, formData.reservationTime);
+      return data;
+    } catch (error) {
+      console.error('run time info fetch error', error);
+      return;
+    }
+  };
+
   // 병원 정보 가져오기
   const fetch = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/hs_info/${h_code}`);
+      const data = await getHospitalInfo(h_code);
       setHospital(data);
     } catch (err) {
       console.error('Single Hospital Info Fetch Error', err.message);
@@ -117,7 +128,16 @@ function ReservationForm() {
 
   // 예약 함수
   const postAppm = async () => {
+    if ((await runTime()) === 'N') {
+      alert('예약은 치과 운영 시간 내에서 가능하며, 점심시간을 제외한 시간대로 선택해 주시기 바랍니다.');
+      return;
+    }
+
     let res = formData.reservationDate + ' ' + formData.reservationTime;
+    if (formData.reservationTime.length !== 5) {
+      alert('올바른 시간 형식이 아닙니다. ex) 13:00');
+      return;
+    }
     if (res && moment(res).isValid()) {
       res = moment(res).format('YYYY-MM-DD HH:mm');
     } else {
@@ -126,7 +146,7 @@ function ReservationForm() {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/appm', {
+      const { data: a_id } = await axios.post('http://localhost:8080/api/appm', {
         h_code: h_code,
         a_date: res,
         a_content: formData.hospitalSymptom,
@@ -135,7 +155,7 @@ function ReservationForm() {
       });
 
       alert('예약이 완료되었습니다.');
-      nav(`/map/reservationForm/reservationCheck?h_code=${h_code}`);
+      nav(`/map/reservationForm/reservationCheck?a_id=${a_id}`);
     } catch (error) {
       console.error('error!', error.message);
     }
@@ -151,12 +171,19 @@ function ReservationForm() {
     });
   };
 
+  const formatPhone = (phone) => {
+    if (!phone) return '';
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length === 11) return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 10) return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+    return phone;
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (!user) {
+    if (!user || !user.id) {
       alert('로그인이 필요합니다.');
-      nav('/member/signin');
       return;
     }
 
@@ -171,7 +198,7 @@ function ReservationForm() {
     }
     if (formData.reservationTime.trim() === '') {
       alert('시간을 입력하세요.');
-      return;
+      if (moment(formData.reservationTime.trim())) return;
     }
 
     // 현재 시간 기준 1시간 전 체크
@@ -185,7 +212,7 @@ function ReservationForm() {
     const oneHourAgo = moment().subtract(1, 'hours');
 
     if (selectedMoment.isBefore(oneHourAgo)) {
-      alert('현재 시간 기준 1시간 전인 시간은 선택할 수 없습니다.');
+      alert('과거시간으로 예약할수 없습니다. 현재시간 이후로 예약하세요. ');
       return;
     }
 
@@ -230,7 +257,7 @@ function ReservationForm() {
                 type="text"
                 name="userName"
                 placeholder="이름"
-                value={user?.name}
+                value={user?.name || ''}
                 className="opacity-50 cursor-not-allowed outline-none rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 disabled
               />
@@ -324,16 +351,15 @@ function ReservationForm() {
                           <div
                             key={idx}
                             className={`h-10 flex items-center justify-center rounded cursor-pointer
-                                  ${date ? 'hover:border border-main-01' : ''}
-                                  ${isToday ? 'border border-blue-500' : ''}
-                                  ${isSelected ? 'bg-blue-500 text-white' : ''}
-                                  ${textColor}
-                                `}
+                            ${date ? 'hover:border border-main-01' : ''}
+                            ${isToday ? 'border border-blue-500' : ''}
+                            ${isSelected ? 'bg-blue-500 text-white' : ''}
+                            ${textColor}
+                          `}
                             onClick={() => {
                               if (!date) return;
                               if (moment(date).isBefore(moment().startOf('day'))) {
-                                // 오늘보다 하루 전날인지 확인
-                                alert('오늘 이전 날짜는 선택할 수 없습니다.');
+                                alert('과거일자로 예약할수 없습니다. 현재일자 이후로 예약하세요.');
                                 return;
                               }
 
@@ -342,6 +368,15 @@ function ReservationForm() {
                                 ...prev,
                                 reservationDate: moment(date).format('YYYY-MM-DD'),
                               }));
+                            }}
+                            onDoubleClick={() => {
+                              if (!date) return;
+                              setSelectedDate(date);
+                              setFormData((prev) => ({
+                                ...prev,
+                                reservationDate: moment(date).format('YYYY-MM-DD'),
+                              }));
+                              setIsCalendar(false); // 🔹 달력 닫기
                             }}
                           >
                             {date.getDate()}
@@ -363,7 +398,7 @@ function ReservationForm() {
               <input
                 type="text"
                 name="userPhoneNumber"
-                value={user?.phone}
+                value={formatPhone(user?.phone) || ''}
                 placeholder="연락처"
                 className="opacity-50 cursor-not-allowed outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
                 disabled
@@ -373,7 +408,7 @@ function ReservationForm() {
                 name="etc"
                 rows="4"
                 placeholder="특이 사항"
-                value={user?.text}
+                value={user?.text || ''}
                 disabled
                 className="opacity-50 cursor-not-allowed outline-none placeholder-gray-mid rounded-sm text-[12px] md:text-base! resize-none bg-white w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 focus:border-main-02"
               ></textarea>

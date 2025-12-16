@@ -9,7 +9,7 @@ const DentCard = ({ hospital }) => {
           {hospital.h_name || '병원명'}
         </h4>
         <div className="stars flex flex-row text-point items-center">
-          <span className="mr-1">{hospital.avg_eval_pt || '4.4'}</span>
+          <span className="mr-1">{hospital.avg_eval_pt.toFixed(1) || '0'}</span>
           <div className="flex flex-row text-point items-center">
             {Array.from({ length: 5 }).map((_, i) => {
               if (hospital.avg_eval_pt >= i + 1)
@@ -68,8 +68,7 @@ const DentCard = ({ hospital }) => {
             </span>
           </div>
           <span className="dummy text-gray-deep">
-            진료 이용 후기 {hospital.review_cnt > 0 ? hospital.review_cnt : '0'}건, 댓글
-            {hospital.comment_cnt || '0'}건
+            진료 이용 후기 {hospital.review_cnt > 0 ? hospital.review_cnt : '0'}건, 댓글 {hospital.comment_cnt || '0'}건
           </span>
         </li>
 

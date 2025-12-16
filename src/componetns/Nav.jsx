@@ -51,7 +51,7 @@ function Nav() {
     };
   }, []);
 
-  const navLinks = [
+  const allNavLinks = [
     {
       name: user?.name ? `${user.name} 님의 마이페이지` : "마이페이지",
       to: "/mypage",
@@ -62,15 +62,23 @@ function Nav() {
     { name: "이벤트", to: "/event" },
   ];
 
+  // u_kind가 2일 때 로그아웃을 제외한 모든 메뉴 숨기기
+  const navLinks =
+    user?.u_kind === 2 || user?.u_kind === "2"
+      ? [] // 로그아웃을 제외한 모든 메뉴 숨기기
+      : allNavLinks;
+
   // 로그아웃 핸들러
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
       await signOut();
       setIsOpen(false);
+      alert("로그아웃 되었습니다.");
       navigate("/member/signin");
     } catch (error) {
       console.error("로그아웃 에러:", error);
+      alert("로그아웃 중 오류가 발생했습니다.");
     }
   };
 
@@ -152,20 +160,22 @@ function Nav() {
           </div>
 
           {/* mb right menu*/}
-          <div className="flex items-center gap-2 md:hidden">
-            <Link
-              to="/map"
-              className="w-10 h-10 flex items-center justify-center text-white hover:text-main-01 transition-colors duration-300"
-            >
-              <span className="material-icons">location_on</span>
-            </Link>
-            <Link
-              to="/mypage"
-              className="w-10 h-10 flex items-center justify-center text-white hover:text-main-01 transition-colors duration-300"
-            >
-              <span className="material-icons">person</span>
-            </Link>
-          </div>
+          {user?.u_kind !== 2 && user?.u_kind !== "2" && (
+            <div className="flex items-center gap-2 md:hidden">
+              <Link
+                to="/map"
+                className="w-10 h-10 flex items-center justify-center text-white hover:text-main-01 transition-colors duration-300"
+              >
+                <span className="material-icons">location_on</span>
+              </Link>
+              <Link
+                to="/mypage"
+                className="w-10 h-10 flex items-center justify-center text-white hover:text-main-01 transition-colors duration-300"
+              >
+                <span className="material-icons">person</span>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -185,44 +195,50 @@ function Nav() {
       >
         <div className="bg-light-01">
           {/* mb menu big */}
-          <div className="bg-main-01 p-[2%]">
-            <div className="flex justify-evenly">
-              <Link
-                to={navLinks[0].to}
-                className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center gap-2 rounded-[10px] text-center"
-                onClick={() => setIsOpen(false)}
-              >
-                <span
-                  className="material-icons text-main-02"
-                  style={{ fontSize: "48px" }}
-                >
-                  person
-                </span>
-                {user?.name ? (
-                  <>
-                    {user.name} 님의
-                    <br />
-                    마이페이지
-                  </>
-                ) : (
-                  "마이페이지"
+          {navLinks.length > 0 && (
+            <div className="bg-main-01 p-[2%]">
+              <div className="flex justify-evenly">
+                {navLinks[0] && (
+                  <Link
+                    to={navLinks[0].to}
+                    className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center gap-2 rounded-[10px] text-center"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <span
+                      className="material-icons text-main-02"
+                      style={{ fontSize: "48px" }}
+                    >
+                      person
+                    </span>
+                    {user?.name ? (
+                      <>
+                        {user.name} 님의
+                        <br />
+                        마이페이지
+                      </>
+                    ) : (
+                      "마이페이지"
+                    )}
+                  </Link>
                 )}
-              </Link>
-              <Link
-                to={navLinks[1].to}
-                className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center justify-center gap-2 rounded-[10px] text-center"
-                onClick={() => setIsOpen(false)}
-              >
-                <span
-                  className="material-icons text-main-02"
-                  style={{ fontSize: "48px" }}
-                >
-                  schedule
-                </span>
-                {navLinks[1].name}
-              </Link>
+                {navLinks[1] && (
+                  <Link
+                    to={navLinks[1].to}
+                    className="w-[45%] flex-col my-[20px] py-[20px] px-4 text-deep bg-white hover:bg-deep hover:text-white transition-all duration-300 flex items-center justify-center gap-2 rounded-[10px] text-center"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <span
+                      className="material-icons text-main-02"
+                      style={{ fontSize: "48px" }}
+                    >
+                      schedule
+                    </span>
+                    {navLinks[1].name}
+                  </Link>
+                )}
+              </div>
             </div>
-          </div>
+          )}
           {/* mb menu another  */}
           {navLinks.slice(2).map((link) => (
             <Link

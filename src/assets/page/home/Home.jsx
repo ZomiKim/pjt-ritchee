@@ -11,32 +11,11 @@ import {
 function Home() {
   const navigate = useNavigate();
 
-  // 첫 방문만 로딩화면이 뜹니다. 화면을 종료시킨 후 재방문 시에는 다시 로딩창이 뜹니다.
-  // 페이지 이동 후 홈화면으로 들어갈때는 로딩창 안뜹니다.
-  const [firstVisit, setFirstVisit] = useState(() => {
-    return sessionStorage.getItem("homeVisited") !== "true";
-  });
-  const [loading, setLoading] = useState(firstVisit);
-
   const [activeTab, setActiveTab] = useState(0);
   const [hospitals, setHospitals] = useState([]);
   const [hospitalsReview, setHospitalsReview] = useState([]);
   const [hospitalsComment, setHospitalsComment] = useState([]);
   const [topHospitals, setTopHospitals] = useState([]);
-
-  // 첫 방문 시 로딩 후 회원가입 페이지로 이동
-  useEffect(() => {
-    if (firstVisit) {
-      const timer = setTimeout(() => {
-        sessionStorage.setItem("homeVisited", "true");
-        setLoading(false);
-        setFirstVisit(false);
-        navigate("/member", { replace: true });
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [firstVisit, navigate]);
 
   // 별점 렌더링 함수
   const renderStars = (rating) => {
@@ -149,23 +128,6 @@ function Home() {
     };
   }, []);
 
-  // 로딩 화면
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-main-01 myBg">
-        <div>
-          <img
-            src="https://ocnuykfvdtebmondqppu.supabase.co/storage/v1/object/public/images/logo_wh.png"
-            alt="logo"
-            className="w-32 mb-6"
-          />
-        </div>
-        <div className="w-16 h-16 border-4 border-gray-100 border-t-blue-500 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // 첫 방문이 아니거나 로딩 끝난 상태 (홈 화면)
   return (
     <>
       {/* 메인 슬라이더 */}
@@ -173,7 +135,7 @@ function Home() {
         <div className="swiper home-swiper">
           <div className="swiper-wrapper">
             <div className="swiper-slide">
-              <div 
+              <div
                 className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
                 onClick={() => navigate("/event/eventview/1")}
               >
@@ -186,7 +148,7 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div 
+              <div
                 className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
                 onClick={() => navigate("/event/eventview/2")}
               >
@@ -199,7 +161,7 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div 
+              <div
                 className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
                 onClick={() => navigate("/event/eventview/3")}
               >
@@ -212,7 +174,7 @@ function Home() {
             </div>
 
             <div className="swiper-slide">
-              <div 
+              <div
                 className="w-full h-[60vw] md:h-[45vw] lg:h-[50vw] overflow-hidden cursor-pointer"
                 onClick={() => navigate("/event/eventview/4")}
               >
@@ -242,8 +204,10 @@ function Home() {
               {topHospitals.map((hospital) => (
                 <div
                   key={hospital.h_code}
-                  className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden cursor-pointer"
-                  onClick={() => navigate(`/dentistList/dentistView?id=${hospital.h_code}`)}
+                  className="w-1/3 flex flex-col items-center justify-center rounded-[10px] overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-[1.03] hover:opacity-80"
+                  onClick={() =>
+                    navigate(`/dentistList/dentistView?id=${hospital.h_code}`)
+                  }
                 >
                   <div className="w-full h-[150px] md:h-[300px] overflow-hidden rounded-[10px]">
                     <img
@@ -270,7 +234,7 @@ function Home() {
         <div className="flex">
           <button
             onClick={() => setActiveTab(0)}
-            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white cursor-pointer ${
               activeTab === 0
                 ? "bg-main-02 text-white"
                 : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"
@@ -280,7 +244,7 @@ function Home() {
           </button>
           <button
             onClick={() => setActiveTab(1)}
-            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white cursor-pointer ${
               activeTab === 1
                 ? "bg-main-02 text-white"
                 : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"
@@ -290,7 +254,7 @@ function Home() {
           </button>
           <button
             onClick={() => setActiveTab(2)}
-            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white ${
+            className={`flex-1 py-3 text-center font-semibold transition-colors rounded-tl-[10px] rounded-tr-[10px] border border-white cursor-pointer ${
               activeTab === 2
                 ? "bg-main-02 text-white"
                 : "bg-gray-light text-gray-deep hover:bg-main-01 hover:text-white"
@@ -603,7 +567,16 @@ function Home() {
           <Button
             size="long"
             variant="primary"
-            onClick={() => navigate("/dentistList")}
+            onClick={() => {
+              // activeTab에 따라 정렬 파라미터 추가
+              const sortParam =
+                activeTab === 0
+                  ? "rating"
+                  : activeTab === 1
+                  ? "review"
+                  : "comment";
+              navigate(`/dentistList?sort=${sortParam}`);
+            }}
             className="cursor-pointer"
           >
             더보기

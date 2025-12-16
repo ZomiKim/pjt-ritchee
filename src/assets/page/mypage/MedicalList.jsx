@@ -1,50 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import Button from '../../../componetns/Button';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PageNatation from '../../../componetns/PageNatation';
 import { useUser } from '../../../context/UserContext';
-
 import { getHospitalList, getMedicalList } from '../../../api/hospital_medicallist';
-
+import Button from '../../../componetns/Button';
 
 function MedicalList() {
   const [searchParams] = useSearchParams();
   const [medicals, setMedicals] = useState([]);
-  const id = searchParams.get('id');
-  const hCode = searchParams.get('h_code');
-  const { user } = useUser();
-
-
   const [list, setList] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const pageSize = 10; // 한 페이지당 아이템 수
+  const nav = useNavigate();
+
+  const pageSize = 6;
+  const id = searchParams.get('id');
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 유저 ID 결정: URL id > 로그인 유저 ID
         const userId = id || user?.id;
         if (!userId) return;
 
-        // 유저 진료 기록 조회 (페이지네이션)
         const medicalData = await getMedicalList(userId, page, pageSize);
         const hospitalData = await getHospitalList();
 
-        // 병원 목록을 h_code 기준 Map 생성
         const hospitalMap = {};
         hospitalData.forEach((h) => {
           hospitalMap[h.h_code] = h.h_name;
         });
 
-        // 진료 기록 + 병원 이름 합치기
         const mergedList = medicalData.content.map((item) => ({
           ...item,
           h_name: hospitalMap[item.h_code] || '병원 정보 없음',
         }));
-
+        console.log(mergedList);
         setList(mergedList);
-        setTotalPages(medicalData.totalPages); // Spring Data Pageable totalPages 사용
+        setTotalPages(medicalData.totalPages);
       } catch (error) {
         console.error('진료 기록 조회 실패 : ', error);
       }
@@ -53,101 +46,101 @@ function MedicalList() {
     fetchData();
   }, [id, user, page]);
 
-
   return (
     <>
-      {user.u_kind === '1' ? (
-        <div className="min-h-screen bg-light-02 myBg px-5 py-2 text-sm md:px-6 md:py-3 md:text-base lg:px-8 lg:py-4 lg:text-base">
-          <h4 className="tit  my-5 mt-10  px-5 mx-[4vw]">
+      {user?.u_kind === '1' ? (
+        <div className="min-h-screen bg-light-02 myBg px-5 py-2">
+          <h4 className="tit my-5 mt-10 px-5 mx-[4vw]">
             <i className="fa-solid fa-hospital text-[16px]"></i>
             {id ? `${id}번 회원님의 진료 내역` : `${user?.name || '회원'} 님의 진료 기록`}
           </h4>
 
+          <div
+            className={`w-[90%] flex flex-row flex-wrap ${
+              list.length < 4 ? 'md:gap-20' : 'md:justify-between'
+            } mx-auto gap-4`}
+          >
+            {list.map((item) => (
+              <div
+                key={item.a_id}
+                className="w-full sm:w-[45%] lg:w-[30%] border p-4 rounded-lg mb-5 bg-white text-gray-700 shadow-lg flex flex-col"
+              >
+                <h4 className="tit my-3 flex items-center gap-2">
+                  <span className="material-icons">local_hospital</span>
+                  {item.h_name}
+                  {item.r_id}
+                </h4>
 
-        <div
-          className={`w-[90%] flex flex-row flex-wrap ${
-            list.length < 4 ? 'md: gap-20' : 'md: justify-between'
-          } mx-auto space-x-2`}
-        >
-          {list.map((item) => (
-            <div
-              key={item.a_id}
-              className="w-full sm:w-[45%] lg:w-[30%] border p-4 rounded-lg mb-5 bg-white text-gray-700 shadow-lg flex flex-col"
-            >
-              <h4 className="tit my-3 mt-3 flex items-center gap-2">
-                <span className="material-icons">local_hospital</span>
-                {item.h_name}
-              </h4>
+                <ul className="pl-1 text-gray-500 space-y-2 mb-5">
+                  <li>· 진료일자 : {item.a_date}</li>
+                  <li>· 증상 : {item.a_dia_name}</li>
+                  <li>· 의사 소견 : {item.a_dia_content}</li>
+                  <li className="dummy text-red-400 pl-1">
+                    {item.r_able_yn === 'Y' ? null : '리뷰 작성 전이나 의사 소견 입력 후에 후기 작성이 가능합니다.'}
+                  </li>
+                </ul>
 
-              <ul className="pl-1 text-gray-500 space-y-2">
-                <li>· &nbsp; 진료일자 &nbsp;: {item.a_date}</li>
-                <li>· &nbsp; 증상 &nbsp;: {item.a_content}</li>
-                {/* <li>· &nbsp; 진단명 &nbsp;: {item.a_dia_name}</li>
-                <li>· &nbsp; 진료내용 &nbsp;: {item.a_dia_content}</li> */}
-                <li>· &nbsp; 의사 소견 &nbsp;: {item.text}</li>
-              </ul>
-
-              <div className="flex justify-center gap-5 mb-[10px]">
-                <Link
-                  to={`/mypage/medicalList/reviewForm/${item.a_id}`}
-                  state={{
-                    hospitalCode: item.h_code,
-                    hospitalName: item.h_name,
-                    a_id: item.a_id,
-                  }}
-                  className="flex-grow text-center py-2 bg-main-02 text-white rounded-md hover:bg-main-02"
-
-                >
-                  후기 작성 하기
-                </Link>
+                <div className="flex justify-center gap-5 mt-auto">
+                  <Button
+                    onClick={() =>
+                      nav(`/mypage/medicalList/reviewForm/${item.a_id}`, {
+                        state: {
+                          hospitalCode: item.h_code,
+                          hospitalName: item.h_name,
+                          a_id: item.a_id,
+                        },
+                      })
+                    }
+                    className={`${
+                      item.r_able_yn === 'Y' ? 'bg-main-02 !hover:bg-main-02' : 'bg-gray-mid pointer-events-none'
+                    } flex-grow text-center py-2  text-white rounded-md `}
+                  >
+                    후기 작성 하기
+                  </Button>
+                </div>
               </div>
-            </div>
-
+            ))}
           </div>
-          <div>
-            <PageNatation />
+
+          <div className="flex justify-center mt-10">
+            <PageNatation currentPage={page} totalPages={totalPages} onPageChange={(newPage) => setPage(newPage)} />
           </div>
         </div>
       ) : (
-        <div className="min-h-screen bg-light-02 myBg px-5 py-2 text-sm md:px-6 md:py-3 md:text-base lg:px-8 lg:py-4 lg:text-base">
-          <h4 className="tit  my-5 mt-10  px-5 mx-[4vw]">
+        <div className="min-h-screen bg-light-02 myBg px-5 py-2">
+          <h4 className="tit my-5 mt-10 px-5 mx-[4vw]">
             <i className="fa-solid fa-hospital text-[16px]"></i>
             {medicals?.[0]?.u_name || ''}님의 진료 내역
           </h4>
 
           <ul
             className={`w-[90%] flex flex-row flex-wrap gap-4 ${
-              medicals?.length < 4 ? 'md:gap-20' : 'md:justify-between'
+              medicals.length < 4 ? 'md:gap-20' : 'md:justify-between'
             } mx-auto`}
           >
-            {medicals?.map((m, i) => {
-              return (
-                <li className="w-full sm:w-[45%] lg:w-[30%] border p-4 rounded-lg mb-5 bg-white text-gray-200 shadow-lg">
-                  <h4 className="tit my-3 mt-3 ">
-                    <span className="material-icons ">local_hospital</span>
-                    {m.h_name || ''}
-                  </h4>
+            {medicals.map((m, i) => (
+              <li
+                key={i}
+                className="w-full sm:w-[45%] lg:w-[30%] border p-4 rounded-lg mb-5 bg-white text-gray-700 shadow-lg"
+              >
+                <h4 className="tit my-3 flex items-center gap-2">
+                  <span className="material-icons">local_hospital</span>
+                  {m.h_name || ''}
+                </h4>
 
-                  <ul className="pl-1 my-5 text-gray-500">
-                    <li>· &nbsp; 진료일자 &nbsp;: {m.a_date || ''} </li>
-                    <li>· &nbsp; 증상 &nbsp;: {m.text || ''}</li>
-                    <li>· &nbsp; 의사 소견 &nbsp;: {m.a_dia_name || '진료 대기 중입니다.'}</li>
-                    <li>· &nbsp; 주의 사항 &nbsp;: {m.a_dia_content || '진료 대기 중입니다.'}</li>
-                  </ul>
-                </li>
-              );
-            })}
+                <ul className="pl-1 my-5 text-gray-500 space-y-2">
+                  <li>· 진료일자 : {m.a_date || ''}</li>
+                  <li>· 증상 : {m.text || ''}</li>
+                  <li>· 의사 소견 : {m.a_dia_name || '진료 대기 중입니다.'}</li>
+                  <li>· 주의 사항 : {m.a_dia_content || '진료 대기 중입니다.'}</li>
+                </ul>
+              </li>
+            ))}
           </ul>
-          <div>
-          
+
+          <div className="flex justify-center mt-10">
+            <PageNatation currentPage={page} totalPages={totalPages} onPageChange={(newPage) => setPage(newPage)} />
           </div>
-
-          ))}
-        </div>
-
-        <div>
-          <PageNatation currentPage={page} totalPages={totalPages} onPageChange={(newPage) => setPage(newPage)} />
-
         </div>
       )}
     </>

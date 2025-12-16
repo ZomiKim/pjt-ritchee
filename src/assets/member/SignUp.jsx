@@ -80,7 +80,7 @@ function SignUp() {
     try {
       const result = await checkUserEmail(formData.useremail);
       const checkResult = typeof result === 'string' ? result : result?.userInfoCheckYn || result;
-      
+
       if (checkResult === 'Y' || checkResult === 'y') {
         setEmailCheckMessage('이미 가입된 이메일입니다.');
       } else if (checkResult === 'N' || checkResult === 'n') {
@@ -241,7 +241,7 @@ function SignUp() {
           {emailCheckMessage && (
             <div
               className={`text-[12px] mt-1 ${
-                emailCheckMessage === '사용 가능한 이메일입니다.' ? 'text-green-400' : 'text-red-400'
+                emailCheckMessage === '사용 가능한 이메일입니다.' ? 'text-deep' : 'text-red-400'
               }`}
             >
               {emailCheckMessage}

@@ -168,7 +168,7 @@ function ReservationCheck() {
                     · 예약 시간 : {date.split(' ')[1]}
                   </div>
                   <div className="phoneNumber dummy text-gray-deep">
-                    · 연락처 : {appointment?.phone || ''}
+                    · 연락처 : {formatPhone(appointment?.phone) || ''}
                   </div>
                   <div className="etc dummy text-gray-deep">
                     · 특이 사항 : {appointment?.text || ''}
@@ -178,7 +178,7 @@ function ReservationCheck() {
             </div>
           </div>
         </div>
-      ) : (
+      ) : appointment.u_kind === '2' ? (
         <div className="myBg bg-light-02 h-screen ">
           <div className="wrap pl-1.5" style={{ backgroundColor: '#f4f8ff' }}>
             <div className="reservation container">
@@ -232,7 +232,7 @@ function ReservationCheck() {
             </div>
           </div>
         </div>
-      )}
+      ) : null}
       {/* Please refer to
     
       /map/reservationForm/reservationCheck?id=1

@@ -3,7 +3,11 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import Button from '../../../componetns/Button';
 import { useUser } from '../../../context/UserContext';
 import moment from 'moment';
-import { getAppmContent, getUserReservation, postOpinionUpdate } from '../../../api/ReservationApi';
+import {
+  getAppmContent,
+  getUserReservation,
+  postOpinionUpdate,
+} from '../../../api/ReservationApi';
 
 function ReservationCheck() {
   const { user } = useUser();
@@ -111,7 +115,16 @@ function ReservationCheck() {
   }, [id, a_id]);
 
   let date = moment(appointment?.a_date).format('YYYY-MM-DD HH:mm');
-  console.log(date);
+
+  const formatPhone = (phone) => {
+    if (!phone) return '';
+    const digits = phone.replace(/\D/g, '');
+    if (digits.length === 11)
+      return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 10)
+      return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+    return phone;
+  };
 
   return (
     <>
@@ -131,16 +144,35 @@ function ReservationCheck() {
                   </h4>
                 </div>
                 <div className="reservationBody">
-                  <div className="patient dummy text-gray-deep">· 환자명 : {appointment?.name || ''}</div>
-                  <div className="symptom dummy text-gray-deep">· 증상 : {appointment?.a_content || ''}</div>
-                  <div className="age dummy text-gray-deep">· 나이 : {`만 ${getAge(appointment?.birth)}세` || ''}</div>
-                  <div className="gender dummy text-gray-deep">
-                    · 성별 : {appointment?.gender === 'M' ? '남' : appointment?.gender === 'F' ? '여' : ''}
+                  <div className="patient dummy text-gray-deep">
+                    · 환자명 : {appointment?.name || ''}
                   </div>
-                  <div className="reservationDate dummy text-gray-deep">· 예약 일자 : {date.split(' ')[0] ?? ''}</div>
-                  <div className="reservationTime dummy text-gray-deep">· 예약 시간 : {date.split(' ')[1]}</div>
-                  <div className="phoneNumber dummy text-gray-deep">· 연락처 : {appointment?.phone || ''}</div>
-                  <div className="etc dummy text-gray-deep">· 특이 사항 : {appointment?.text || ''}</div>
+                  <div className="symptom dummy text-gray-deep">
+                    · 증상 : {appointment?.a_content || ''}
+                  </div>
+                  <div className="age dummy text-gray-deep">
+                    · 나이 : {`만 ${getAge(appointment?.birth)}세` || ''}
+                  </div>
+                  <div className="gender dummy text-gray-deep">
+                    · 성별 :{' '}
+                    {appointment?.gender === 'M'
+                      ? '남'
+                      : appointment?.gender === 'F'
+                      ? '여'
+                      : ''}
+                  </div>
+                  <div className="reservationDate dummy text-gray-deep">
+                    · 예약 일자 : {date.split(' ')[0] ?? ''}
+                  </div>
+                  <div className="reservationTime dummy text-gray-deep">
+                    · 예약 시간 : {date.split(' ')[1]}
+                  </div>
+                  <div className="phoneNumber dummy text-gray-deep">
+                    · 연락처 : {appointment?.phone || ''}
+                  </div>
+                  <div className="etc dummy text-gray-deep">
+                    · 특이 사항 : {appointment?.text || ''}
+                  </div>
                 </div>
               </div>
             </div>
@@ -160,14 +192,20 @@ function ReservationCheck() {
                     <span className="material-icons">local_hospital</span>
                     {appointment.h_name}
                   </h4>
-                  <li className="break-words">· 환자명: {appointment.u_name || ''}</li>
-                  <li className="break-words">· 증상: {appointment.a_content || ''}</li>
+                  <li className="break-words">
+                    · 환자명: {appointment.u_name || ''}
+                  </li>
+                  <li className="break-words">
+                    · 증상: {appointment.a_content || ''}
+                  </li>
                   <li>· 나이: {appointment.age || ''}</li>
                   <li>· 성별: {appointment.gender || ''}</li>
                   <li>· 예약 일자: {appointment.a_date || ''}</li>
                   <li>· 예약 시간: {appointment.a_time || ''}</li>
-                  <li>· 연락처: {appointment.phone || ''}</li>
-                  <li className="break-words">· 특이 사항: {appointment.text || ''}</li>
+                  <li>· 연락처: {formatPhone(appointment.phone) || ''}</li>
+                  <li className="break-words">
+                    · 특이 사항: {appointment.text || ''}
+                  </li>
                 </ul>
                 <textarea
                   id="opinion"

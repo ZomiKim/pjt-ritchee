@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import PageNatation from "../../../componetns/PageNatation";
-import { useUser } from "../../../context/UserContext";
-import { getReviewList } from "../../../api/hospital_reviewHistory";
+import React, { useEffect, useState } from 'react';
+import PageNatation from '../../../componetns/PageNatation';
+import { useUser } from '../../../context/UserContext';
+import { getReviewList } from '../../../api/hospital_reviewHistory';
 
 function ReviewHistory() {
   const { user } = useUser();
@@ -18,7 +18,7 @@ function ReviewHistory() {
       try {
         setLoading(true);
         const data = await getReviewList(user.id, currentPage, itemsPerPage);
-        console.log("리뷰 API 응답:", data);
+        console.log('리뷰 API 응답:', data);
 
         // 서버가 페이지네이션을 지원하는 경우
         if (data.content && data.totalElements !== undefined) {
@@ -40,7 +40,7 @@ function ReviewHistory() {
           setTotalElements(0);
         }
       } catch (error) {
-        console.error("리뷰 불러오기 실패:", error);
+        console.error('리뷰 불러오기 실패:', error);
         setReviews([]);
         setTotalElements(0);
       } finally {
@@ -61,7 +61,7 @@ function ReviewHistory() {
       <div className="container flex flex-col max-w-screen-xl mx-auto">
         <h4 className="tit my-5 mt-10 mx-[1vw] break-words">
           <span className="material-icons">edit_calendar</span>
-          {user?.name || "회원"} 님의 작성 후기
+          {user?.name || '회원'} 님의 작성 후기
         </h4>
 
         {/* 중간에서 절대 깨지지 않는 Grid */}
@@ -104,6 +104,7 @@ function ReviewHistory() {
                     {review.h_name}
                   </h4>
                   <li className="break-words">· 제목: {review.r_title}</li>
+                  <li className="break-words">· 내용: {review.r_content}</li>
 
                   {/* 별점 */}
                   <li className="flex flex-row text-point items-center">
@@ -120,11 +121,10 @@ function ReviewHistory() {
                   </li>
 
                   <li className="break-words">
-                    · 작성일:{" "}
+                    · 작성일:{' '}
                     {review.createdAt?.substring(0, 10) ||
                       review.r_date?.substring(0, 10)}
                   </li>
-                  <li className="break-words">· 내용: {review.r_content}</li>
                 </ul>
               </div>
             ))

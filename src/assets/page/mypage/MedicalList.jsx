@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PageNatation from '../../../componetns/PageNatation';
 import { useUser } from '../../../context/UserContext';
-import { getHospitalList, getMedicalList } from '../../../api/hospital_medicallist';
+import {
+  getHospitalList,
+  getMedicalList,
+} from '../../../api/hospital_medicallist';
 import Button from '../../../componetns/Button';
 
 function MedicalList() {
@@ -24,7 +27,9 @@ function MedicalList() {
         if (!userId) return;
 
         const medicalData = await getMedicalList(userId, page, pageSize);
-        setMedicals(Array.isArray(medicalData.content) ? medicalData.content : []);
+        setMedicals(
+          Array.isArray(medicalData.content) ? medicalData.content : []
+        );
         const hospitalData = await getHospitalList();
 
         const hospitalMap = {};
@@ -60,7 +65,9 @@ function MedicalList() {
           <div className="container flex flex-col max-w-screen-xl mx-auto">
             <h4 className="tit my-5 mt-10 mx-[1vw] break-words">
               <i className="fa-solid fa-hospital text-[16px]"></i>
-              {id ? `${id}번 회원님의 진료 내역` : `${user?.name || '회원'} 님의 진료 기록`}
+              {id
+                ? `${id}번 회원님의 진료 내역`
+                : `${user?.name || '회원'} 님의 진료 기록`}
             </h4>
 
             {/* 중간에서 절대 깨지지 않는 Grid */}
@@ -95,38 +102,49 @@ function MedicalList() {
             break-words overflow-hidden 
           "
                   >
-                  <ul className="pl-1 space-y-2 text-gray-500 overflow-hidden break-words">
-                    <h4 className="tit my-3 mt-3 flex items-center gap-1 break-words overflow-hidden">
-                      <span className="material-icons">local_hospital</span>
-                      {item.h_name}
-                    </h4>
-                    <li className="break-words">· 진료일자 : {item.a_date}</li>
-                    <li className="break-words">· 증상 : {item.a_dia_name}</li>
-                    <li className="break-words">· 의사 소견 : {item.a_dia_content}</li>
-                    <li className="dummy text-red-400 pl-1 break-words">
-                      {item.r_able_yn === 'Y' ? null : '리뷰 작성 전이나 의사 소견 입력 후에 후기 작성이 가능합니다.'}
-                    </li>
-                  </ul>
+                    <ul className="pl-1 space-y-2 text-gray-500 overflow-hidden break-words">
+                      <h4 className="tit my-3 mt-3 flex items-center gap-1 break-words overflow-hidden">
+                        <span className="material-icons">local_hospital</span>
+                        {item.h_name}
+                      </h4>
+                      <li className="break-words">
+                        · 진료일자 : {item.a_date}
+                      </li>
+                      <li className="break-words">· 증상 : {item.a_content}</li>
+                      <li className="break-words">
+                        · 의사 소견 : {item.a_dia_name}
+                      </li>
+                      <li className="break-words">
+                        · 주의 사항 : {item.a_dia_content}
+                      </li>
+                      <li className="dummy text-red-400 pl-1 break-words">
+                        {item.r_able_yn === 'Y'
+                          ? null
+                          : '리뷰 작성 전이나 의사 소견 입력 후에 후기 작성이 가능합니다.'}
+                      </li>
+                    </ul>
 
-                  <div className="flex justify-center gap-5 mt-5">
-                    <Button
-                      onClick={() =>
-                        nav(`/mypage/medicalList/reviewForm/${item.a_id}`, {
-                          state: {
-                            hospitalCode: item.h_code,
-                            hospitalName: item.h_name,
-                            a_id: item.a_id,
-                          },
-                        })
-                      }
-                      className={`${
-                        item.r_able_yn === 'Y' ? 'bg-main-02 !hover:bg-main-02' : 'bg-gray-mid pointer-events-none'
-                      } flex-grow text-center py-2  text-white rounded-md `}
-                    >
-                      후기 작성 하기
-                    </Button>
+                    <div className="flex justify-center gap-5">
+                      <Button
+                        onClick={() =>
+                          nav(`/mypage/medicalList/reviewForm/${item.a_id}`, {
+                            state: {
+                              hospitalCode: item.h_code,
+                              hospitalName: item.h_name,
+                              a_id: item.a_id,
+                            },
+                          })
+                        }
+                        className={`${
+                          item.r_able_yn === 'Y'
+                            ? 'bg-main-02 !hover:bg-main-02'
+                            : 'bg-gray-mid pointer-events-none'
+                        } flex-grow text-center py-2  text-white rounded-md mt-4`}
+                      >
+                        후기 작성 하기
+                      </Button>
+                    </div>
                   </div>
-                </div>
                 ))
               )}
             </div>
@@ -151,9 +169,9 @@ function MedicalList() {
             </h4>
 
             <ul
-              className={`w-[90%] flex flex-row flex-wrap gap-4 ${
+              className={`w-[90%] flex flex-row flex-wrap gap-4  ${
                 medicals.length < 4 ? 'md:gap-20' : 'md:justify-between'
-              } mx-auto`}
+              } `}
             >
               {medicals?.length === 0 ? (
                 <p className="w-full text-left text-gray-500 pl-[1vw]">
@@ -161,22 +179,28 @@ function MedicalList() {
                 </p>
               ) : (
                 medicals?.map((m, i) => (
-                <li
-                  key={i}
-                  className="w-full sm:w-[45%] lg:w-[30%] border p-4 rounded-lg mb-5 bg-white text-gray-700 shadow-lg"
-                >
-                  <h4 className="tit my-3 flex items-center gap-2">
-                    <span className="material-icons">local_hospital</span>
-                    {m.h_name || ''}
-                  </h4>
+                  <li
+                    key={i}
+                    className="w-full sm:w-[45%] lg:w-[30%] border p-4 rounded-lg mb-5 bg-white text-gray-700 shadow-lg"
+                  >
+                    <h4 className="tit my-3 flex items-center gap-2">
+                      <span className="material-icons">local_hospital</span>
+                      {m.h_name || ''}
+                    </h4>
 
-                  <ul className="pl-1 my-5 text-gray-500 space-y-2 break-words overflow-hidden">
-                    <li className="break-words">· 진료일자 : {m.a_date || ''}</li>
-                    <li className="break-words">· 증상 : {m.text || ''}</li>
-                    <li className="break-words">· 의사 소견 : {m.a_dia_name || '진료 대기 중입니다.'}</li>
-                    <li className="break-words">· 주의 사항 : {m.a_dia_content || '진료 대기 중입니다.'}</li>
-                  </ul>
-                </li>
+                    <ul className="pl-1 my-5 text-gray-500 space-y-2 break-words overflow-hidden">
+                      <li className="break-words">
+                        · 진료일자 : {m.a_date || ''}
+                      </li>
+                      <li className="break-words">· 증상 : {m.text || ''}</li>
+                      <li className="break-words">
+                        · 의사 소견 : {m.a_dia_name || '진료 대기 중입니다.'}
+                      </li>
+                      <li className="break-words">
+                        · 주의 사항 : {m.a_dia_content || '진료 대기 중입니다.'}
+                      </li>
+                    </ul>
+                  </li>
                 ))
               )}
             </ul>

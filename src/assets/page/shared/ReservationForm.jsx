@@ -130,7 +130,9 @@ function ReservationForm() {
   // 예약 함수
   const postAppm = async () => {
     if ((await runTime()) === 'N') {
-      alert('예약은 치과 운영 시간 내에서 가능하며, 점심시간을 제외한 시간대로 선택해 주시기 바랍니다.');
+      alert(
+        '예약은 치과 운영 시간 내에서 가능하며, 점심시간을 제외한 시간대로 선택해 주시기 바랍니다.'
+      );
       return;
     }
 
@@ -175,8 +177,10 @@ function ReservationForm() {
   const formatPhone = (phone) => {
     if (!phone) return '';
     const digits = phone.replace(/\D/g, '');
-    if (digits.length === 11) return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    if (digits.length === 10) return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 11)
+      return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 10)
+      return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
     return phone;
   };
 
@@ -213,7 +217,7 @@ function ReservationForm() {
     const oneHourAgo = moment().subtract(1, 'hours');
 
     if (selectedMoment.isBefore(oneHourAgo)) {
-      alert('과거시간으로 예약할수 없습니다. 현재시간 이후로 예약하세요. ');
+      alert('과거 시간으로 예약할 수 없습니다. 현재 시간 이후로 예약하세요. ');
       return;
     }
 
@@ -285,15 +289,25 @@ function ReservationForm() {
               {/* 달력 */}
               <div className="relative">
                 <div
-                  className={`rounded-sm text-[12px] md:text-base text-${selectedDate ? 'black' : 'gray-mid'} bg-white 
+                  className={`rounded-sm text-[12px] md:text-base text-${
+                    selectedDate ? 'black' : 'gray-mid'
+                  } bg-white 
                   w-full py-2.5 pl-3 pr-2 mb-[5px] border border-main-01 
                   flex items-center gap-2 cursor-pointer`}
                   onClick={() => setIsCalendar((prev) => !prev)}
                 >
-                  <span className="material-icons text-[15px]! md:text-[20px]!">edit_calendar</span>
-                  {selectedDate ? moment(selectedDate).format('YYYY-MM-DD') : '날짜 선택'}
+                  <span className="material-icons text-[15px]! md:text-[20px]!">
+                    edit_calendar
+                  </span>
+                  {selectedDate
+                    ? moment(selectedDate).format('YYYY-MM-DD')
+                    : '날짜 선택'}
                 </div>
-                <div className={`${isCalendar ? '' : 'hidden'} absolute w-full z-10`}>
+                <div
+                  className={`${
+                    isCalendar ? '' : 'hidden'
+                  } absolute w-full z-10`}
+                >
                   <div className="w-full max-w-md  p-4 bg-white rounded-lg shadow-md">
                     {/* 헤더 */}
                     <div className="flex justify-between items-center mb-4">
@@ -341,12 +355,16 @@ function ReservationForm() {
 
                         const dayOfWeek = date.getDay(); // 0:일, 6:토
                         const dateStr = moment(date).format('YYYY-MM-DD');
-                        const isHoliday = holidays.some((h) => h.date === dateStr);
+                        const isHoliday = holidays.some(
+                          (h) => h.date === dateStr
+                        );
 
                         // 텍스트 색상 결정
                         let textColor = '';
-                        if (dayOfWeek === 6) textColor = 'text-blue-500'; // 토요일은 파랑
-                        else if (dayOfWeek === 0 || isHoliday) textColor = 'text-red-500'; // 일요일 또는 공휴일 빨강
+                        if (dayOfWeek === 6)
+                          textColor = 'text-blue-500'; // 토요일은 파랑
+                        else if (dayOfWeek === 0 || isHoliday)
+                          textColor = 'text-red-500'; // 일요일 또는 공휴일 빨강
 
                         return (
                           <div
@@ -359,15 +377,20 @@ function ReservationForm() {
                           `}
                             onClick={() => {
                               if (!date) return;
-                              if (moment(date).isBefore(moment().startOf('day'))) {
-                                alert('과거일자로 예약할수 없습니다. 현재일자 이후로 예약하세요.');
+                              if (
+                                moment(date).isBefore(moment().startOf('day'))
+                              ) {
+                                alert(
+                                  '과거 일자로 예약할 수 없습니다. 현재 일자 이후로 예약하세요.'
+                                );
                                 return;
                               }
 
                               setSelectedDate(date);
                               setFormData((prev) => ({
                                 ...prev,
-                                reservationDate: moment(date).format('YYYY-MM-DD'),
+                                reservationDate:
+                                  moment(date).format('YYYY-MM-DD'),
                               }));
                             }}
                             onDoubleClick={() => {
@@ -375,7 +398,8 @@ function ReservationForm() {
                               setSelectedDate(date);
                               setFormData((prev) => ({
                                 ...prev,
-                                reservationDate: moment(date).format('YYYY-MM-DD'),
+                                reservationDate:
+                                  moment(date).format('YYYY-MM-DD'),
                               }));
                               setIsCalendar(false); // 🔹 달력 닫기
                             }}
@@ -415,25 +439,43 @@ function ReservationForm() {
               ></textarea>
               <div className="flex gap-[7px] select-none cursor-pointer">
                 {privacyChecked ? (
-                  <span className="material-icons text-main-02" onClick={() => setPrivacyChecked((prev) => !prev)}>
+                  <span
+                    className="material-icons text-main-02"
+                    onClick={() => setPrivacyChecked((prev) => !prev)}
+                  >
                     check_box
                   </span>
                 ) : (
-                  <span className="material-icons text-main-02" onClick={() => setPrivacyChecked((prev) => !prev)}>
+                  <span
+                    className="material-icons text-main-02"
+                    onClick={() => setPrivacyChecked((prev) => !prev)}
+                  >
                     check_box_outline_blank
                   </span>
                 )}
-                <label className="dummy text-gray-deep" onClick={() => setPrivacyChecked((prev) => !prev)}>
-                  병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료 후 관련 법령에 따라 보관 후 파기합니다.
+                <label
+                  className="dummy text-gray-deep"
+                  onClick={() => setPrivacyChecked((prev) => !prev)}
+                >
+                  병원 예약을 위해 기본 개인정보를 수집·이용합니다. 예약 완료 후
+                  관련 법령에 따라 보관 후 파기합니다.
                 </label>
               </div>
               <Button
                 size="long"
-                className={`mb-[50px] ${privacyChecked ? '' : 'opacity-50! cursor-not-allowed!'} cursor-pointer`}
+                className={`mb-[50px] ${
+                  privacyChecked ? '' : 'opacity-50! cursor-not-allowed!'
+                } cursor-pointer`}
                 onClick={privacyChecked ? null : (e) => e.preventDefault()}
                 disabled={!privacyChecked}
               >
-                <div className={`w-full ${privacyChecked ? '' : 'pointer-events-none!'}`}>예약하기</div>
+                <div
+                  className={`w-full ${
+                    privacyChecked ? '' : 'pointer-events-none!'
+                  }`}
+                >
+                  예약하기
+                </div>
               </Button>
             </form>
           </div>

@@ -16,8 +16,8 @@ function AppmList() {
   const [totalElements, setTotalElements] = useState(0);
 
   const itemsPerPage = 6;
-  const hospitalName = appmList?.[0]?.h_name || '';
-
+  const hospitalName =
+    appmList?.[0]?.h_name || user?.text.slice(9, user?.text.length - 1) || '';
   const opinionHandler = (i) => {
     if (!appmList) return;
     nav(`/map/reservationForm/reservationCheck?a_id=${i}`);
@@ -33,7 +33,11 @@ function AppmList() {
       try {
         if (!user?.id) return;
 
-        const data = await getAppmListOfHospital(user.id, currentPage, itemsPerPage);
+        const data = await getAppmListOfHospital(
+          user.id,
+          currentPage,
+          itemsPerPage
+        );
         console.log(data);
 
         setAppmList(Array.isArray(data.content) ? data.content : []);
@@ -55,8 +59,10 @@ function AppmList() {
   const formatPhone = (phone) => {
     if (!phone) return '';
     const digits = phone.replace(/\D/g, '');
-    if (digits.length === 11) return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-    if (digits.length === 10) return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 11)
+      return digits.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    if (digits.length === 10)
+      return digits.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
     return phone;
   };
 
@@ -101,16 +107,28 @@ function AppmList() {
                       <span className="material-icons">local_hospital</span>
                       {reservation.h_name}
                     </h4>
-                    <li className="break-words">· 환자명: {reservation.u_name}</li>
-                    <li className="break-words">· 증상: {reservation.a_content}</li>
+                    <li className="break-words">
+                      · 환자명: {reservation.u_name}
+                    </li>
+                    <li className="break-words">
+                      · 증상: {reservation.a_content}
+                    </li>
                     <li>· 나이: {reservation.age}</li>
                     <li>· 성별: {reservation.gender}</li>
                     <li>· 예약 일자: {reservation.a_date}</li>
                     <li>· 예약 시간: {reservation.a_time}</li>
                     <li>· 연락처: {formatPhone(reservation.phone)}</li>
-                    <li className="break-words">· 특이 사항: {reservation.text}</li>
-                    <li className="break-words">· 진단명: {reservation.a_dia_name || '진료 대기 중입니다.'}</li>
-                    <li className="break-words">· 진단 내용: {reservation.a_dia_content || '진료 대기 중입니다.'}</li>
+                    <li className="break-words">
+                      · 특이 사항: {reservation.text}
+                    </li>
+                    <li className="break-words">
+                      · 진단명:{' '}
+                      {reservation.a_dia_name || '진료 대기 중입니다.'}
+                    </li>
+                    <li className="break-words">
+                      · 진단 내용:{' '}
+                      {reservation.a_dia_content || '진료 대기 중입니다.'}
+                    </li>
                   </ul>
 
                   <div className="flex flex-wrap justify-between w-full mt-5 gap-2">
@@ -127,7 +145,9 @@ function AppmList() {
                       size="mid"
                       variant="primary"
                       className="flex-1 min-w-[100px] xl:cursor-pointer"
-                      onClick={() => listHandler(reservation.u_id, reservation.h_code)}
+                      onClick={() =>
+                        listHandler(reservation.u_id, reservation.h_code)
+                      }
                     >
                       {reservation.u_name} 환자 진료 리스트
                     </Button>
@@ -147,7 +167,9 @@ function AppmList() {
             </div>
           </>
         ) : (
-          <p className="w-full text-center text-gray-500 mt-20 myBg bg-light-02">예약 내역이 없습니다.</p>
+          <p className="w-full text-center text-gray-500 mt-20 myBg bg-light-02">
+            예약 내역이 없습니다.
+          </p>
         )}
       </div>
     </div>

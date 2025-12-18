@@ -112,7 +112,7 @@ function ReservationCheck() {
     if (id && a_id) {
       user.u_kind === '1' ? userReservationFetch() : getappmContent();
     }
-  }, [id, a_id]);
+  }, [user, id, a_id]);
 
   let date = moment(appointment?.a_date).format('YYYY-MM-DD HH:mm');
 
@@ -128,7 +128,7 @@ function ReservationCheck() {
 
   return (
     <>
-      {appointment.u_kind === '1' ? (
+      {appointment?.u_kind === '1' ? (
         <div className="myBg bg-light-02 h-screen ">
           <div className="wrap pl-1.5" style={{ backgroundColor: '#f4f8ff' }}>
             <div className="reservation container">
@@ -178,7 +178,7 @@ function ReservationCheck() {
             </div>
           </div>
         </div>
-      ) : appointment.u_kind === '2' ? (
+      ) : (
         <div className="myBg bg-light-02 h-screen ">
           <div className="wrap pl-1.5" style={{ backgroundColor: '#f4f8ff' }}>
             <div className="reservation container">
@@ -232,7 +232,7 @@ function ReservationCheck() {
             </div>
           </div>
         </div>
-      ) : null}
+      )}
       {/* Please refer to
     
       /map/reservationForm/reservationCheck?id=1

@@ -7,7 +7,7 @@ import Mypage from './assets/page/mypage/Mypage';
 import Event from './assets/page/event/Event';
 import Member from './assets/member/Member';
 import Map from './assets/page/shared/Map';
-import Footer from './componetns/footer';
+import Footer from './componetns/Footer';
 import ProtectedRoute from './componetns/ProtectedRoute';
 import { useUser } from './context/UserContext';
 import AppmList from './assets/page/dentistlist/AppmList';
@@ -27,15 +27,35 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={user?.u_kind === '1' ? <Home /> : user?.u_kind === '2' ? <AppmList /> : <Home />}
+              element={
+                user?.u_kind === '1' ? (
+                  <Home />
+                ) : user?.u_kind === '2' ? (
+                  <AppmList />
+                ) : (
+                  <Home />
+                )
+              }
             />
             <Route
               path="/about/*"
-              element={user?.u_kind === 2 || user?.u_kind === '2' ? <Navigate to="/" /> : <About />}
+              element={
+                user?.u_kind === 2 || user?.u_kind === '2' ? (
+                  <Navigate to="/" />
+                ) : (
+                  <About />
+                )
+              }
             />
             <Route
               path="/dentistList/*"
-              element={user?.u_kind === 2 || user?.u_kind === '2' ? <Navigate to="/" /> : <DentList />}
+              element={
+                user?.u_kind === 2 || user?.u_kind === '2' ? (
+                  <Navigate to="/" />
+                ) : (
+                  <DentList />
+                )
+              }
             />
             <Route
               path="/mypage/*"
@@ -47,7 +67,13 @@ function App() {
             />
             <Route
               path="/event/*"
-              element={user?.u_kind === 2 || user?.u_kind === '2' ? <Navigate to="/" /> : <Event />}
+              element={
+                user?.u_kind === 2 || user?.u_kind === '2' ? (
+                  <Navigate to="/" />
+                ) : (
+                  <Event />
+                )
+              }
             />
             <Route path="/map/*" element={<Map />} />
             <Route path="/member/*" element={<Member />} />
